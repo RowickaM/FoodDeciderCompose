@@ -1,6 +1,5 @@
 package pl.gungnir.fooddecider.screens.randomizeFood
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -23,25 +22,21 @@ import kotlin.random.Random
 @Composable
 fun RandomizeFood() {
     val randomizeText = remember { mutableStateOf("") }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.background)
-    ) {
-        Toolbar(
-            icon = Icons.Default.Add,
-            onIconClick = {}
+
+    Toolbar(
+        icon = Icons.Default.Add,
+        onIconClick = {}
+    )
+    Column {
+        Spacer(modifier = Modifier.height(150.dp))
+        RandomizeFood(
+            onClick = {
+                randomizeText.value = "Randomize number: ${Random.nextInt(0, 100)}"
+            }
         )
-        Column {
-            Spacer(modifier = Modifier.height(150.dp))
-            RandomizeFood(
-                onClick = {
-                    randomizeText.value = "Randomize number: ${Random.nextInt(0, 100)}"
-                }
-            )
-            RandomizeResult(result = randomizeText.value)
-        }
+        RandomizeResult(result = randomizeText.value)
     }
+
 }
 
 @Composable
