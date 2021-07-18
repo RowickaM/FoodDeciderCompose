@@ -37,7 +37,7 @@ fun Toolbar(
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.W600,
                 text = title,
-                style = MaterialTheme.typography.h3
+                style = MaterialTheme.typography.h6
             )
         }
 

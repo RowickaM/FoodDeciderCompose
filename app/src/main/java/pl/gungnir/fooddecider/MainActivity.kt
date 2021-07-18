@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import pl.gungnir.fooddecider.mics.Toolbar
 import pl.gungnir.fooddecider.screens.randomizeFood.RandomizeFood
+import pl.gungnir.fooddecider.screens.savedFood.SavedFood
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 import kotlin.random.Random
 
@@ -28,10 +29,22 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val list = arrayListOf<String>()
+        for (i in 0..15) {
+            list.add("Jedzenie pozycja $i")
+        }
         setContent {
 
             FoodDeciderTheme {
-                RandomizeFood()
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = MaterialTheme.colors.background)
+                ) {
+                    SavedFood(
+                        list = list
+                    )
+                }
             }
         }
     }
