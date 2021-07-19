@@ -1,8 +1,8 @@
 package pl.gungnir.fooddecider.screens.templates
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -35,7 +35,7 @@ fun FoodTemplate(
 
 @Composable
 fun FoodTemplateItem(
-    template: Template
+    template: Template,
 ) {
     Surface(
         modifier = Modifier.padding(horizontal = 16.dp),
@@ -45,7 +45,7 @@ fun FoodTemplateItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .defaultMinSize(minHeight = 150.dp),
+                .defaultMinSize(minHeight = 180.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
@@ -61,10 +61,26 @@ fun FoodTemplateItem(
                 text = template.categoryFoodName.uppercase(),
                 style = MaterialTheme.typography.h5
             )
-            Text(
-                text = "TAGS TAGS TAGS TAGS TAGS",
-                textAlign = TextAlign.Center
-            )
+            LazyRow(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
+                itemsIndexed(template.foodTags) { index, tag ->
+                    Text(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp,
+                                shape = MaterialTheme.shapes.medium,
+                                color = MaterialTheme.colors.primary
+                            )
+                            .padding(horizontal = 8.dp, vertical = 2.dp),
+                        text = tag,
+                        textAlign = TextAlign.Center
+                    )
+                    if (index != template.foodTags.size - 1) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                    }
+                }
+            }
         }
     }
 }
