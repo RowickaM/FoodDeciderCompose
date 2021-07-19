@@ -26,7 +26,7 @@ fun FoodTemplateDetails(
         HeaderFoodTemplateDetails(template = template)
         Column(
             modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 16.dp)
+                .padding(start = 16.dp, top = 16.dp, end = 16.dp)
                 .verticalScroll(scrollState),
         ) {
             Text(text = "Food to add:", style = MaterialTheme.typography.h6)

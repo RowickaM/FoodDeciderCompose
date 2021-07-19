@@ -1,6 +1,5 @@
 package pl.gungnir.fooddecider.screens.randomizeFood
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -16,6 +15,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pl.gungnir.fooddecider.NavigationItem
 import pl.gungnir.fooddecider.mics.Toolbar
+import pl.gungnir.fooddecider.mics.nonRippleClickable
 
 @Composable
 fun RandomizeFood(
@@ -48,7 +48,7 @@ fun RandomizeFood(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
-            .clickable(onClick = onClick, enabled = enabledClick),
+            .nonRippleClickable(onClick = onClick, enabled = enabledClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
