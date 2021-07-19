@@ -21,7 +21,6 @@ fun ImageBackground(
         painter = image ?: painterResource(id = R.drawable.background_template_default),
         contentDescription = null,
         modifier = Modifier
-//            .aspectRatio(2.9f)
             .then(modifier),
         contentScale = ContentScale.Crop,
     )

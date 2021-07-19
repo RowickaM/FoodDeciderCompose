@@ -12,20 +12,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import pl.gungnir.fooddecider.NavigationItem
 import pl.gungnir.fooddecider.mics.Toolbar
-import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 import kotlin.random.Random
 
 @Composable
-fun RandomizeFood() {
+fun RandomizeFood(
+    navController: NavController
+) {
     val randomizeText = remember { mutableStateOf("") }
 
     Toolbar(
         icon = Icons.Default.Add,
-        onIconClick = {}
+        onIconClick = { navController.navigate(NavigationItem.RandomList.route) }
     )
     Column {
         Spacer(modifier = Modifier.height(150.dp))
@@ -70,18 +72,5 @@ fun RandomizeResult(space: Dp = 24.dp, result: String) {
             style = MaterialTheme.typography.h6
         )
         Spacer(modifier = Modifier.height(space))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    FoodDeciderTheme {
-        Toolbar(
-            icon = Icons.Default.Add,
-            onIconClick = {}
-        )
-        RandomizeFood(onClick = {})
-        RandomizeResult(result = "RANDO RESULT")
     }
 }

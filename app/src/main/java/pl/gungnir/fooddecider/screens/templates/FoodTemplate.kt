@@ -1,11 +1,9 @@
 package pl.gungnir.fooddecider.screens.templates
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -15,25 +13,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import pl.gungnir.fooddecider.NavigationItem
 import pl.gungnir.fooddecider.data.Template
+import pl.gungnir.fooddecider.data.list
 import pl.gungnir.fooddecider.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.mics.Tag
 import pl.gungnir.fooddecider.mics.Toolbar
-import pl.gungnir.fooddecider.ui.theme.DarkGrey
 
 @Composable
 fun FoodTemplate(
-    listTemplates: List<Template>
+    navController: NavController
 ) {
-    val templates = remember { listTemplates }
+    val templates = remember { list }
 
     Column {
 
         Toolbar(title = "LIST TEMPLATES")
         Spacer(modifier = Modifier.height(16.dp))
         LazyColumn {
-            items(templates) { template ->
-                FoodTemplateItem(template = template)
+            itemsIndexed(templates) { index, template ->
+                FoodTemplateItem(
+                    template = template,
+                    onClick = { navigateToDetails(navController, index) }
+                )
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
@@ -43,12 +46,14 @@ fun FoodTemplate(
 @Composable
 fun FoodTemplateItem(
     template: Template,
+    onClick: () -> Unit
 ) {
     val height = 180.dp
     Surface(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .height(height),
+            .height(height)
+            .clickable(onClick = onClick),
         shape = MaterialTheme.shapes.medium,
         elevation = 4.dp
     ) {
@@ -84,4 +89,11 @@ fun FoodTemplateItem(
             }
         }
     }
+}
+
+private fun navigateToDetails(
+    navController: NavController,
+    id: Int
+) {
+    navController.navigate(NavigationItem.FoodTemplateDetails.route.replace("{id}", id.toString()))
 }

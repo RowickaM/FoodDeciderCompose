@@ -79,3 +79,7 @@ val list = arrayListOf(
         foodList = listOf()
     ),
 )
+val savedFood = arrayListOf(
+    "Kurczak 6",
+    "makaron z sosem"
+)

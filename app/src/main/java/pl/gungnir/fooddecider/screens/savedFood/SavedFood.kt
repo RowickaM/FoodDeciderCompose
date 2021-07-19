@@ -10,13 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import pl.gungnir.fooddecider.data.savedFood
 import pl.gungnir.fooddecider.mics.Toolbar
 
 @Composable
 fun SavedFood(
-    list: List<String>
 ) {
-    val listFood = remember { list }
+    val listFood = remember { savedFood }
 
     Column {
 
