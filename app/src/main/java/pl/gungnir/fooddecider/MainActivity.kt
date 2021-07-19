@@ -3,6 +3,7 @@ package pl.gungnir.fooddecider
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.*
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
+import androidx.navigation.compose.rememberNavController
 import pl.gungnir.fooddecider.data.list
 import pl.gungnir.fooddecider.mics.BottomBar
 import pl.gungnir.fooddecider.mics.BottomBarItem
@@ -22,14 +26,18 @@ import pl.gungnir.fooddecider.screens.templates.FoodTemplate
 import pl.gungnir.fooddecider.screens.templatesDetails.FoodTemplateDetails
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 
+@ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
-            val navBackStackEntry = navController.currentBackStackEntryAsState().value
-            val currentDestination = navBackStackEntry?.destination
+            val bottomNavigationList = arrayListOf(
+                BottomBarItem.RandomFoodList,
+                BottomBarItem.RandomFood,
+                BottomBarItem.TemplateFood,
+            )
 
             FoodDeciderTheme {
                 Scaffold(
@@ -38,7 +46,7 @@ class MainActivity : ComponentActivity() {
                         .background(color = MaterialTheme.colors.background),
                     bottomBar = {
                         BottomBar(
-                            currentDestination = currentDestination?.route,
+                            navigationList = bottomNavigationList,
                             onItemCLick = {
                                 navigateTo(navController, it)
                             }
