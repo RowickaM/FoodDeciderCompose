@@ -7,24 +7,30 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import pl.gungnir.fooddecider.data.savedFood
+import androidx.lifecycle.viewmodel.compose.viewModel
+import pl.gungnir.fooddecider.mics.EmptyInfo
 import pl.gungnir.fooddecider.mics.Toolbar
 
 @Composable
 fun SavedFood(
+    viewModel: SavedFoodViewModel = viewModel()
 ) {
-    val listFood = remember { savedFood }
+    viewModel.onInitialize()
+    val listFood = viewModel.listOfSavedFood.value
 
     Column {
 
         Toolbar(title = "LIST OF FOOD")
-        LazyColumn {
-            items(listFood) { food ->
-                SavedFoodItem(name = food)
+        when (listFood) {
+            Result.Loading -> Text(text = "Loading...")
+            is Result.Success -> LazyColumn {
+                items(listFood.result) { food ->
+                    SavedFoodItem(name = food)
+                }
             }
+            else -> EmptyInfo(text = "You don't have saved food")
         }
     }
 }
