@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = NavigationItem.FoodTemplates.route
+                        startDestination = NavigationItem.Random.route
                     ) {
                         composable(route = NavigationItem.Random.route) {
                             RandomizeFood(navController)

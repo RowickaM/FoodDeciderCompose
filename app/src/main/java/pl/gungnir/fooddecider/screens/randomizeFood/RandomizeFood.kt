@@ -7,24 +7,23 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import pl.gungnir.fooddecider.NavigationItem
 import pl.gungnir.fooddecider.mics.Toolbar
-import kotlin.random.Random
 
 @Composable
 fun RandomizeFood(
-    navController: NavController
+    navController: NavController,
+    viewModel: RandomizeFoodViewModel = viewModel()
 ) {
-    val randomizeText = remember { mutableStateOf("") }
-
+    viewModel.onInitialize()
+    val foodResult = viewModel.randomFood.value
     Toolbar(
         icon = Icons.Default.Add,
         onIconClick = { navController.navigate(NavigationItem.RandomList.route) }
@@ -32,24 +31,24 @@ fun RandomizeFood(
     Column {
         Spacer(modifier = Modifier.height(150.dp))
         RandomizeFood(
-            onClick = {
-                randomizeText.value = "Randomize number: ${Random.nextInt(0, 100)}"
-            }
+            onClick = viewModel::drawFood,
+            enabledClick = foodResult != Result.Loading
         )
-        RandomizeResult(result = randomizeText.value)
+        RandomizeResult(result = foodResult)
     }
 
 }
 
 @Composable
 fun RandomizeFood(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabledClick: Boolean
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick, enabled = enabledClick),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
@@ -60,14 +59,27 @@ fun RandomizeFood(
 }
 
 @Composable
-fun RandomizeResult(space: Dp = 24.dp, result: String) {
+fun RandomizeResult(space: Dp = 24.dp, result: Result) {
+    val text = when (result) {
+        Result.Loading -> {
+            "Loading..."
+        }
+        is Result.Success -> {
+            result.result
+        }
+        else -> {
+            "Click image to draw food"
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(space))
+
         Text(
-            text = result,
+            text = text,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.h6
         )
