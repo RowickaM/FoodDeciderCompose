@@ -4,16 +4,18 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navArgument
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import pl.gungnir.fooddecider.data.list
+import pl.gungnir.fooddecider.mics.BottomBar
+import pl.gungnir.fooddecider.mics.BottomBarItem
 import pl.gungnir.fooddecider.screens.randomizeFood.RandomizeFood
 import pl.gungnir.fooddecider.screens.savedFood.SavedFood
 import pl.gungnir.fooddecider.screens.templates.FoodTemplate
@@ -26,14 +28,25 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+            val navBackStackEntry = navController.currentBackStackEntryAsState().value
+            val currentDestination = navBackStackEntry?.destination
 
             FoodDeciderTheme {
-                Box(
+                Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(color = MaterialTheme.colors.background)
+                        .background(color = MaterialTheme.colors.background),
+                    bottomBar = {
+                        BottomBar(
+                            currentDestination = currentDestination?.route,
+                            onItemCLick = {
+                                navigateTo(navController, it)
+                            }
+                        )
+                    }
                 ) {
                     NavHost(
+                        modifier = Modifier.padding(bottom = 60.dp),
                         navController = navController,
                         startDestination = NavigationItem.Random.route
                     ) {
@@ -65,6 +78,15 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun navigateTo(navController: NavHostController, item: BottomBarItem) {
+        val navItem = when (item) {
+            BottomBarItem.RandomFood -> NavigationItem.Random
+            BottomBarItem.RandomFoodList -> NavigationItem.RandomList
+            BottomBarItem.TemplateFood -> NavigationItem.FoodTemplates
+        }
+        navController.navigate(navItem.route)
     }
 }
 
