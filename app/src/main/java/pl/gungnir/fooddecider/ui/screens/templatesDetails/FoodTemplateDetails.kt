@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.screens.templatesDetails
+package pl.gungnir.fooddecider.ui.screens.templatesDetails
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,9 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import pl.gungnir.fooddecider.data.Template
-import pl.gungnir.fooddecider.mics.ImageBackgroundColumn
-import pl.gungnir.fooddecider.mics.Tag
+import pl.gungnir.fooddecider.model.data.Template
+import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
+import pl.gungnir.fooddecider.ui.mics.Tag
 
 @Composable
 fun FoodTemplateDetails(

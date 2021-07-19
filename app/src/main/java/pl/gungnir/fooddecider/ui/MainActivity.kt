@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider
+package pl.gungnir.fooddecider.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -17,13 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
-import pl.gungnir.fooddecider.data.list
-import pl.gungnir.fooddecider.mics.BottomBar
-import pl.gungnir.fooddecider.mics.BottomBarItem
-import pl.gungnir.fooddecider.screens.randomizeFood.RandomizeFood
-import pl.gungnir.fooddecider.screens.savedFood.SavedFood
-import pl.gungnir.fooddecider.screens.templates.FoodTemplate
-import pl.gungnir.fooddecider.screens.templatesDetails.FoodTemplateDetails
+import pl.gungnir.fooddecider.model.data.list
+import pl.gungnir.fooddecider.ui.mics.BottomBar
+import pl.gungnir.fooddecider.ui.mics.BottomBarItem
+import pl.gungnir.fooddecider.ui.screens.randomizeFood.RandomizeFood
+import pl.gungnir.fooddecider.ui.screens.savedFood.SavedFood
+import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplate
+import pl.gungnir.fooddecider.ui.screens.templatesDetails.FoodTemplateDetails
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 
 @ExperimentalAnimationApi

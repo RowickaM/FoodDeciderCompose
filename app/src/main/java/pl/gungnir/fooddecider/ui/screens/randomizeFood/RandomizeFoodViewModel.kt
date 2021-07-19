@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.screens.randomizeFood
+package pl.gungnir.fooddecider.ui.screens.randomizeFood
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import pl.gungnir.fooddecider.data.savedFood
+import pl.gungnir.fooddecider.model.data.savedFood
 import kotlin.random.Random
 
 class RandomizeFoodViewModel : ViewModel() {

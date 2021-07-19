@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.data
+package pl.gungnir.fooddecider.model.data
 
 data class Template(
     val categoryFoodName: String,

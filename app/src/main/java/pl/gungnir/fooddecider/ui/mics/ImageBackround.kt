@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.mics
+package pl.gungnir.fooddecider.ui.mics
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
