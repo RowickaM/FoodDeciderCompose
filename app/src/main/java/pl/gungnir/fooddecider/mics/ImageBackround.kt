@@ -21,7 +21,7 @@ fun ImageBackground(
         painter = image ?: painterResource(id = R.drawable.background_template_default),
         contentDescription = null,
         modifier = Modifier
-            .aspectRatio(2f)
+//            .aspectRatio(2.9f)
             .then(modifier),
         contentScale = ContentScale.Crop,
     )
@@ -32,27 +32,23 @@ fun ImageBackgroundColumn(
     modifier: Modifier = Modifier,
     modifierImage: Modifier = Modifier,
     image: Painter? = null,
+    verticalAlignment: Arrangement.HorizontalOrVertical = Arrangement.SpaceBetween,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Box {
         ImageBackground(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .then(modifierImage),
             image = image
         )
-        Image(
-            painter = image ?: painterResource(id = R.drawable.background_template_default),
-            contentDescription = null,
-            modifier = Modifier
-                .aspectRatio(2f)
-                .then(modifierImage),
-            contentScale = ContentScale.Crop,
-        )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = Color(0x80313131))
                 .then(modifier),
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = verticalAlignment,
             content = content
         )
     }
