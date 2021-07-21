@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.screens.templates
+package pl.gungnir.fooddecider.ui.screens.templates
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,12 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import pl.gungnir.fooddecider.NavigationItem
-import pl.gungnir.fooddecider.data.Template
-import pl.gungnir.fooddecider.data.list
-import pl.gungnir.fooddecider.mics.ImageBackgroundColumn
-import pl.gungnir.fooddecider.mics.Tag
-import pl.gungnir.fooddecider.mics.Toolbar
+import pl.gungnir.fooddecider.model.data.Template
+import pl.gungnir.fooddecider.model.data.list
+import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
+import pl.gungnir.fooddecider.ui.mics.Tag
+import pl.gungnir.fooddecider.ui.mics.Toolbar
 
 @Composable
 fun FoodTemplate(

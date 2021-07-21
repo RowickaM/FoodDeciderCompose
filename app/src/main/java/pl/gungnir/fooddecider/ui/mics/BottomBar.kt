@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.mics
+package pl.gungnir.fooddecider.ui.mics
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.keyframes
@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import pl.gungnir.fooddecider.NavigationItem
 import pl.gungnir.fooddecider.R
+import pl.gungnir.fooddecider.ui.NavigationItem
 
 @ExperimentalAnimationApi
 @Composable
@@ -31,7 +31,7 @@ fun BottomBar(
     onItemCLick: (BottomBarItem) -> Unit
 ) {
     val (activeIndex, setActiveIndex) = remember {
-        mutableStateOf(0)
+        mutableStateOf(1)
     }
     LazyRow(
         modifier = Modifier

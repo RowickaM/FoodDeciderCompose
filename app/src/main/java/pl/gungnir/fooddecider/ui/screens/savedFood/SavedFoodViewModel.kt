@@ -1,9 +1,9 @@
-package pl.gungnir.fooddecider.screens.savedFood
+package pl.gungnir.fooddecider.ui.screens.savedFood
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import pl.gungnir.fooddecider.data.savedFood
+import pl.gungnir.fooddecider.model.data.savedFood
 
 class SavedFoodViewModel : ViewModel() {
 

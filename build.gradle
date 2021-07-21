@@ -7,5 +7,9 @@ task clean(type: Delete) {
 buildscript {
     ext {
         compose_version = '1.0.0-beta09'
+        koin_version = '3.1.2'
+    }
+    repositories {
+        mavenCentral()
     }
 }

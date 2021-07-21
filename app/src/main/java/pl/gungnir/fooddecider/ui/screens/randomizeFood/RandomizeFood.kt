@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.screens.randomizeFood
+package pl.gungnir.fooddecider.ui.screens.randomizeFood
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import pl.gungnir.fooddecider.NavigationItem
-import pl.gungnir.fooddecider.mics.Toolbar
-import pl.gungnir.fooddecider.mics.nonRippleClickable
+import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.ui.mics.Toolbar
+import pl.gungnir.fooddecider.ui.mics.nonRippleClickable
 
 @Composable
 fun RandomizeFood(

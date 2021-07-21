@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.screens.savedFood
+package pl.gungnir.fooddecider.ui.screens.savedFood
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -10,8 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import pl.gungnir.fooddecider.mics.EmptyInfo
-import pl.gungnir.fooddecider.mics.Toolbar
+import pl.gungnir.fooddecider.ui.mics.EmptyInfo
+import pl.gungnir.fooddecider.ui.mics.Toolbar
 
 @Composable
 fun SavedFood(
