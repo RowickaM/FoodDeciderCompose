@@ -2,6 +2,8 @@ package pl.gungnir.fooddecider
 
 import android.app.Application
 import org.koin.core.context.startKoin
+import pl.gungnir.fooddecider.util.di.databaseModule
+import pl.gungnir.fooddecider.util.di.useCaseModule
 import pl.gungnir.fooddecider.util.di.viewModelModule
 
 class App : Application() {
@@ -16,7 +18,9 @@ class App : Application() {
         startKoin {
             modules(
                 modules = listOf(
-                    viewModelModule
+                    viewModelModule,
+                    databaseModule,
+                    useCaseModule,
                 )
             )
         }
