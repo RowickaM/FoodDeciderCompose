@@ -14,9 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import pl.gungnir.fooddecider.NavigationItem
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.list
+import pl.gungnir.fooddecider.ui.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.ui.mics.Tag
 import pl.gungnir.fooddecider.ui.mics.Toolbar
