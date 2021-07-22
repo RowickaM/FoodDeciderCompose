@@ -18,17 +18,23 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.navArgument
 import org.koin.java.KoinJavaComponent.inject
+import pl.gungnir.fooddecider.ui.NavigationItem
 
 @ExperimentalComposeUiApi
 @Composable
-fun Login() {
+fun Login(
+    navController: NavController
+) {
     val viewModel by inject<LoginViewModel>(LoginViewModel::class.java)
     val (login, setLogin) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
 
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -39,10 +45,7 @@ fun Login() {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(0.8f),
             value = login,
-            onValueChange = {
-                setLogin(it)
-                viewModel.onLoginChange(it)
-            },
+            onValueChange = setLogin,
             label = { Text(text = "email") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
@@ -58,10 +61,7 @@ fun Login() {
                 .focusRequester(focusRequester)
                 .fillMaxWidth(0.8f),
             value = password,
-            onValueChange = {
-                setPassword(it)
-                viewModel.onPasswordChange(it)
-            },
+            onValueChange = setPassword,
             label = { Text(text = "password") },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
@@ -78,7 +78,11 @@ fun Login() {
         OutlinedButton(
             modifier = Modifier
                 .fillMaxWidth(0.8f),
-            onClick = viewModel::onLoginClick,
+            onClick = {
+                viewModel.onLoginClick(login, password) {
+                    navController.navigate(NavigationItem.Random.route)
+                }
+            },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colors.background,
                 contentColor = MaterialTheme.colors.primary

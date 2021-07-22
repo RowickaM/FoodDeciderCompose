@@ -1,6 +1,7 @@
 package pl.gungnir.fooddecider.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -41,6 +44,7 @@ class MainActivity : ComponentActivity() {
                 BottomBarItem.RandomFood,
                 BottomBarItem.TemplateFood,
             )
+            val showBottomBar = remember { mutableStateOf(false) }
 
             FoodDeciderTheme {
                 Scaffold(
@@ -48,12 +52,14 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(color = MaterialTheme.colors.background),
                     bottomBar = {
-                        BottomBar(
-                            navigationList = bottomNavigationList,
-                            onItemCLick = {
-                                navigateTo(navController, it)
-                            }
-                        )
+                        if (showBottomBar.value) {
+                            BottomBar(
+                                navigationList = bottomNavigationList,
+                                onItemCLick = {
+                                    navigateTo(navController, it)
+                                }
+                            )
+                        }
                     }
                 ) {
                     NavHost(
@@ -62,15 +68,19 @@ class MainActivity : ComponentActivity() {
                         startDestination = NavigationItem.Login.route
                     ) {
                         composable(route = NavigationItem.Login.route) {
-                            Login()
+                            showBottomBar.value = false
+                            Login(navController)
                         }
                         composable(route = NavigationItem.Random.route) {
+                            showBottomBar.value = true
                             RandomizeFood(navController)
                         }
                         composable(route = NavigationItem.RandomList.route) {
+                            showBottomBar.value = true
                             SavedFood()
                         }
                         composable(route = NavigationItem.FoodTemplates.route) {
+                            showBottomBar.value = true
                             FoodTemplate(navController)
                         }
                         composable(
@@ -81,6 +91,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         ) {
+                            showBottomBar.value = false
                             val id = it.arguments?.getInt("id")
                             id?.let {
                                 val template = list[id]

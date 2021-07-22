@@ -1,25 +1,21 @@
 package pl.gungnir.fooddecider.ui.screens.login
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import pl.gungnir.fooddecider.model.useCase.LoginUseCase
+import pl.gungnir.fooddecider.util.onSuccess
 
 class LoginViewModel(
-
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
-    private val login: MutableState<String> = mutableStateOf("")
-    private val password: MutableState<String> = mutableStateOf("")
-
-    fun onLoginChange(login: String) {
-        this.login.value = login
-    }
-
-    fun onPasswordChange(password: String) {
-        this.password.value = password
-    }
-
-    fun onLoginClick() {
-
+    fun onLoginClick(email: String, password: String, afterSuccess: () -> Unit) {
+        viewModelScope.launch {
+            loginUseCase.run(LoginUseCase.Params(email, password))
+                .onSuccess {
+                    afterSuccess.invoke()
+                }
+        }
     }
 }
