@@ -9,15 +9,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import org.koin.java.KoinJavaComponent
 import pl.gungnir.fooddecider.ui.mics.EmptyInfo
 import pl.gungnir.fooddecider.ui.mics.Toolbar
+import pl.gungnir.fooddecider.ui.screens.randomizeFood.Result
+import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
 
 @Composable
-fun SavedFood(
-    viewModel: SavedFoodViewModel = viewModel()
-) {
-    viewModel.onInitialize()
+fun SavedFood() {
+    val viewModel by KoinJavaComponent.inject<SaveFoodShareViewModel>(SaveFoodShareViewModel::class.java)
     val listFood = viewModel.listOfSavedFood.value
 
     Column {
@@ -25,7 +25,7 @@ fun SavedFood(
         Toolbar(title = "LIST OF FOOD")
         when (listFood) {
             Result.Loading -> Text(text = "Loading...")
-            is Result.Success -> LazyColumn {
+            is Result.SuccessFetch -> LazyColumn {
                 items(listFood.result) { food ->
                     SavedFoodItem(name = food)
                 }

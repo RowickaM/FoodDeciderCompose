@@ -1,3 +1,10 @@
 package pl.gungnir.fooddecider.util.firebase
 
-interface FirebaseHelper
+import kotlinx.coroutines.flow.Flow
+
+interface FirebaseHelper {
+
+    fun getSavedFoodConnection(userUID: String): Flow<List<String>>
+
+    fun getTemplates()
+}

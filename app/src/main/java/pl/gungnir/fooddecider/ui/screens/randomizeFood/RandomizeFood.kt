@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.ui.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.mics.nonRippleClickable
@@ -20,8 +20,9 @@ import pl.gungnir.fooddecider.ui.mics.nonRippleClickable
 @Composable
 fun RandomizeFood(
     navController: NavController,
-    viewModel: RandomizeFoodViewModel = viewModel()
 ) {
+    val viewModel by inject<SaveFoodShareViewModel>(SaveFoodShareViewModel::class.java)
+
     viewModel.onInitialize()
     val foodResult = viewModel.randomFood.value
     Toolbar(
