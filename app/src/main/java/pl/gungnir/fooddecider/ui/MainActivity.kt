@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -20,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import pl.gungnir.fooddecider.model.data.list
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
+import pl.gungnir.fooddecider.ui.screens.login.Login
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.RandomizeFood
 import pl.gungnir.fooddecider.ui.screens.savedFood.SavedFood
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplate
@@ -29,6 +31,7 @@ import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
 
+    @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -56,8 +59,11 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         modifier = Modifier.padding(bottom = 60.dp),
                         navController = navController,
-                        startDestination = NavigationItem.Random.route
+                        startDestination = NavigationItem.Login.route
                     ) {
+                        composable(route = NavigationItem.Login.route) {
+                            Login()
+                        }
                         composable(route = NavigationItem.Random.route) {
                             RandomizeFood(navController)
                         }
@@ -99,6 +105,7 @@ class MainActivity : ComponentActivity() {
 }
 
 sealed class NavigationItem(val route: String) {
+    object Login : NavigationItem("login")
     object Random : NavigationItem("random")
     object RandomList : NavigationItem("random_list")
     object FoodTemplates : NavigationItem("food_templates")

@@ -2,6 +2,7 @@ package pl.gungnir.fooddecider.util.firebase
 
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -13,6 +14,7 @@ class FirebaseHelperImpl : FirebaseHelper {
 
     private val db by lazy { FirebaseFirestore.getInstance() }
 
+    @ExperimentalCoroutinesApi
     override fun getSavedFoodConnection(userUID: String): Flow<List<String>> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_FOOD)
