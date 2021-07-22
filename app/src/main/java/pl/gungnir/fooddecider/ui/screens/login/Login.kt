@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,11 +20,13 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navArgument
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.ui.mics.nonRippleClickable
 
 @ExperimentalComposeUiApi
 @Composable
@@ -31,6 +36,7 @@ fun Login(
     val viewModel by inject<LoginViewModel>(LoginViewModel::class.java)
     val (login, setLogin) = remember { mutableStateOf("") }
     val (password, setPassword) = remember { mutableStateOf("") }
+    val (showPassword, setShowPassword) = remember { mutableStateOf(false) }
 
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -67,10 +73,19 @@ fun Login(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
             ),
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (showPassword) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardActions = KeyboardActions(onDone = {
                 keyboardController?.hide()
-            })
+            }),
+            trailingIcon = {
+                Icon(
+                    imageVector = if (showPassword) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+                    contentDescription = "show password",
+                    modifier = Modifier.nonRippleClickable {
+                        setShowPassword(!showPassword)
+                    }
+                )
+            }
         )
 
         Spacer(modifier = Modifier.height(20.dp))
