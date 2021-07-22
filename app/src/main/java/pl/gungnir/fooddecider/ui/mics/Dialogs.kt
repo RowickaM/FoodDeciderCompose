@@ -1,6 +1,5 @@
 package pl.gungnir.fooddecider.ui.mics
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button

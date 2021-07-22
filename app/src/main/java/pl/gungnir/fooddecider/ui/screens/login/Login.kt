@@ -1,6 +1,8 @@
 package pl.gungnir.fooddecider.ui.screens.login
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -42,14 +44,15 @@ fun Login(
     val (password, setPassword) = remember { mutableStateOf("") }
     val passwordError = remember<MutableState<String?>> { mutableStateOf("") }
 
-    val (showDialog, setShowDialog) = remember { mutableStateOf(true) }
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
     val (dialogMessage, setDialogMessage) = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize(align = Alignment.Center),
+            .wrapContentSize(align = Alignment.Center)
+            .verticalScroll(state = rememberScrollState()),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (showDialog) {
             DialogError(
@@ -144,13 +147,15 @@ private fun onLogin(
     email: String,
     password: String,
 ) {
-    viewModel.onLoginClick(
-        email = email,
-        password = password,
-        afterSuccess = { navController.navigate(NavigationItem.Random.route) },
-        afterFailure = {
-            setDialogVisible(true)
-            setDialogMessage(it)
-        }
-    )
+    if (email.isNotEmpty() && password.isNotEmpty()){
+        viewModel.onLoginClick(
+            email = email,
+            password = password,
+            afterSuccess = { navController.navigate(NavigationItem.Random.route) },
+            afterFailure = {
+                setDialogVisible(true)
+                setDialogMessage(it)
+            }
+        )
+    }
 }
