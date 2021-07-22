@@ -11,10 +11,13 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
+import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.ui.mics.DialogError
 import pl.gungnir.fooddecider.ui.mics.ErrorMessageInput
 import pl.gungnir.fooddecider.ui.mics.InputOutlined
 import pl.gungnir.fooddecider.ui.mics.InputsType
@@ -28,6 +31,8 @@ fun Login(
 ) {
     val widthPercent = 0.8f
     val focusRequester = remember { FocusRequester() }
+    val emailErrorText = stringResource(id = R.string.invalid_format)
+    val passwordErrorText = stringResource(id = R.string.too_short)
 
     val viewModel by inject<LoginViewModel>(LoginViewModel::class.java)
 
@@ -37,6 +42,8 @@ fun Login(
     val (password, setPassword) = remember { mutableStateOf("") }
     val passwordError = remember<MutableState<String?>> { mutableStateOf("") }
 
+    val (showDialog, setShowDialog) = remember { mutableStateOf(true) }
+    val (dialogMessage, setDialogMessage) = remember { mutableStateOf("") }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -44,6 +51,14 @@ fun Login(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (showDialog) {
+            DialogError(
+                title = stringResource(id = R.string.cannot_sing_in),
+                message = dialogMessage,
+                onChangeVisible = setShowDialog
+            )
+        }
+
         InputOutlined(
             focusRequester = focusRequester,
             widthPercent = widthPercent,
@@ -52,11 +67,11 @@ fun Login(
                 emailError.value = if (isEmailValid(login)) {
                     null
                 } else {
-                    "invalid format"
+                    emailErrorText
                 }
                 setLogin(it)
             },
-            label = "email",
+            label = stringResource(id = R.string.email),
             isError = !emailError.value.isNullOrEmpty(),
             hasNext = true,
             type = InputsType.EMAIL,
@@ -74,17 +89,22 @@ fun Login(
                 passwordError.value = if (isPasswordValid(password)) {
                     null
                 } else {
-                    "password is too short "
+                    passwordErrorText
                 }
                 setPassword(it)
             },
-            label = "password",
+            label = stringResource(id = R.string.password),
             isError = !passwordError.value.isNullOrEmpty(),
             type = InputsType.PASSWORD,
             onDone = {
-                viewModel.onLoginClick(login, password) {
-                    navController.navigate(NavigationItem.Random.route)
-                }
+                onLogin(
+                    viewModel = viewModel,
+                    navController = navController,
+                    setDialogVisible = setShowDialog,
+                    email = login,
+                    password = password,
+                    setDialogMessage = setDialogMessage,
+                )
             }
         )
 
@@ -96,9 +116,14 @@ fun Login(
             modifier = Modifier
                 .fillMaxWidth(widthPercent),
             onClick = {
-                viewModel.onLoginClick(login, password) {
-                    navController.navigate(NavigationItem.Random.route)
-                }
+                onLogin(
+                    viewModel = viewModel,
+                    navController = navController,
+                    setDialogVisible = setShowDialog,
+                    email = login,
+                    password = password,
+                    setDialogMessage = setDialogMessage,
+                )
             },
             enabled = emailError.value == null && passwordError.value == null,
             colors = ButtonDefaults.buttonColors(
@@ -106,7 +131,26 @@ fun Login(
                 contentColor = MaterialTheme.colors.primary
             )
         ) {
-            Text(text = "Log in")
+            Text(text = stringResource(id = R.string.sing_in))
         }
     }
+}
+
+private fun onLogin(
+    viewModel: LoginViewModel,
+    navController: NavController,
+    setDialogVisible: (Boolean) -> Unit,
+    setDialogMessage: (String) -> Unit,
+    email: String,
+    password: String,
+) {
+    viewModel.onLoginClick(
+        email = email,
+        password = password,
+        afterSuccess = { navController.navigate(NavigationItem.Random.route) },
+        afterFailure = {
+            setDialogVisible(true)
+            setDialogMessage(it)
+        }
+    )
 }

@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.util.repo
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapConcat
@@ -21,11 +22,19 @@ class DatabaseRepoImpl(
         return firebaseAuthHelper
             .login(email, password)
             .map {
-                if (it.isNotBlank()) {
-                    it.right()
-                } else {
-                    Failure.Unknown.left()
-                }
+                Log.d("MRMRMR", "DatabaseRepoImpl loginUser: $it")
+                it.fold(
+                    {
+                        it.left()
+                    },
+                    {
+                        if (it.isNotBlank()) {
+                            it.right()
+                        } else {
+                            Failure.Unknown.left()
+                        }
+                    }
+                )
             }
             .first()
     }

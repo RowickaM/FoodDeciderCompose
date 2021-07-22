@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.util.di
 
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
 import pl.gungnir.fooddecider.model.useCase.LoginUseCase
@@ -9,12 +10,13 @@ import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelperImpl
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelperImpl
+import pl.gungnir.fooddecider.util.helper.ResourceProvider
+import pl.gungnir.fooddecider.util.helper.ResourceProviderImpl
 import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
-
 val viewModelModule = module {
     single { SaveFoodShareViewModel(get()) }
-    factory { LoginViewModel(get()) }
+    factory { LoginViewModel(get(), get()) }
 }
 
 val databaseModule = module {
@@ -26,4 +28,8 @@ val databaseModule = module {
 val useCaseModule = module {
     factory { GetAllSavedFoodUseCase(get()) }
     factory { LoginUseCase(get()) }
+}
+
+val appModule = module {
+    single<ResourceProvider> { ResourceProviderImpl(androidContext()) }
 }
