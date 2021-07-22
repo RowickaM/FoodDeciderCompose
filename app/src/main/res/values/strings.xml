@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">FoodDecider</string>
+
+    <string name="sing_in">Zaloguj się</string>
+    <string name="email">E-mail</string>
+    <string name="password">Hasło</string>
+
+    <string name="invalid_format">Nipoprawny format</string>
+    <string name="too_short">Za któtkie</string>
+
+    <string name="cannot_sing_in">Nie można się zalogować</string>
+
+    <string name="firebase_user_not_exist">Nie ma takiego użytkownika</string>
+    <string name="firebase_user_collision">Taki użytkownik już istnieje</string>
+    <string name="firebase_invalid_credentials">Niepoprawne dane logowania</string>
+    <string name="firebase_unknown">Bład serwera. Spróbuj ponownie później.</string>
 </resources>
