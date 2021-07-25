@@ -6,7 +6,7 @@ import pl.gungnir.fooddecider.util.Failure
 
 interface DatabaseRepo {
 
-    fun getSavedFood(userId: String): Flow<List<String>>
+    fun getSavedFood(): Flow<List<String>>?
 
     suspend fun loginUser(email: String, password: String): Either<Failure, String>
 

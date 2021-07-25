@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
+import pl.gungnir.fooddecider.util.None
+import pl.gungnir.fooddecider.util.onSuccess
 import kotlin.random.Random
 
 class SaveFoodShareViewModel(
@@ -23,14 +25,17 @@ class SaveFoodShareViewModel(
 
     fun onInitialize() {
         if (_listOfSavedFood.isEmpty()) {
-            getAllSavedFoodUseCase.invoke("")
-                .map {
-                    listOfSavedFood.value = Result.Loading
-                    _listOfSavedFood.clear()
-                    _listOfSavedFood.addAll(it)
-                    listOfSavedFood.value = Result.SuccessFetch(_listOfSavedFood)
-                }
-                .launchIn(viewModelScope)
+            viewModelScope.launch {
+                getAllSavedFoodUseCase.run(None)
+                    .onSuccess {
+                        it.map {
+                            listOfSavedFood.value = Result.Loading
+                            _listOfSavedFood.clear()
+                            _listOfSavedFood.addAll(it)
+                            listOfSavedFood.value = Result.SuccessFetch(_listOfSavedFood)
+                        }.launchIn(this)
+                    }
+            }
         }
     }
 

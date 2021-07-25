@@ -1,13 +1,14 @@
 package pl.gungnir.fooddecider.model.useCase
 
 import kotlinx.coroutines.flow.Flow
+import pl.gungnir.fooddecider.util.*
 import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 
 class GetAllSavedFoodUseCase(
     private val databaseRepo: DatabaseRepo
-) : BaseFlowUseCase<List<String>, String>() {
+) : BaseUseCase<Flow<List<String>>, None>() {
 
-    override fun run(params: String): Flow<List<String>> {
-        return databaseRepo.getSavedFood(userId = params)
+    override suspend fun run(params: None): Either<Failure, Flow<List<String>>> {
+        return databaseRepo.getSavedFood()?.right() ?: Failure.UserNotExist.left()
     }
 }
