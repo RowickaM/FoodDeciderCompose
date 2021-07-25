@@ -14,32 +14,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.Template
-import pl.gungnir.fooddecider.model.data.list
 import pl.gungnir.fooddecider.ui.NavigationItem
-import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
-import pl.gungnir.fooddecider.ui.mics.Tag
-import pl.gungnir.fooddecider.ui.mics.Toolbar
+import pl.gungnir.fooddecider.ui.mics.*
 
 @Composable
 fun FoodTemplate(
     navController: NavController
 ) {
-    val templates = remember { list }
+    val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
+    viewModel.fetchData()
+    val templates = remember { viewModel.templates }
 
     Column {
 
         Toolbar(title = "LIST TEMPLATES")
         Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn {
-            itemsIndexed(templates) { index, template ->
-                FoodTemplateItem(
-                    template = template,
-                    onClick = { navigateToDetails(navController, index) }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+
+        when (templates.value) {
+            Result.Loading -> Loading()
+            Result.Empty -> EmptyInfo(text = "No templates to show")
+            is Result.Success -> LazyColumn {
+                itemsIndexed(
+                    (templates.value as Result.Success).result
+                ) { index, template ->
+                    FoodTemplateItem(
+                        template = template,
+                        onClick = { navigateToDetails(navController, index) }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
             }
         }
+
     }
 }
 

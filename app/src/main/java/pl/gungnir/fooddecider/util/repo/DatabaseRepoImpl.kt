@@ -3,6 +3,7 @@ package pl.gungnir.fooddecider.util.repo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.util.Either
 import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
@@ -44,5 +45,12 @@ class DatabaseRepoImpl(
 
     override fun isUserLogged(): Either<Failure, Boolean> {
         return firebaseAuthHelper.userIsLogged().right()
+    }
+
+    override suspend fun getTemplates(): Either<Failure, List<Template>> {
+        return firebaseHelper
+            .getTemplates()
+            .first()
+            .right()
     }
 }

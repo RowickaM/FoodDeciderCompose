@@ -1,6 +1,7 @@
 package pl.gungnir.fooddecider.util.repo
 
 import kotlinx.coroutines.flow.Flow
+import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.util.Either
 import pl.gungnir.fooddecider.util.Failure
 
@@ -11,4 +12,6 @@ interface DatabaseRepo {
     suspend fun loginUser(email: String, password: String): Either<Failure, String>
 
     fun isUserLogged(): Either<Failure, Boolean>
+
+    suspend fun getTemplates(): Either<Failure, List<Template>>
 }

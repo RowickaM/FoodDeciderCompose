@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.java.KoinJavaComponent
 import pl.gungnir.fooddecider.ui.mics.EmptyInfo
+import pl.gungnir.fooddecider.ui.mics.Loading
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.Result
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
@@ -24,7 +25,7 @@ fun SavedFood() {
 
         Toolbar(title = "LIST OF FOOD")
         when (listFood) {
-            Result.Loading -> Text(text = "Loading...")
+            Result.Loading -> Loading()
             is Result.SuccessFetch -> LazyColumn {
                 items(listFood.result) { food ->
                     SavedFoodItem(name = food)
