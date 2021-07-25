@@ -1,13 +1,14 @@
 package pl.gungnir.fooddecider.util.firebase
 
 import android.util.Log
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.flow.flowOn
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.util.*
@@ -15,11 +16,13 @@ import pl.gungnir.fooddecider.util.*
 class FirebaseHelperImpl : FirebaseHelper {
 
     private val db by lazy { FirebaseFirestore.getInstance() }
+    private val auth by lazy { FirebaseAuth.getInstance() }
 
     @ExperimentalCoroutinesApi
     override fun getSavedFoodConnection(userUID: String): Flow<List<String>> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_FOOD)
+                .document(userUID)
                 .addSnapshotListener { value, error ->
                     error?.let {
                         close()
@@ -27,7 +30,7 @@ class FirebaseHelperImpl : FirebaseHelper {
                     }
 
                     value?.let { querySnapshot ->
-                        val data = querySnapshot.documents[0].data?.get(KEY_DATA_DISHES)
+                        val data = querySnapshot.data?.get(KEY_DATA_DISHES)
                         trySendBlocking(data as List<String>)
                     }
                 }
@@ -67,5 +70,26 @@ class FirebaseHelperImpl : FirebaseHelper {
                 }
             awaitClose()
         }.flowOn(Dispatchers.IO)
+    }
+
+    @FlowPreview
+    override suspend fun getSavedFood(): Flow<List<String>> {
+        auth.uid?.let { uid ->
+            return channelFlow {
+                db.collection(COLLECTION_SAVED_FOOD)
+                    .document(uid)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val data =
+                                task.result?.data?.get(KEY_DATA_DISHES) ?: emptyList<String>()
+                            trySendBlocking(data as List<String>)
+                        }
+                        close()
+                    }
+                awaitClose()
+            }.flowOn(Dispatchers.IO)
+
+        } ?: return flowOf(emptyList())
     }
 }

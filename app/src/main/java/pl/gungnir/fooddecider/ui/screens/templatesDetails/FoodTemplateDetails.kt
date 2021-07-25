@@ -9,12 +9,13 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.koin.java.KoinJavaComponent.inject
-import pl.gungnir.fooddecider.model.data.Template
+import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.ui.mics.Tag
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
@@ -24,18 +25,20 @@ fun FoodTemplateDetails(
     templateId: String
 ) {
     val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
+    viewModel.getTemplateById(templateId)
+    val template = remember { viewModel.templateDetails }
 
-    val template = viewModel.getTemplateById(templateId)
-
-    Column {
-        HeaderFoodTemplateDetails(template = template)
-        template?.let { FoodTemplateDetailsLists(template = template) }
-    }
+    template.value?.let {
+        Column {
+            HeaderFoodTemplateDetails(template = template.value)
+            FoodTemplateDetailsLists(template = it)
+        }
+    } ?: HeaderFoodTemplateDetails(template = null)
 }
 
 @Composable
 private fun HeaderFoodTemplateDetails(
-    template: Template?
+    template: TemplateDetails?
 ) {
     val height = 250.dp
     Surface(
@@ -85,7 +88,7 @@ private fun HeaderFoodTemplateDetails(
 
 @Composable
 private fun FoodTemplateDetailsLists(
-    template: Template,
+    template: TemplateDetails,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -95,7 +98,7 @@ private fun FoodTemplateDetailsLists(
     ) {
         Text(text = "Food to add:", style = MaterialTheme.typography.h6)
         Column {
-            template.foodList.forEach { food ->
+            template.notAdded.forEach { food ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -116,7 +119,7 @@ private fun FoodTemplateDetailsLists(
         Spacer(modifier = Modifier.height(24.dp))
         Text(text = "Food already added:", style = MaterialTheme.typography.h6)
         Column {
-            template.foodList.forEach { food ->
+            template.added.forEach { food ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -8,4 +8,6 @@ interface FirebaseHelper {
     fun getSavedFoodConnection(userUID: String): Flow<List<String>>
 
     fun getTemplates(): Flow<List<Template>>
+
+    suspend fun getSavedFood(): Flow<List<String>>
 }

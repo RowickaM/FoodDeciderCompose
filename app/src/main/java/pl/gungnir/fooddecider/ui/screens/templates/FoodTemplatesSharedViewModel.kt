@@ -4,18 +4,21 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.model.data.Template
+import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.model.useCase.GetTemplatesUseCase
+import pl.gungnir.fooddecider.model.useCase.SplitDishesTemplateUseCase
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.onSuccess
 
 class FoodTemplatesSharedViewModel(
-    private val getTemplatesUseCase: GetTemplatesUseCase
+    private val getTemplatesUseCase: GetTemplatesUseCase,
+    private val splitDishesTemplateUseCase: SplitDishesTemplateUseCase
 ) : ViewModel() {
 
     val templates: MutableState<Result?> = mutableStateOf(null)
+    val templateDetails: MutableState<TemplateDetails?> = mutableStateOf(null)
 
     fun onInitialize() {
         if (templates.value == null) {
@@ -37,12 +40,18 @@ class FoodTemplatesSharedViewModel(
         }
     }
 
-    fun getTemplateById(templateId: String): Template? {
-        return if (templates.value !is Result.Success) {
-            null
-        } else {
-            (templates.value as Result.Success).result.find { it.id == templateId }
-        }
+    fun getTemplateById(templateId: String) {
+        val templates = (this.templates.value as Result.Success).result
+
+        templates.find { it.id == templateId }
+            ?.let {
+                viewModelScope.launch {
+                    splitDishesTemplateUseCase.run(it)
+                        .onSuccess {
+                            templateDetails.value = it
+                        }
+                }
+            }
     }
 }
 
