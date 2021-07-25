@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -24,7 +25,7 @@ fun FoodTemplate(
     navController: NavController
 ) {
     val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
-    viewModel.fetchData()
+    viewModel.onInitialize()
     val templates = remember { viewModel.templates }
 
     Column {
@@ -36,12 +37,12 @@ fun FoodTemplate(
             Result.Loading -> Loading()
             Result.Empty -> EmptyInfo(text = "No templates to show")
             is Result.Success -> LazyColumn {
-                itemsIndexed(
+                items(
                     (templates.value as Result.Success).result
-                ) { index, template ->
+                ) { template ->
                     FoodTemplateItem(
                         template = template,
-                        onClick = { navigateToDetails(navController, index) }
+                        onClick = { navigateToDetails(navController, template.id) }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
@@ -101,7 +102,7 @@ fun FoodTemplateItem(
 
 private fun navigateToDetails(
     navController: NavController,
-    id: Int
+    id: String
 ) {
-    navController.navigate(NavigationItem.FoodTemplateDetails.route.replace("{id}", id.toString()))
+    navController.navigate(NavigationItem.FoodTemplateDetails.route.replace("{id}", id))
 }

@@ -15,12 +15,17 @@ class FoodTemplatesSharedViewModel(
     private val getTemplatesUseCase: GetTemplatesUseCase
 ) : ViewModel() {
 
-    val templates: MutableState<Result> = mutableStateOf(Result.Empty)
+    val templates: MutableState<Result?> = mutableStateOf(null)
 
-    fun fetchData() {
+    fun onInitialize() {
+        if (templates.value == null) {
+            fetchData()
+        }
+    }
+
+    private fun fetchData() {
         templates.value = Result.Loading
         viewModelScope.launch {
-            delay(1000)
             getTemplatesUseCase.run(None)
                 .onSuccess {
                     if (it.isEmpty()) {
@@ -29,6 +34,14 @@ class FoodTemplatesSharedViewModel(
                         templates.value = Result.Success(it)
                     }
                 }
+        }
+    }
+
+    fun getTemplateById(templateId: String): Template? {
+        return if (templates.value !is Result.Success) {
+            null
+        } else {
+            (templates.value as Result.Success).result.find { it.id == templateId }
         }
     }
 }

@@ -21,7 +21,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
-import pl.gungnir.fooddecider.model.data.list
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.ui.screens.login.Login
@@ -87,15 +86,14 @@ class MainActivity : ComponentActivity() {
                             route = NavigationItem.FoodTemplateDetails.route,
                             arguments = listOf(
                                 navArgument("id") {
-                                    type = NavType.IntType
+                                    type = NavType.StringType
                                 }
                             )
                         ) {
                             showBottomBar.value = false
-                            val id = it.arguments?.getInt("id")
+                            val id = it.arguments?.getString("id")
                             id?.let {
-                                val template = list[id]
-                                FoodTemplateDetails(template)
+                                FoodTemplateDetails(id)
                             } ?: navController.navigateUp()
 
                         }
