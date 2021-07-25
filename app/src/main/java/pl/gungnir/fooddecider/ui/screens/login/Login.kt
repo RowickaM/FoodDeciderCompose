@@ -31,12 +31,38 @@ import pl.gungnir.fooddecider.util.helper.isPasswordValid
 fun Login(
     navController: NavController
 ) {
+    val viewModel by inject<LoginViewModel>(LoginViewModel::class.java)
+
+    val isUserLogged = remember { viewModel.isUserLogged }
+
+    viewModel.onInitialize()
+
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        when (isUserLogged.value) {
+            null -> CircularProgressIndicator(modifier = Modifier.wrapContentSize())
+            true -> {
+                CircularProgressIndicator(modifier = Modifier.wrapContentSize())
+                navController.navigate(NavigationItem.Random.route)
+            }
+        }
+        LoginScreen(
+            navController = navController,
+            viewModel = viewModel
+        )
+    }
+}
+
+@ExperimentalComposeUiApi
+@Composable
+private fun LoginScreen(
+    navController: NavController,
+    viewModel: LoginViewModel
+) {
+
     val widthPercent = 0.8f
     val focusRequester = remember { FocusRequester() }
     val emailErrorText = stringResource(id = R.string.invalid_format)
     val passwordErrorText = stringResource(id = R.string.too_short)
-
-    val viewModel by inject<LoginViewModel>(LoginViewModel::class.java)
 
     val (login, setLogin) = remember { mutableStateOf("") }
     val emailError = remember<MutableState<String?>> { mutableStateOf("") }
@@ -46,6 +72,7 @@ fun Login(
 
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
     val (dialogMessage, setDialogMessage) = remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -147,7 +174,7 @@ private fun onLogin(
     email: String,
     password: String,
 ) {
-    if (email.isNotEmpty() && password.isNotEmpty()){
+    if (email.isNotEmpty() && password.isNotEmpty()) {
         viewModel.onLoginClick(
             email = email,
             password = password,

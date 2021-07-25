@@ -1,13 +1,14 @@
 package pl.gungnir.fooddecider.util.repo
 
-import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
-import pl.gungnir.fooddecider.util.*
+import pl.gungnir.fooddecider.util.Either
+import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
+import pl.gungnir.fooddecider.util.left
+import pl.gungnir.fooddecider.util.right
 
 class DatabaseRepoImpl(
     private val firebaseHelper: FirebaseHelper,
@@ -22,7 +23,6 @@ class DatabaseRepoImpl(
         return firebaseAuthHelper
             .login(email, password)
             .map {
-                Log.d("MRMRMR", "DatabaseRepoImpl loginUser: $it")
                 it.fold(
                     {
                         it.left()
@@ -37,5 +37,9 @@ class DatabaseRepoImpl(
                 )
             }
             .first()
+    }
+
+    override fun isUserLogged(): Either<Failure, Boolean> {
+        return firebaseAuthHelper.userIsLogged().right()
     }
 }
