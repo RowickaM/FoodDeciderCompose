@@ -12,8 +12,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -29,11 +27,10 @@ import pl.gungnir.fooddecider.ui.NavigationItem
 @Composable
 fun BottomBar(
     navigationList: List<BottomBarItem>,
+    activeIndex: Int,
+    setActiveIndex: (Int) -> Unit,
     onItemCLick: (BottomBarItem) -> Unit
 ) {
-    val (activeIndex, setActiveIndex) = remember {
-        mutableStateOf(1)
-    }
     LazyRow(
         modifier = Modifier
             .shadow(elevation = dimensionResource(id = R.dimen.elevation_default))

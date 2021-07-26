@@ -36,18 +36,24 @@ import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
 
+    private var navController: NavHostController? = null
+
     @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
+            navController = rememberNavController()
             val bottomNavigationList = arrayListOf(
                 BottomBarItem.RandomFoodList(stringResource(id = R.string.bottom_nav_list_label)),
                 BottomBarItem.RandomFood(stringResource(id = R.string.bottom_nav_draw_label)),
                 BottomBarItem.TemplateFood(stringResource(id = R.string.bottom_nav_templates_label)),
             )
             val showBottomBar = remember { mutableStateOf(false) }
+
+            val (activeIndex, setActiveIndex) = remember {
+                mutableStateOf(1)
+            }
 
             FoodDeciderTheme {
                 Scaffold(
@@ -58,6 +64,8 @@ class MainActivity : ComponentActivity() {
                         if (showBottomBar.value) {
                             BottomBar(
                                 navigationList = bottomNavigationList,
+                                activeIndex = activeIndex,
+                                setActiveIndex = setActiveIndex,
                                 onItemCLick = {
                                     navigateTo(navController, it)
                                 }
@@ -65,41 +73,55 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) {
-                    NavHost(
-                        modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.height_bottom_bar)),
-                        navController = navController,
-                        startDestination = NavigationItem.Login.route
-                    ) {
-                        composable(route = NavigationItem.Login.route) {
-                            showBottomBar.value = false
-                            Login(navController)
-                        }
-                        composable(route = NavigationItem.Random.route) {
-                            showBottomBar.value = true
-                            RandomizeFood(navController)
-                        }
-                        composable(route = NavigationItem.RandomList.route) {
-                            showBottomBar.value = true
-                            SavedFood()
-                        }
-                        composable(route = NavigationItem.FoodTemplates.route) {
-                            showBottomBar.value = true
-                            FoodTemplate(navController)
-                        }
-                        composable(
-                            route = NavigationItem.FoodTemplateDetails.route,
-                            arguments = listOf(
-                                navArgument(KEY_TEMPLATE_ID) {
-                                    type = NavType.StringType
-                                }
-                            )
+                    navController?.let { nav ->
+                        NavHost(
+                            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.height_bottom_bar)),
+                            navController = nav,
+                            startDestination = NavigationItem.Login.route
                         ) {
-                            showBottomBar.value = false
-                            val id = it.arguments?.getString(KEY_TEMPLATE_ID)
-                            id?.let {
-                                FoodTemplateDetails(id)
-                            } ?: navController.navigateUp()
+                            composable(route = NavigationItem.Login.route) {
+                                showBottomBar.value = false
+                                Login(nav)
+                            }
+                            composable(route = NavigationItem.Random.route) {
+                                showBottomBar.value = true
+                                val navItem = bottomNavigationList
+                                    .find { it is BottomBarItem.RandomFood }
 
+                                setActiveIndex(bottomNavigationList.indexOf(navItem))
+                                RandomizeFood(nav)
+                            }
+                            composable(route = NavigationItem.RandomList.route) {
+                                showBottomBar.value = true
+                                val navItem = bottomNavigationList
+                                    .find { it is BottomBarItem.RandomFoodList }
+
+                                setActiveIndex(bottomNavigationList.indexOf(navItem))
+                                SavedFood()
+                            }
+                            composable(route = NavigationItem.FoodTemplates.route) {
+                                showBottomBar.value = true
+                                val navItem = bottomNavigationList
+                                    .find { it is BottomBarItem.TemplateFood }
+
+                                setActiveIndex(bottomNavigationList.indexOf(navItem))
+                                FoodTemplate(nav)
+                            }
+                            composable(
+                                route = NavigationItem.FoodTemplateDetails.route,
+                                arguments = listOf(
+                                    navArgument(KEY_TEMPLATE_ID) {
+                                        type = NavType.StringType
+                                    }
+                                )
+                            ) {
+                                showBottomBar.value = false
+                                val id = it.arguments?.getString(KEY_TEMPLATE_ID)
+                                id?.let {
+                                    FoodTemplateDetails(id)
+                                } ?: nav.navigateUp()
+
+                            }
                         }
                     }
                 }
@@ -107,8 +129,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun navigateTo(navController: NavHostController, item: BottomBarItem) {
-        navController.navigate(item.navItem.route)
+    private fun navigateTo(navController: NavHostController?, item: BottomBarItem) {
+        navController?.navigate(item.navItem.route)
+    }
+
+    override fun onBackPressed() {
+        if (navController?.currentDestination?.route != NavigationItem.Random.route) {
+            super.onBackPressed()
+        } else {
+            finish()
+        }
+
     }
 }
 
