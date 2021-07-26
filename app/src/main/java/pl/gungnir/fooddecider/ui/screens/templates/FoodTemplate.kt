@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -14,31 +15,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.Template
-import pl.gungnir.fooddecider.model.data.list
 import pl.gungnir.fooddecider.ui.NavigationItem
-import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
-import pl.gungnir.fooddecider.ui.mics.Tag
-import pl.gungnir.fooddecider.ui.mics.Toolbar
+import pl.gungnir.fooddecider.ui.mics.*
 
 @Composable
 fun FoodTemplate(
     navController: NavController
 ) {
-    val templates = remember { list }
+    val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
+    viewModel.onInitialize()
+    val templates = remember { viewModel.templates }
+    val isRefreshing = remember { viewModel.isRefreshing }
 
-    Column {
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
+        onRefresh = { viewModel.onRefresh() }
+    ) {
+        Column {
+            Toolbar(title = "LIST TEMPLATES")
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Toolbar(title = "LIST TEMPLATES")
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn {
-            itemsIndexed(templates) { index, template ->
-                FoodTemplateItem(
-                    template = template,
-                    onClick = { navigateToDetails(navController, index) }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+            when (templates.value) {
+                Result.Loading -> Loading()
+                Result.Empty -> EmptyInfo(text = "No templates to show")
+                is Result.Success -> LazyColumn {
+                    (templates.value as? Result.Success)?.result?.let {
+                        items(it) { template ->
+                            FoodTemplateItem(
+                                template = template,
+                                onClick = { navigateToDetails(navController, template.id) }
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                    }
+                }
             }
+
         }
     }
 }
@@ -93,7 +109,7 @@ fun FoodTemplateItem(
 
 private fun navigateToDetails(
     navController: NavController,
-    id: Int
+    id: String
 ) {
-    navController.navigate(NavigationItem.FoodTemplateDetails.route.replace("{id}", id.toString()))
+    navController.navigate(NavigationItem.FoodTemplateDetails.route.replace("{id}", id))
 }

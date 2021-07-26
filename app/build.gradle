@@ -66,16 +66,18 @@ dependencies {
     testImplementation "io.insert-koin:koin-test:$koin_version"
     // Koin main features for Android (Scope,ViewModel ...)
     implementation "io.insert-koin:koin-android:$koin_version"
-// Koin Java Compatibility
+    // Koin Java Compatibility
     implementation "io.insert-koin:koin-android-compat:$koin_version"
-// Koin for Jetpack WorkManager
+    // Koin for Jetpack WorkManager
     implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
-// Koin for Jetpack Compose
+    // Koin for Jetpack Compose
     implementation "io.insert-koin:koin-androidx-compose:$koin_version"
+
     //firebase
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-auth'
 
+    implementation "com.google.accompanist:accompanist-swiperefresh:0.14.0"
 }

@@ -1,8 +1,5 @@
 package pl.gungnir.fooddecider.util.firebase
 
-import android.util.Log
-import com.google.firebase.FirebaseError
-import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

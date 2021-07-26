@@ -3,7 +3,10 @@ package pl.gungnir.fooddecider.ui.screens.login
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -19,10 +22,7 @@ import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.NavigationItem
-import pl.gungnir.fooddecider.ui.mics.DialogError
-import pl.gungnir.fooddecider.ui.mics.ErrorMessageInput
-import pl.gungnir.fooddecider.ui.mics.InputOutlined
-import pl.gungnir.fooddecider.ui.mics.InputsType
+import pl.gungnir.fooddecider.ui.mics.*
 import pl.gungnir.fooddecider.util.helper.isEmailValid
 import pl.gungnir.fooddecider.util.helper.isPasswordValid
 
@@ -39,9 +39,9 @@ fun Login(
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         when (isUserLogged.value) {
-            null -> CircularProgressIndicator(modifier = Modifier.wrapContentSize())
+            null -> Loading()
             true -> {
-                CircularProgressIndicator(modifier = Modifier.wrapContentSize())
+                Loading()
                 navController.navigate(NavigationItem.Random.route)
             }
         }
