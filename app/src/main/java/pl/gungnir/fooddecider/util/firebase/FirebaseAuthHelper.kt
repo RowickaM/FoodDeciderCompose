@@ -3,6 +3,7 @@ package pl.gungnir.fooddecider.util.firebase
 import kotlinx.coroutines.flow.Flow
 import pl.gungnir.fooddecider.util.Either
 import pl.gungnir.fooddecider.util.Failure
+import pl.gungnir.fooddecider.util.None
 
 interface FirebaseAuthHelper {
 
@@ -11,4 +12,6 @@ interface FirebaseAuthHelper {
     fun userIsLogged(): Boolean
 
     fun getUID(): String
+
+    fun logoutUser(): Either<Failure, None>
 }

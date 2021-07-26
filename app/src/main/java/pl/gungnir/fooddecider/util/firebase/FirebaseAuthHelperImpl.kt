@@ -11,10 +11,7 @@ import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
-import pl.gungnir.fooddecider.util.Either
-import pl.gungnir.fooddecider.util.Failure
-import pl.gungnir.fooddecider.util.left
-import pl.gungnir.fooddecider.util.right
+import pl.gungnir.fooddecider.util.*
 
 class FirebaseAuthHelperImpl : FirebaseAuthHelper {
 
@@ -55,5 +52,10 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
 
     override fun getUID(): String {
         return auth.currentUser?.uid ?: ""
+    }
+
+    override fun logoutUser(): Either<Failure, None> {
+        auth.signOut()
+        return None.right()
     }
 }

@@ -39,7 +39,6 @@ fun FoodTemplate(
         onRefresh = { viewModel.onRefresh() }
     ) {
         Column {
-            Toolbar(title = stringResource(id = R.string.templates_title))
             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
 
             when (templates.value) {

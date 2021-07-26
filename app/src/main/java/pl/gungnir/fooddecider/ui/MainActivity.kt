@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,10 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
@@ -22,9 +27,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
+import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.screens.login.Login
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.RandomizeFood
 import pl.gungnir.fooddecider.ui.screens.savedFood.SavedFood
@@ -37,6 +44,7 @@ import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 class MainActivity : ComponentActivity() {
 
     private var navController: NavHostController? = null
+    private val viewModel by inject<MainViewModel>(MainViewModel::class.java)
 
     @ExperimentalMaterialApi
     @ExperimentalComposeUiApi
@@ -50,6 +58,8 @@ class MainActivity : ComponentActivity() {
                 BottomBarItem.TemplateFood(stringResource(id = R.string.bottom_nav_templates_label)),
             )
             val showBottomBar = remember { mutableStateOf(false) }
+            val showToolbar = remember { mutableStateOf(false) }
+            val toolbarTitle = remember { mutableStateOf("") }
 
             val (activeIndex, setActiveIndex) = remember {
                 mutableStateOf(1)
@@ -71,6 +81,24 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+                    },
+                    topBar = {
+                        if (showToolbar.value) {
+                            Toolbar(
+                                title = toolbarTitle.value,
+                                icon = additionalIcon(),
+                                onIconClick = { additionalIconAction() },
+                                onLogout = {
+                                    viewModel.logout {
+                                        finish()
+                                        val intent = Intent(this, MainActivity::class.java)
+                                        intent.flags =
+                                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                        startActivity(intent)
+                                    }
+                                }
+                            )
+                        }
                     }
                 ) {
                     navController?.let { nav ->
@@ -81,10 +109,16 @@ class MainActivity : ComponentActivity() {
                         ) {
                             composable(route = NavigationItem.Login.route) {
                                 showBottomBar.value = false
+                                showToolbar.value = false
+                                toolbarTitle.value = ""
+
                                 Login(nav)
                             }
                             composable(route = NavigationItem.Random.route) {
                                 showBottomBar.value = true
+                                showToolbar.value = true
+                                toolbarTitle.value = ""
+
                                 val navItem = bottomNavigationList
                                     .find { it is BottomBarItem.RandomFood }
 
@@ -93,6 +127,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(route = NavigationItem.RandomList.route) {
                                 showBottomBar.value = true
+                                showToolbar.value = true
+                                toolbarTitle.value = stringResource(id = R.string.templates_title)
+
                                 val navItem = bottomNavigationList
                                     .find { it is BottomBarItem.RandomFoodList }
 
@@ -101,6 +138,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable(route = NavigationItem.FoodTemplates.route) {
                                 showBottomBar.value = true
+                                showToolbar.value = true
+                                toolbarTitle.value = stringResource(id = R.string.list_foods_title)
+
                                 val navItem = bottomNavigationList
                                     .find { it is BottomBarItem.TemplateFood }
 
@@ -116,6 +156,9 @@ class MainActivity : ComponentActivity() {
                                 )
                             ) {
                                 showBottomBar.value = false
+                                showToolbar.value = false
+                                toolbarTitle.value = ""
+
                                 val id = it.arguments?.getString(KEY_TEMPLATE_ID)
                                 id?.let {
                                     FoodTemplateDetails(id)
@@ -129,8 +172,34 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @Composable
+    private fun additionalIcon(): ImageVector? {
+        return when (getActualNavigationItem()) {
+            NavigationItem.Random -> Icons.Default.Add
+            else -> null
+        }
+    }
+
+    private fun additionalIconAction(): Unit? {
+        return when (getActualNavigationItem()) {
+            NavigationItem.Random -> navController?.navigate(NavigationItem.RandomList.route)
+            else -> Unit
+        }
+    }
+
     private fun navigateTo(navController: NavHostController?, item: BottomBarItem) {
         navController?.navigate(item.navItem.route)
+    }
+
+    private fun getActualNavigationItem(): NavigationItem {
+        return when (navController?.currentDestination?.route) {
+            NavigationItem.Login.route -> NavigationItem.Login
+            NavigationItem.Random.route -> NavigationItem.Random
+            NavigationItem.RandomList.route -> NavigationItem.RandomList
+            NavigationItem.FoodTemplates.route -> NavigationItem.FoodTemplates
+            NavigationItem.FoodTemplateDetails.route -> NavigationItem.FoodTemplateDetails
+            else -> NavigationItem.Random
+        }
     }
 
     override fun onBackPressed() {

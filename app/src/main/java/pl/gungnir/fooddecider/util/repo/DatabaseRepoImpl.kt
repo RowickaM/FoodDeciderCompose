@@ -41,6 +41,10 @@ class DatabaseRepoImpl(
             .first()
     }
 
+    override suspend fun logoutUser(): Either<Failure, None> {
+        return firebaseAuthHelper.logoutUser()
+    }
+
     override fun isUserLogged(): Either<Failure, Boolean> {
         return firebaseAuthHelper.userIsLogged().right()
     }

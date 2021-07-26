@@ -39,4 +39,5 @@
     <string name="count_template">Potraw: %d</string>
     <string name="food_name">Nazwa potrawy</string>
     <string name="add">Dodaj</string>
+    <string name="logout">wyloguj</string>
 </resources>

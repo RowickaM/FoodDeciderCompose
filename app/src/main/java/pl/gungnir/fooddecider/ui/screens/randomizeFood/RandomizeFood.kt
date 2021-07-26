@@ -27,10 +27,7 @@ fun RandomizeFood(
 
     viewModel.onInitialize()
     val foodResult = viewModel.randomFood.value
-    Toolbar(
-        icon = Icons.Default.Add,
-        onIconClick = { navController.navigate(NavigationItem.RandomList.route) }
-    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()

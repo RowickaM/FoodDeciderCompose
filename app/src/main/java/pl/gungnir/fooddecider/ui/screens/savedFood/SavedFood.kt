@@ -26,8 +26,6 @@ fun SavedFood() {
     val listFood = viewModel.listOfSavedFood.value
 
     Column {
-
-        Toolbar(title = stringResource(id = R.string.list_foods_title))
         when (listFood) {
             Result.Loading -> Loading()
             is Result.SuccessFetch -> SaveFoodContent(
