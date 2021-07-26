@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.ui.NavigationItem
@@ -27,28 +29,33 @@ fun FoodTemplate(
     val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
     viewModel.onInitialize()
     val templates = remember { viewModel.templates }
+    val isRefreshing = remember { viewModel.isRefreshing }
 
-    Column {
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
+        onRefresh = { viewModel.onRefresh() }
+    ) {
+        Column {
+            Toolbar(title = "LIST TEMPLATES")
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Toolbar(title = "LIST TEMPLATES")
-        Spacer(modifier = Modifier.height(16.dp))
-
-        when (templates.value) {
-            Result.Loading -> Loading()
-            Result.Empty -> EmptyInfo(text = "No templates to show")
-            is Result.Success -> LazyColumn {
-                items(
-                    (templates.value as Result.Success).result
-                ) { template ->
-                    FoodTemplateItem(
-                        template = template,
-                        onClick = { navigateToDetails(navController, template.id) }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
+            when (templates.value) {
+                Result.Loading -> Loading()
+                Result.Empty -> EmptyInfo(text = "No templates to show")
+                is Result.Success -> LazyColumn {
+                    (templates.value as? Result.Success)?.result?.let {
+                        items(it) { template ->
+                            FoodTemplateItem(
+                                template = template,
+                                onClick = { navigateToDetails(navController, template.id) }
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
+                    }
                 }
             }
-        }
 
+        }
     }
 }
 

@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
@@ -27,11 +29,17 @@ fun FoodTemplateDetails(
     val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
     viewModel.getTemplateById(templateId)
     val template = remember { viewModel.templateDetails }
+    val isRefreshing = remember { viewModel.isRefreshing }
 
     template.value?.let {
         Column {
             HeaderFoodTemplateDetails(template = template.value)
-            FoodTemplateDetailsLists(template = it)
+            SwipeRefresh(
+                state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
+                onRefresh = { viewModel.onRefreshDetails() }
+            ) {
+                FoodTemplateDetailsLists(template = it)
+            }
         }
     } ?: HeaderFoodTemplateDetails(template = null)
 }
@@ -96,7 +104,9 @@ private fun FoodTemplateDetailsLists(
             .padding(start = 16.dp, top = 16.dp, end = 16.dp)
             .verticalScroll(scrollState),
     ) {
-        Text(text = "Food to add:", style = MaterialTheme.typography.h6)
+        if (template.notAdded.isNotEmpty()) {
+            Text(text = "Food to add:", style = MaterialTheme.typography.h6)
+        }
         Column {
             template.notAdded.forEach { food ->
                 Row(
@@ -117,7 +127,9 @@ private fun FoodTemplateDetailsLists(
             }
         }
         Spacer(modifier = Modifier.height(24.dp))
-        Text(text = "Food already added:", style = MaterialTheme.typography.h6)
+        if (template.added.isNotEmpty()) {
+            Text(text = "Food already added:", style = MaterialTheme.typography.h6)
+        }
         Column {
             template.added.forEach { food ->
                 Row(
