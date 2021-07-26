@@ -31,9 +31,11 @@ fun RandomizeFood(
         icon = Icons.Default.Add,
         onIconClick = { navController.navigate(NavigationItem.RandomList.route) }
     )
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .wrapContentSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize()
+    ) {
         RandomizeFood(
             onClick = viewModel::drawFood,
             enabledClick = foodResult != Result.Loading
@@ -83,7 +85,7 @@ fun RandomizeResult(result: Result) {
         Text(
             text = text,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6,
+            style = MaterialTheme.typography.h4,
             modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.space_xxLarge))
         )
     }

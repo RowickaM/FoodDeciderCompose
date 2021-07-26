@@ -28,6 +28,7 @@ fun Tag(tagValue: String) {
             ),
         text = tagValue,
         textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.onPrimary
+        color = MaterialTheme.colors.onPrimary,
+        style = MaterialTheme.typography.body2
     )
 }
