@@ -170,21 +170,21 @@ sealed class BottomBarItem(
     val navItem: NavigationItem
 ) {
 
-    object RandomFood : BottomBarItem(
+    class RandomFood(label: String) : BottomBarItem(
         R.drawable.ic_list,
-        "Draw",
+        label,
         NavigationItem.Random
     )
 
-    object RandomFoodList : BottomBarItem(
+    class RandomFoodList(label: String) : BottomBarItem(
         R.drawable.ic_list,
-        "Foods",
+        label,
         NavigationItem.RandomList
     )
 
-    object TemplateFood : BottomBarItem(
+    class TemplateFood(label: String) : BottomBarItem(
         R.drawable.ic_list,
-        "Templates",
+        label,
         NavigationItem.FoodTemplates
     )
 }

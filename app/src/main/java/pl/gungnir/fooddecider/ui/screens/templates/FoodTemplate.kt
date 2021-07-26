@@ -12,12 +12,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
+import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.ui.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.*
@@ -36,12 +38,12 @@ fun FoodTemplate(
         onRefresh = { viewModel.onRefresh() }
     ) {
         Column {
-            Toolbar(title = "LIST TEMPLATES")
+            Toolbar(title = stringResource(id = R.string.templates_title))
             Spacer(modifier = Modifier.height(16.dp))
 
             when (templates.value) {
                 Result.Loading -> Loading()
-                Result.Empty -> EmptyInfo(text = "No templates to show")
+                Result.Empty -> EmptyInfo(text = stringResource(id = R.string.templates_no_templates))
                 is Result.Success -> LazyColumn {
                     (templates.value as? Result.Success)?.result?.let {
                         items(it) { template ->
@@ -82,7 +84,7 @@ fun FoodTemplateItem(
                         .fillMaxWidth()
                         .padding(end = 16.dp, top = 8.dp),
                     textAlign = TextAlign.End,
-                    text = "Count: ${template.foodCount}",
+                    text = stringResource(id = R.string.count_template, template.foodCount),
                     color = MaterialTheme.colors.onPrimary
                 )
                 Text(
