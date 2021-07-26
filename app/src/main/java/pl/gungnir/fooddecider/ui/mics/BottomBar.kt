@@ -88,8 +88,8 @@ private fun BottomBarItem(
         if (targetExpanded == index) {
             ExpandedBottomBarItem(
                 item = item,
-                color = MaterialTheme.colors.secondary,
-                backgroundColor = MaterialTheme.colors.secondaryVariant
+                color = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colors.primary
             ) {
                 onCLick(it)
             }
@@ -120,7 +120,7 @@ private fun ExpandedBottomBarItem(
             })
             .background(
                 shape = CircleShape,
-                color = backgroundColor
+                color = backgroundColor.copy(alpha = 0.3f)
             )
             .padding(horizontal = dimensionResource(id = R.dimen.space_large)),
         verticalAlignment = Alignment.CenterVertically
