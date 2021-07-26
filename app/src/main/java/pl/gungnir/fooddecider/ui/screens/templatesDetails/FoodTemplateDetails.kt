@@ -12,11 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
+import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.ui.mics.Tag
@@ -85,7 +87,7 @@ private fun HeaderFoodTemplateDetails(
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = "Template no exist",
+                    text = stringResource(id = R.string.templates_template_no_exist),
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.onPrimary
                 )
@@ -105,7 +107,10 @@ private fun FoodTemplateDetailsLists(
             .verticalScroll(scrollState),
     ) {
         if (template.notAdded.isNotEmpty()) {
-            Text(text = "Food to add:", style = MaterialTheme.typography.h6)
+            Text(
+                text = stringResource(id = R.string.templates_to_add_list),
+                style = MaterialTheme.typography.h6
+            )
         }
         Column {
             template.notAdded.forEach { food ->
@@ -120,7 +125,10 @@ private fun FoodTemplateDetailsLists(
                     IconButton(onClick = { }) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add food $food"
+                            contentDescription = stringResource(
+                                id = R.string.templates_add_food_template,
+                                food
+                            ),
                         )
                     }
                 }
@@ -128,7 +136,10 @@ private fun FoodTemplateDetailsLists(
         }
         Spacer(modifier = Modifier.height(24.dp))
         if (template.added.isNotEmpty()) {
-            Text(text = "Food already added:", style = MaterialTheme.typography.h6)
+            Text(
+                text = stringResource(id = R.string.templates_added_list),
+                style = MaterialTheme.typography.h6
+            )
         }
         Column {
             template.added.forEach { food ->

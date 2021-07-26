@@ -17,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import pl.gungnir.fooddecider.R
 
 enum class InputsType {
     EMAIL,
@@ -86,7 +88,7 @@ fun InputOutlined(
             if (type == InputsType.PASSWORD) {
                 Icon(
                     imageVector = if (showPassword) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
-                    contentDescription = "show password",
+                    contentDescription = stringResource(id = R.string.content_description_toggle_password),
                     modifier = Modifier.nonRippleClickable {
                         setShowPassword(!showPassword)
                     }

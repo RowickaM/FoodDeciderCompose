@@ -4,6 +4,7 @@
     <string name="sing_in">Zaloguj się</string>
     <string name="email">E-mail</string>
     <string name="password">Hasło</string>
+    <string name="ok">OK</string>
 
     <string name="invalid_format">Nipoprawny format</string>
     <string name="too_short">Za któtkie</string>
@@ -14,4 +15,26 @@
     <string name="firebase_user_collision">Taki użytkownik już istnieje</string>
     <string name="firebase_invalid_credentials">Niepoprawne dane logowania</string>
     <string name="firebase_unknown">Bład serwera. Spróbuj ponownie później.</string>
+
+    <string name="bottom_nav_draw_label">Losowanie</string>
+    <string name="bottom_nav_list_label">Potrawy</string>
+    <string name="bottom_nav_templates_label">Propozycje</string>
+
+    <string name="randomize_food_click">Kliknij, aby wylosować propozycje potrawy</string>
+    <string name="randomize_food_image_click">Kliknij w obrazek, aby wylosować propozycje potrawy</string>
+    <string name="randomize_food_loading">Losowanie w trakcie</string>
+
+    <string name="list_foods_title">List potraw do losowania</string>
+    <string name="list_foods_no_foods">Brak zapisanych potraw</string>
+
+    <string name="templates_title">Lista propozycji</string>
+    <string name="templates_no_templates">Brak propozycji do wyświeltenia</string>
+    <string name="templates_template_no_exist">Propozycja nie istnieje</string>
+    <string name="templates_to_add_list">Potrawy do dodania</string>
+    <string name="templates_added_list">Potrawy już w twojej liście</string>
+    <string name="templates_add_food_template">Dodaj potrawę o nazwie %s</string>
+
+    <string name="content_description_toggle_password">Przełącz widoczność hasła</string>
+
+    <string name="count_template">Potraw: %d</string>
 </resources>

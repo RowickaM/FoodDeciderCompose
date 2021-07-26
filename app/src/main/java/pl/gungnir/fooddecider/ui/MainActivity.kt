@@ -1,7 +1,6 @@
 package pl.gungnir.fooddecider.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -14,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.ui.screens.login.Login
@@ -39,9 +40,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val bottomNavigationList = arrayListOf(
-                BottomBarItem.RandomFoodList,
-                BottomBarItem.RandomFood,
-                BottomBarItem.TemplateFood,
+                BottomBarItem.RandomFoodList(stringResource(id = R.string.bottom_nav_list_label)),
+                BottomBarItem.RandomFood(stringResource(id = R.string.bottom_nav_draw_label)),
+                BottomBarItem.TemplateFood(stringResource(id = R.string.bottom_nav_templates_label)),
             )
             val showBottomBar = remember { mutableStateOf(false) }
 
@@ -104,12 +105,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun navigateTo(navController: NavHostController, item: BottomBarItem) {
-        val navItem = when (item) {
-            BottomBarItem.RandomFood -> NavigationItem.Random
-            BottomBarItem.RandomFoodList -> NavigationItem.RandomList
-            BottomBarItem.TemplateFood -> NavigationItem.FoodTemplates
-        }
-        navController.navigate(navItem.route)
+        navController.navigate(item.navItem.route)
     }
 }
 

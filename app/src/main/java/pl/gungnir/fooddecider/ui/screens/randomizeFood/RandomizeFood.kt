@@ -8,11 +8,13 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
+import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.mics.nonRippleClickable
@@ -54,7 +56,7 @@ fun RandomizeFood(
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "CLICK TO RANDOMIZE FOOD"
+            text = stringResource(id = R.string.randomize_food_click)
         )
     }
 }
@@ -63,13 +65,13 @@ fun RandomizeFood(
 fun RandomizeResult(space: Dp = 24.dp, result: Result) {
     val text = when (result) {
         Result.Loading -> {
-            "Loading..."
+            stringResource(id = R.string.randomize_food_loading)
         }
         is Result.Success -> {
             result.result
         }
         else -> {
-            "Click image to draw food"
+            stringResource(id = R.string.randomize_food_image_click)
         }
     }
 

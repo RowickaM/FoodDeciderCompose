@@ -8,8 +8,10 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.koin.java.KoinJavaComponent
+import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.EmptyInfo
 import pl.gungnir.fooddecider.ui.mics.Loading
 import pl.gungnir.fooddecider.ui.mics.Toolbar
@@ -23,7 +25,7 @@ fun SavedFood() {
 
     Column {
 
-        Toolbar(title = "LIST OF FOOD")
+        Toolbar(title = stringResource(id = R.string.list_foods_title))
         when (listFood) {
             Result.Loading -> Loading()
             is Result.SuccessFetch -> LazyColumn {
@@ -31,7 +33,7 @@ fun SavedFood() {
                     SavedFoodItem(name = food)
                 }
             }
-            else -> EmptyInfo(text = "You don't have saved food")
+            else -> EmptyInfo(text = stringResource(id = R.string.list_foods_no_foods))
         }
     }
 }
