@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,10 +51,10 @@ fun FoodTemplateDetails(
 private fun HeaderFoodTemplateDetails(
     template: TemplateDetails?
 ) {
-    val height = 250.dp
+    val height = dimensionResource(id = R.dimen.height_food_template_details)
     Surface(
         modifier = Modifier.height(height),
-        elevation = 4.dp
+        elevation = dimensionResource(id = R.dimen.elevation_small)
     ) {
         Box {
             template?.let {
@@ -70,12 +71,16 @@ private fun HeaderFoodTemplateDetails(
                     )
 
                     LazyRow(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                        modifier = Modifier
+                            .padding(
+                                horizontal = dimensionResource(id = R.dimen.space_xMedium),
+                                vertical = dimensionResource(id = R.dimen.space_default)
+                            ),
                     ) {
                         itemsIndexed(template.foodTags) { index, tag ->
                             Tag(tagValue = tag)
                             if (index != template.foodTags.size - 1) {
-                                Spacer(modifier = Modifier.width(8.dp))
+                                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_default)))
                             }
                         }
                     }
@@ -103,7 +108,11 @@ private fun FoodTemplateDetailsLists(
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
-            .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+            .padding(
+                start = dimensionResource(id = R.dimen.space_large),
+                top = dimensionResource(id = R.dimen.space_large),
+                end = dimensionResource(id = R.dimen.space_large)
+            )
             .verticalScroll(scrollState),
     ) {
         if (template.notAdded.isNotEmpty()) {
@@ -117,7 +126,7 @@ private fun FoodTemplateDetailsLists(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = dimensionResource(id = R.dimen.space_default)),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
@@ -134,7 +143,7 @@ private fun FoodTemplateDetailsLists(
                 }
             }
         }
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_xlarge)))
         if (template.added.isNotEmpty()) {
             Text(
                 text = stringResource(id = R.string.templates_added_list),
@@ -146,12 +155,12 @@ private fun FoodTemplateDetailsLists(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = dimensionResource(id = R.dimen.space_default)),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        modifier = Modifier.padding(vertical = 10.dp),
+                        modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.space_medium)),
                         text = food
                     )
                 }

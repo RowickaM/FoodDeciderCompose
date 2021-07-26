@@ -8,8 +8,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import org.koin.java.KoinJavaComponent
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.EmptyInfo
@@ -43,7 +43,11 @@ fun SavedFoodItem(
     name: String
 ) {
     Text(
-        modifier = Modifier.padding(vertical = 10.dp, horizontal = 16.dp),
+        modifier = Modifier
+            .padding(
+                vertical = dimensionResource(id = R.dimen.space_medium),
+                horizontal = dimensionResource(id = R.dimen.space_large)
+            ),
         text = name,
         style = MaterialTheme.typography.body1
     )

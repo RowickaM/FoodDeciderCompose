@@ -13,8 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -30,6 +30,7 @@ import pl.gungnir.fooddecider.ui.screens.savedFood.SavedFood
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplate
 import pl.gungnir.fooddecider.ui.screens.templatesDetails.FoodTemplateDetails
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
+import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
@@ -63,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     NavHost(
-                        modifier = Modifier.padding(bottom = 60.dp),
+                        modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.height_bottom_bar)),
                         navController = navController,
                         startDestination = NavigationItem.Login.route
                     ) {
@@ -86,13 +87,13 @@ class MainActivity : ComponentActivity() {
                         composable(
                             route = NavigationItem.FoodTemplateDetails.route,
                             arguments = listOf(
-                                navArgument("id") {
+                                navArgument(KEY_TEMPLATE_ID) {
                                     type = NavType.StringType
                                 }
                             )
                         ) {
                             showBottomBar.value = false
-                            val id = it.arguments?.getString("id")
+                            val id = it.arguments?.getString(KEY_TEMPLATE_ID)
                             id?.let {
                                 FoodTemplateDetails(id)
                             } ?: navController.navigateUp()

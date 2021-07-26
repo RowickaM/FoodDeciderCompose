@@ -9,9 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import pl.gungnir.fooddecider.R
 
 @Composable
 fun Toolbar(
@@ -22,11 +23,11 @@ fun Toolbar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(height = 50.dp)
+            .height(height = dimensionResource(id = R.dimen.height_toolbar))
             .padding(
-                top = 24.dp,
-                start = 12.dp,
-                end = 12.dp
+                top = dimensionResource(id = R.dimen.space_xlarge),
+                start = dimensionResource(id = R.dimen.space_xMedium),
+                end = dimensionResource(id = R.dimen.space_xMedium),
             ),
     ) {
         title?.let {

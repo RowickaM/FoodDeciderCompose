@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -35,9 +36,9 @@ fun BottomBar(
     }
     LazyRow(
         modifier = Modifier
-            .shadow(elevation = 8.dp)
+            .shadow(elevation = dimensionResource(id = R.dimen.elevation_default))
             .fillMaxWidth()
-            .height(60.dp)
+            .height(dimensionResource(id = R.dimen.height_bottom_bar))
             .background(color = MaterialTheme.colors.surface)
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.SpaceAround,
@@ -113,7 +114,7 @@ private fun ExpandedBottomBarItem(
 ) {
     Row(
         modifier = Modifier
-            .height(40.dp)
+            .height(dimensionResource(id = R.dimen.height_bottom_bar_item))
             .nonRippleClickable(onClick = {
                 onItemCLick(item)
             })
@@ -121,7 +122,7 @@ private fun ExpandedBottomBarItem(
                 shape = CircleShape,
                 color = backgroundColor
             )
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = dimensionResource(id = R.dimen.space_large)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -129,7 +130,7 @@ private fun ExpandedBottomBarItem(
             contentDescription = item.label,
             tint = color
         )
-        Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_default)))
         Text(
             text = item.label,
             color = color
@@ -145,7 +146,7 @@ private fun CollapsedBottomBarItem(
 ) {
     Row(
         modifier = Modifier
-            .height(40.dp)
+            .height(dimensionResource(id = R.dimen.height_bottom_bar_item))
             .nonRippleClickable(onClick = {
                 onItemCLick(item)
             })
@@ -153,7 +154,7 @@ private fun CollapsedBottomBarItem(
                 shape = CircleShape,
                 color = Color.Transparent
             )
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = dimensionResource(id = R.dimen.space_large)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

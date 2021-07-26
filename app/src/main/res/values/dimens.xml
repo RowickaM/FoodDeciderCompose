@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="text_size_xxSmall">10sp</dimen>
+    <dimen name="text_size_xSmall">12sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_default">16sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_xMedium">20sp</dimen>
+    <dimen name="text_size_xxMedium">22sp</dimen>
+    <dimen name="text_size_large">24sp</dimen>
+    <dimen name="text_size_xLarge">28sp</dimen>
+
+    <dimen name="space_xxSmall">2dp</dimen>
+    <dimen name="space_xSmall">4dp</dimen>
+    <dimen name="space_small">6dp</dimen>
+    <dimen name="space_default">8dp</dimen>
+    <dimen name="space_medium">10dp</dimen>
+    <dimen name="space_xMedium">12dp</dimen>
+    <dimen name="space_xxMedium">14dp</dimen>
+    <dimen name="space_large">16dp</dimen>
+    <dimen name="space_xlarge">24dp</dimen>
+    <dimen name="space_xxLarge">32dp</dimen>
+
+    <dimen name="height_bottom_bar">60dp</dimen>
+    <dimen name="height_bottom_bar_item">40dp</dimen>
+    <dimen name="height_toolbar">50dp</dimen>
+    <dimen name="height_food_template_item">180dp</dimen>
+    <dimen name="height_food_template_details">250dp</dimen>
+
+    <dimen name="elevation_small">4dp</dimen>
+    <dimen name="elevation_default">8dp</dimen>
+
+    <dimen name="border_width">2dp</dimen>
+</resources>
