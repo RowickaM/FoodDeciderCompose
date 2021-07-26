@@ -6,4 +6,5 @@ sealed class Failure {
     object InvalidCredentials : Failure()
     object UserCollision : Failure()
     object FirebaseAuthUnknown : Failure()
+    object Unauthorized : Failure()
 }

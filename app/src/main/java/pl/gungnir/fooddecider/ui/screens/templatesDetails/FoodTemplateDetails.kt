@@ -134,7 +134,7 @@ private fun FoodTemplateDetailsLists(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "$food $food",
+                        text = food,
                         modifier = Modifier.fillMaxWidth(0.8f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis

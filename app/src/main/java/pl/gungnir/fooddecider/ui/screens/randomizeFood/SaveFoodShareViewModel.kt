@@ -11,17 +11,21 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
+import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.onSuccess
 import kotlin.random.Random
 
 class SaveFoodShareViewModel(
-    private val getAllSavedFoodUseCase: GetAllSavedFoodUseCase
+    private val getAllSavedFoodUseCase: GetAllSavedFoodUseCase,
+    private val setFoodListUseCase: SetFoodListUseCase
 ) : ViewModel() {
 
     private val _listOfSavedFood: SnapshotStateList<String> = mutableStateListOf()
     val listOfSavedFood: MutableState<Result> = mutableStateOf(Result.Empty)
     val randomFood: MutableState<Result> = mutableStateOf(Result.Empty)
+
+    val newFood: MutableState<String> = mutableStateOf("")
 
     fun onInitialize() {
         if (_listOfSavedFood.isEmpty()) {
@@ -48,6 +52,26 @@ class SaveFoodShareViewModel(
                 randomFood.value = Result.Success(_listOfSavedFood[index])
             }
 
+        }
+    }
+
+    fun onFoodNameChange(newFoodName: String) {
+        newFood.value = newFoodName
+    }
+
+    fun onAddFoodClick() {
+        _listOfSavedFood.add(newFood.value)
+        viewModelScope.launch {
+            setFoodListUseCase.run(_listOfSavedFood).onSuccess {
+                newFood.value = ""
+            }
+        }
+    }
+
+    fun onRemoveFood(foodIndex: Int) {
+        _listOfSavedFood.removeAt(foodIndex)
+        viewModelScope.launch {
+            setFoodListUseCase.run(_listOfSavedFood)
         }
     }
 }

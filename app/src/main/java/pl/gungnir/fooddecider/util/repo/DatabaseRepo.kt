@@ -5,6 +5,7 @@ import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.Either
 import pl.gungnir.fooddecider.util.Failure
+import pl.gungnir.fooddecider.util.None
 
 interface DatabaseRepo {
 
@@ -15,5 +16,8 @@ interface DatabaseRepo {
     fun isUserLogged(): Either<Failure, Boolean>
 
     suspend fun getTemplates(): Either<Failure, List<Template>>
+
     suspend fun splitFoodsInTemplates(template: Template): Either<Failure, TemplateDetails>
+
+    suspend fun setNewFoodList(foods: List<String>): Either<Failure, None>
 }

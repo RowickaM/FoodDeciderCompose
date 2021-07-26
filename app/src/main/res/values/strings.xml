@@ -37,4 +37,6 @@
     <string name="content_description_toggle_password">Przełącz widoczność hasła</string>
 
     <string name="count_template">Potraw: %d</string>
+    <string name="food_name">Nazwa potrawy</string>
+    <string name="add">Dodaj</string>
 </resources>
