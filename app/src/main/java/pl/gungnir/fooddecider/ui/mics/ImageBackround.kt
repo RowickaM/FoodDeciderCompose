@@ -20,8 +20,7 @@ fun ImageBackground(
     Image(
         painter = image ?: painterResource(id = R.drawable.background_template_default),
         contentDescription = null,
-        modifier = Modifier
-            .then(modifier),
+        modifier = Modifier.then(modifier),
         contentScale = ContentScale.Crop,
     )
 }

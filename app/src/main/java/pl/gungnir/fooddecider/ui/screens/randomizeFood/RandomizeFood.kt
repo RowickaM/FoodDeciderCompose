@@ -8,9 +8,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
@@ -31,8 +31,9 @@ fun RandomizeFood(
         icon = Icons.Default.Add,
         onIconClick = { navController.navigate(NavigationItem.RandomList.route) }
     )
-    Column {
-        Spacer(modifier = Modifier.height(150.dp))
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .wrapContentSize()) {
         RandomizeFood(
             onClick = viewModel::drawFood,
             enabledClick = foodResult != Result.Loading
@@ -62,7 +63,7 @@ fun RandomizeFood(
 }
 
 @Composable
-fun RandomizeResult(space: Dp = 24.dp, result: Result) {
+fun RandomizeResult(result: Result) {
     val text = when (result) {
         Result.Loading -> {
             stringResource(id = R.string.randomize_food_loading)
@@ -79,13 +80,11 @@ fun RandomizeResult(space: Dp = 24.dp, result: Result) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(space))
-
         Text(
             text = text,
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.space_xxLarge))
         )
-        Spacer(modifier = Modifier.height(space))
     }
 }

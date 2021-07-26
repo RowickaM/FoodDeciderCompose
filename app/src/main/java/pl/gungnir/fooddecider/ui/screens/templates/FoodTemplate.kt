@@ -12,9 +12,9 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -23,6 +23,7 @@ import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.ui.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.*
+import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 
 @Composable
 fun FoodTemplate(
@@ -39,7 +40,7 @@ fun FoodTemplate(
     ) {
         Column {
             Toolbar(title = stringResource(id = R.string.templates_title))
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
 
             when (templates.value) {
                 Result.Loading -> Loading()
@@ -51,7 +52,7 @@ fun FoodTemplate(
                                 template = template,
                                 onClick = { navigateToDetails(navController, template.id) }
                             )
-                            Spacer(modifier = Modifier.height(16.dp))
+                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
                         }
                     }
                 }
@@ -66,14 +67,14 @@ fun FoodTemplateItem(
     template: Template,
     onClick: () -> Unit
 ) {
-    val height = 180.dp
+    val height = dimensionResource(id = R.dimen.height_food_template_item)
     Surface(
         modifier = Modifier
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = dimensionResource(id = R.dimen.space_large))
             .height(height)
             .clickable(onClick = onClick),
         shape = MaterialTheme.shapes.medium,
-        elevation = 4.dp
+        elevation = dimensionResource(id = R.dimen.elevation_small)
     ) {
         Box {
             ImageBackgroundColumn(
@@ -82,7 +83,10 @@ fun FoodTemplateItem(
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(end = 16.dp, top = 8.dp),
+                        .padding(
+                            end = dimensionResource(id = R.dimen.space_large),
+                            top = dimensionResource(id = R.dimen.space_default)
+                        ),
                     textAlign = TextAlign.End,
                     text = stringResource(id = R.string.count_template, template.foodCount),
                     color = MaterialTheme.colors.onPrimary
@@ -95,12 +99,19 @@ fun FoodTemplateItem(
                     color = MaterialTheme.colors.onPrimary
                 )
                 LazyRow(
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+                    modifier = Modifier
+                        .padding(
+                            horizontal = dimensionResource(id = R.dimen.space_xMedium),
+                            vertical = dimensionResource(id = R.dimen.space_default)
+                        )
                 ) {
                     itemsIndexed(template.foodTags) { index, tag ->
                         Tag(tagValue = tag)
                         if (index != template.foodTags.size - 1) {
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(
+                                modifier = Modifier
+                                    .width(dimensionResource(id = R.dimen.space_default))
+                            )
                         }
                     }
                 }
@@ -113,5 +124,10 @@ private fun navigateToDetails(
     navController: NavController,
     id: String
 ) {
-    navController.navigate(NavigationItem.FoodTemplateDetails.route.replace("{id}", id))
+    navController.navigate(
+        NavigationItem.FoodTemplateDetails.route.replace(
+            "{$KEY_TEMPLATE_ID}",
+            id
+        )
+    )
 }

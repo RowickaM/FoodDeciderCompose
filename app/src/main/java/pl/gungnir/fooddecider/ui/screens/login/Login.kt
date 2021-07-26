@@ -16,8 +16,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
@@ -37,7 +37,10 @@ fun Login(
 
     viewModel.onInitialize()
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         when (isUserLogged.value) {
             null -> Loading()
             true -> {
@@ -109,7 +112,7 @@ private fun LoginScreen(
 
         ErrorMessageInput(text = emailError.value ?: "", widthPercent = widthPercent)
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_xlarge)))
 
         InputOutlined(
             modifier = Modifier.focusRequester(focusRequester),
@@ -140,7 +143,7 @@ private fun LoginScreen(
 
         ErrorMessageInput(text = passwordError.value ?: "", widthPercent = widthPercent)
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_xlarge)))
 
         OutlinedButton(
             modifier = Modifier
