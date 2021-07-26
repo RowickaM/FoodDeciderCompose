@@ -89,13 +89,14 @@ fun FoodTemplateItem(
                         ),
                     textAlign = TextAlign.End,
                     text = stringResource(id = R.string.count_template, template.foodCount),
+                    style = MaterialTheme.typography.subtitle2,
                     color = MaterialTheme.colors.onPrimary
                 )
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     text = template.categoryFoodName.uppercase(),
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.h1,
                     color = MaterialTheme.colors.onPrimary
                 )
                 LazyRow(

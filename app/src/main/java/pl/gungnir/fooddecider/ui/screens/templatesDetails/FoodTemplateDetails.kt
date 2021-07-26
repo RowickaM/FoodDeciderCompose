@@ -14,7 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -66,7 +68,7 @@ private fun HeaderFoodTemplateDetails(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
                         text = template.categoryFoodName.uppercase(),
-                        style = MaterialTheme.typography.h5,
+                        style = MaterialTheme.typography.h1,
                         color = MaterialTheme.colors.onPrimary
                     )
 
@@ -93,7 +95,7 @@ private fun HeaderFoodTemplateDetails(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     text = stringResource(id = R.string.templates_template_no_exist),
-                    style = MaterialTheme.typography.h5,
+                    style = MaterialTheme.typography.h1,
                     color = MaterialTheme.colors.onPrimary
                 )
             }
@@ -118,7 +120,8 @@ private fun FoodTemplateDetailsLists(
         if (template.notAdded.isNotEmpty()) {
             Text(
                 text = stringResource(id = R.string.templates_to_add_list),
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h4,
+                fontWeight = FontWeight.Bold
             )
         }
         Column {
@@ -130,7 +133,12 @@ private fun FoodTemplateDetailsLists(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = food)
+                    Text(
+                        text = "$food $food",
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                     IconButton(onClick = { }) {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -147,7 +155,8 @@ private fun FoodTemplateDetailsLists(
         if (template.added.isNotEmpty()) {
             Text(
                 text = stringResource(id = R.string.templates_added_list),
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h4,
+                fontWeight = FontWeight.Bold
             )
         }
         Column {
