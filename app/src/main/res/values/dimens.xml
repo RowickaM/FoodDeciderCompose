@@ -13,6 +13,8 @@
 
     <dimen name="height_bottom_bar">60dp</dimen>
     <dimen name="height_bottom_bar_item">40dp</dimen>
+    <dimen name="height_bottom_bar_icon">25dp</dimen>
+    <dimen name="height_bottom_bar_icon_selected">30dp</dimen>
     <dimen name="height_toolbar">50dp</dimen>
     <dimen name="height_food_template_item">180dp</dimen>
     <dimen name="height_food_template_details">250dp</dimen>

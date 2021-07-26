@@ -6,7 +6,12 @@
         <entry key="../../../../../../layout/compose-model-1626939617523.xml" value="0.2750677506775068" />
         <entry key="../../../../../../layout/compose-model-1626939710302.xml" value="1.5094850948509486" />
         <entry key="../../../../layout/compose-model-1626624643752.xml" value="1.0" />
+        <entry key="app/src/main/res/drawable/cubes.xml" value="0.1095" />
+        <entry key="app/src/main/res/drawable/foods.xml" value="0.1095" />
+        <entry key="app/src/main/res/drawable/ic_cubes.xml" value="0.1095" />
         <entry key="app/src/main/res/drawable/ic_list.xml" value="0.1755" />
+        <entry key="app/src/main/res/drawable/ic_templates.xml" value="0.1095" />
+        <entry key="app/src/main/res/drawable/templates.xml" value="0.1095" />
       </map>
     </option>
   </component>

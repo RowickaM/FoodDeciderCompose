@@ -128,7 +128,10 @@ private fun ExpandedBottomBarItem(
         Icon(
             painter = painterResource(id = item.iconRes),
             contentDescription = item.label,
-            tint = color
+            tint = color,
+            modifier = Modifier.size(
+                dimensionResource(id = R.dimen.height_bottom_bar_icon_selected)
+            )
         )
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_default)))
         Text(
@@ -160,7 +163,10 @@ private fun CollapsedBottomBarItem(
         Icon(
             painter = painterResource(id = item.iconRes),
             contentDescription = item.label,
-            tint = color
+            tint = color,
+            modifier = Modifier.size(
+                dimensionResource(id = R.dimen.height_bottom_bar_icon)
+            )
         )
     }
 }
@@ -172,19 +178,19 @@ sealed class BottomBarItem(
 ) {
 
     class RandomFood(label: String) : BottomBarItem(
-        R.drawable.ic_list,
+        R.drawable.ic_cubes,
         label,
         NavigationItem.Random
     )
 
     class RandomFoodList(label: String) : BottomBarItem(
-        R.drawable.ic_list,
+        R.drawable.ic_foods,
         label,
         NavigationItem.RandomList
     )
 
     class TemplateFood(label: String) : BottomBarItem(
-        R.drawable.ic_list,
+        R.drawable.ic_templates,
         label,
         NavigationItem.FoodTemplates
     )
