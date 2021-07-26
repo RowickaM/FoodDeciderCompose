@@ -5,12 +5,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
-import pl.gungnir.fooddecider.util.Either
-import pl.gungnir.fooddecider.util.Failure
+import pl.gungnir.fooddecider.util.*
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
-import pl.gungnir.fooddecider.util.left
-import pl.gungnir.fooddecider.util.right
 
 class DatabaseRepoImpl(
     private val firebaseHelper: FirebaseHelper,
@@ -76,5 +73,9 @@ class DatabaseRepoImpl(
             added = addedFood,
             notAdded = noAddedFood
         ).right()
+    }
+
+    override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
+        return firebaseHelper.setSavedFood(foods).first()
     }
 }

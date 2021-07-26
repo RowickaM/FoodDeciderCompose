@@ -16,7 +16,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
 
 val viewModelModule = module {
-    single { SaveFoodShareViewModel(get()) }
+    single { SaveFoodShareViewModel(get(), get()) }
     single { FoodTemplatesSharedViewModel(get(), get()) }
     factory { LoginViewModel(get(), get(), get()) }
 }
@@ -33,6 +33,7 @@ val useCaseModule = module {
     factory { IsUserLoggedUseCase(get()) }
     factory { GetTemplatesUseCase(get()) }
     factory { SplitDishesTemplateUseCase(get()) }
+    factory { SetFoodListUseCase(get()) }
 }
 
 val appModule = module {

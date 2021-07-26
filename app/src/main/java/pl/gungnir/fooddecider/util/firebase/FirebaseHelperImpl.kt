@@ -1,6 +1,5 @@
 package pl.gungnir.fooddecider.util.firebase
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,7 @@ class FirebaseHelperImpl : FirebaseHelper {
 
                     value?.let { querySnapshot ->
                         val data = querySnapshot.data?.get(KEY_DATA_DISHES)
-                        trySendBlocking(data as List<String>)
+                        trySendBlocking(data as? List<String> ?: emptyList())
                     }
                 }
 
@@ -83,7 +82,7 @@ class FirebaseHelperImpl : FirebaseHelper {
                         if (task.isSuccessful) {
                             val data =
                                 task.result?.data?.get(KEY_DATA_DISHES) ?: emptyList<String>()
-                            trySendBlocking(data as List<String>)
+                            trySendBlocking(data as? List<String> ?: emptyList())
                         }
                         close()
                     }
@@ -91,5 +90,25 @@ class FirebaseHelperImpl : FirebaseHelper {
             }.flowOn(Dispatchers.IO)
 
         } ?: return flowOf(emptyList())
+    }
+
+    override suspend fun setSavedFood(list: List<String>): Flow<Either<Failure, None>> {
+        auth.uid?.let { uid ->
+            return channelFlow {
+                db.collection(COLLECTION_SAVED_FOOD)
+                    .document(uid)
+                    .set(mapOf(KEY_DATA_DISHES to list))
+                    .addOnCompleteListener { task ->
+                        if (task.exception != null) {
+                            trySendBlocking(Failure.Unknown.left())
+                        }
+                        if (task.isSuccessful) {
+                            trySendBlocking(None.right())
+                        }
+                        close()
+                    }
+                awaitClose()
+            }.flowOn(Dispatchers.IO)
+        } ?: return flowOf(Failure.Unauthorized.left())
     }
 }
