@@ -1,7 +1,6 @@
 package pl.gungnir.fooddecider.ui.theme
 
 import androidx.compose.material.Typography
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -47,7 +46,7 @@ val Typography = Typography(
     button = TextStyle(
         fontWeight = FontWeight.W400,
         fontSize = 15.sp,
-        color = Color.White
+        color = BaseLight
     ),
     caption = TextStyle(
         fontWeight = FontWeight.Normal,
