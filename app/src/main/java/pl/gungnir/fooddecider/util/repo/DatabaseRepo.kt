@@ -17,7 +17,7 @@ interface DatabaseRepo {
 
     suspend fun getTemplates(): Either<Failure, List<Template>>
 
-    suspend fun splitFoodsInTemplates(template: Template): Either<Failure, TemplateDetails>
+    suspend fun splitFoodsInTemplates(template: Template): Either<Failure, Pair<TemplateDetails, List<String>>>
 
     suspend fun setNewFoodList(foods: List<String>): Either<Failure, None>
 }

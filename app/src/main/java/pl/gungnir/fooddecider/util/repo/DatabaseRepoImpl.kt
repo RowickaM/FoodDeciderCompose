@@ -52,7 +52,7 @@ class DatabaseRepoImpl(
             .right()
     }
 
-    override suspend fun splitFoodsInTemplates(template: Template): Either<Failure, TemplateDetails> {
+    override suspend fun splitFoodsInTemplates(template: Template): Either<Failure, Pair<TemplateDetails, List<String>>> {
         val allAddedFoods = firebaseHelper.getSavedFood().first()
         val addedFood = arrayListOf<String>()
         val noAddedFood = arrayListOf<String>()
@@ -65,13 +65,16 @@ class DatabaseRepoImpl(
             }
         }
 
-        return TemplateDetails(
-            id = template.id,
-            categoryFoodName = template.categoryFoodName,
-            foodCount = template.foodCount,
-            foodTags = template.foodTags,
-            added = addedFood,
-            notAdded = noAddedFood
+        return Pair(
+            TemplateDetails(
+                id = template.id,
+                categoryFoodName = template.categoryFoodName,
+                foodCount = template.foodCount,
+                foodTags = template.foodTags,
+                added = addedFood,
+                notAdded = noAddedFood
+            ),
+            allAddedFoods
         ).right()
     }
 

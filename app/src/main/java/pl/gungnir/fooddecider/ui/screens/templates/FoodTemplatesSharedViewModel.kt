@@ -9,14 +9,18 @@ import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.model.useCase.GetTemplatesUseCase
+import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
 import pl.gungnir.fooddecider.model.useCase.SplitDishesTemplateUseCase
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.onSuccess
 
 class FoodTemplatesSharedViewModel(
     private val getTemplatesUseCase: GetTemplatesUseCase,
-    private val splitDishesTemplateUseCase: SplitDishesTemplateUseCase
+    private val splitDishesTemplateUseCase: SplitDishesTemplateUseCase,
+    private val setFoodListUseCase: SetFoodListUseCase
 ) : ViewModel() {
+
+    private val allSavedFood: MutableState<ArrayList<String>> = mutableStateOf(arrayListOf())
 
     val templates: MutableState<Result?> = mutableStateOf(null)
     val templateDetails: MutableState<TemplateDetails?> = mutableStateOf(null)
@@ -53,8 +57,10 @@ class FoodTemplatesSharedViewModel(
                 viewModelScope.launch {
                     splitDishesTemplateUseCase.run(it)
                         .onSuccess {
-                            templateDetails.value = it
+                            templateDetails.value = it.first
                             templateId.value = id
+                            allSavedFood.value.clear()
+                            allSavedFood.value.addAll(it.second)
                         }
                 }
             }
@@ -81,6 +87,30 @@ class FoodTemplatesSharedViewModel(
             getTemplateById(templateId.value)
         }
         isRefreshing.value = false
+    }
+
+    fun onAddButtonClick(foodName: String) {
+        val saved = allSavedFood.value
+        saved.add(foodName)
+
+        viewModelScope.launch {
+            setFoodListUseCase.run(saved).onSuccess {
+                val details = templateDetails.value
+                val added = arrayListOf<String>()
+                val noAdded = arrayListOf<String>()
+
+                added.addAll(details?.added ?: emptyList())
+                noAdded.addAll(details?.notAdded ?: emptyList())
+
+                added.add(foodName)
+                noAdded.remove(foodName)
+
+                templateDetails.value = details?.copy(
+                    added = added,
+                    notAdded = noAdded
+                )
+            }
+        }
     }
 }
 

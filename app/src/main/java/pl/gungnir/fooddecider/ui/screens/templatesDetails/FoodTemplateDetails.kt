@@ -43,7 +43,7 @@ fun FoodTemplateDetails(
                 state = rememberSwipeRefreshState(isRefreshing = isRefreshing.value),
                 onRefresh = { viewModel.onRefreshDetails() }
             ) {
-                FoodTemplateDetailsLists(template = it)
+                FoodTemplateDetailsLists(template = it, onAdd = { viewModel.onAddButtonClick(it) })
             }
         }
     } ?: HeaderFoodTemplateDetails(template = null)
@@ -106,6 +106,7 @@ private fun HeaderFoodTemplateDetails(
 @Composable
 private fun FoodTemplateDetailsLists(
     template: TemplateDetails,
+    onAdd: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -139,7 +140,7 @@ private fun FoodTemplateDetailsLists(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = { onAdd.invoke(food) }) {
                         Icon(
                             imageVector = Icons.Default.Add,
                             contentDescription = stringResource(

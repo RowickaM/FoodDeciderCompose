@@ -8,9 +8,9 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 
 class SplitDishesTemplateUseCase(
     private val databaseRepo: DatabaseRepo
-) : BaseUseCase<TemplateDetails, Template>() {
+) : BaseUseCase<Pair<TemplateDetails, List<String>>, Template>() {
 
-    override suspend fun run(params: Template): Either<Failure, TemplateDetails> {
+    override suspend fun run(params: Template): Either<Failure, Pair<TemplateDetails, List<String>>> {
         return databaseRepo.splitFoodsInTemplates(template = params)
     }
 
