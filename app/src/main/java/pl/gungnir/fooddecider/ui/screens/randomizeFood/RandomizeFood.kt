@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.ui.screens.randomizeFood
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -11,14 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.ui.mics.FoodAnimationOnClick
 import pl.gungnir.fooddecider.ui.mics.Toolbar
-import pl.gungnir.fooddecider.ui.mics.nonRippleClickable
+import pl.gungnir.fooddecider.util.RANDOM_FOOD_TIME
 
+@ExperimentalAnimationApi
 @Composable
 fun RandomizeFood(
     navController: NavController,
@@ -33,32 +35,15 @@ fun RandomizeFood(
             .fillMaxSize()
             .wrapContentSize()
     ) {
-        RandomizeFood(
+        FoodAnimationOnClick(
             onClick = viewModel::drawFood,
-            enabledClick = foodResult != Result.Loading
+            enabledClick = foodResult != Result.Loading,
+            durationAnimation = RANDOM_FOOD_TIME
         )
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
         RandomizeResult(result = foodResult)
     }
 
-}
-
-@Composable
-fun RandomizeFood(
-    onClick: () -> Unit,
-    enabledClick: Boolean
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(250.dp)
-            .nonRippleClickable(onClick = onClick, enabled = enabledClick),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.randomize_food_click)
-        )
-    }
 }
 
 @Composable

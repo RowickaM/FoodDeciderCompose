@@ -9,3 +9,5 @@ const val KEY_DATA_NAME = "name"
 const val KEY_DATA_TAGS = "tags"
 
 const val KEY_TEMPLATE_ID = "id"
+
+const val RANDOM_FOOD_TIME = 1000
