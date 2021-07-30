@@ -32,6 +32,7 @@ import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.ui.mics.Toolbar
+import pl.gungnir.fooddecider.ui.screens.forgotPassword.ForgotPassword
 import pl.gungnir.fooddecider.ui.screens.login.Login
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.RandomizeFood
 import pl.gungnir.fooddecider.ui.screens.savedFood.SavedFood
@@ -113,6 +114,12 @@ class MainActivity : ComponentActivity() {
                                 toolbarTitle.value = ""
 
                                 Login(nav)
+                            }
+                            composable(route = NavigationItem.ForgotPassword.route){
+                                showBottomBar.value = false
+                                showToolbar.value = false
+
+                                ForgotPassword(nav)
                             }
                             composable(route = NavigationItem.Random.route) {
                                 showBottomBar.value = true
@@ -214,6 +221,7 @@ class MainActivity : ComponentActivity() {
 
 sealed class NavigationItem(val route: String) {
     object Login : NavigationItem("login")
+    object ForgotPassword : NavigationItem("forget_password")
     object Random : NavigationItem("random")
     object RandomList : NavigationItem("random_list")
     object FoodTemplates : NavigationItem("food_templates")

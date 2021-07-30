@@ -41,6 +41,21 @@ class DatabaseRepoImpl(
             .first()
     }
 
+    override suspend fun sendResetPasswordMail(email: String): Either<Failure, None> {
+        return firebaseAuthHelper.resetPasswordLink(email)
+            .map {
+                it.fold(
+                    {
+                        it.left()
+                    },
+                    {
+                        None.right()
+                    }
+                )
+            }
+            .first()
+    }
+
     override suspend fun logoutUser(): Either<Failure, None> {
         return firebaseAuthHelper.logoutUser()
     }

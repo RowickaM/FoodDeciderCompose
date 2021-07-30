@@ -46,6 +46,31 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
         }.flowOn(Dispatchers.IO)
     }
 
+    @ExperimentalCoroutinesApi
+    override fun resetPasswordLink(email: String): Flow<Either<Failure, None>> {
+        return channelFlow {
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    try {
+                        if (!task.isSuccessful) {
+                            task.exception?.let { throw it }
+                        }
+
+                        if (task.isSuccessful) {
+                            trySendBlocking(None.right())
+                            close()
+                        }
+                    } catch (e: FirebaseAuthInvalidUserException) {
+                        trySendBlocking(Failure.UserNotExist.left())
+                    } catch (e: FirebaseAuthException) {
+                        trySendBlocking(Failure.FirebaseAuthUnknown.left())
+                    }
+
+                }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
+    }
+
     override fun userIsLogged(): Boolean {
         return auth.currentUser != null
     }

@@ -4,6 +4,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import pl.gungnir.fooddecider.model.useCase.*
 import pl.gungnir.fooddecider.ui.MainViewModel
+import pl.gungnir.fooddecider.ui.screens.forgotPassword.ForgotPasswordViewModel
 import pl.gungnir.fooddecider.ui.screens.login.LoginViewModel
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
@@ -21,6 +22,7 @@ val viewModelModule = module {
     single { FoodTemplatesSharedViewModel(get(), get(), get()) }
     factory { LoginViewModel(get(), get(), get()) }
     factory { MainViewModel(get()) }
+    factory { ForgotPasswordViewModel(get(), get()) }
 }
 
 val databaseModule = module {

@@ -57,7 +57,6 @@ fun SaveFoodContent(
             widthPercent = 1f,
             value = viewModel.newFood.value,
             onValueChange = { viewModel.onFoodNameChange(it) },
-            isError = false,
             label = stringResource(id = R.string.food_name),
             onDone = { viewModel.onAddFoodClick() }
         )

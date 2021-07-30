@@ -40,4 +40,5 @@
     <string name="food_name">Nazwa potrawy</string>
     <string name="add">Dodaj</string>
     <string name="logout">wyloguj</string>
+    <string name="send_link">Wyślij link</string>
 </resources>
