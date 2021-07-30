@@ -81,7 +81,7 @@ private fun LoginScreen(
     ) {
         if (showDialog) {
             DialogError(
-                title = stringResource(id = R.string.cannot_sing_in),
+                title = stringResource(id = R.string.cannot_send_link),
                 message = dialogMessage,
                 onChangeVisible = setShowDialog
             )

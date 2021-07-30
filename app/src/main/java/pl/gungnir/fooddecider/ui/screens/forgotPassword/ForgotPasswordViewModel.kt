@@ -22,7 +22,7 @@ class ForgotPasswordViewModel(
                             Failure.UserNotExist -> resourceProvider.getString(R.string.firebase_user_not_exist)
                             else -> resourceProvider.getString(R.string.firebase_unknown)
                         }
-                        onFailure("")
+                        onFailure(message)
                     }, { onSuccess() })
         }
     }

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
+import pl.gungnir.fooddecider.ui.mics.DialogError
 import pl.gungnir.fooddecider.ui.mics.InputOutlined
 import pl.gungnir.fooddecider.ui.mics.InputsType
 import pl.gungnir.fooddecider.util.helper.isEmailValid
@@ -33,6 +34,9 @@ fun ForgotPassword(
     val widthPercent = 0.8f
     val (email, setEmail) = remember { mutableStateOf("") }
 
+    val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
+    val (dialogMessage, setDialogMessage) = remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,6 +45,14 @@ fun ForgotPassword(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        if (showDialog) {
+            DialogError(
+                title = stringResource(id = R.string.cannot_sing_in),
+                message = dialogMessage,
+                onChangeVisible = setShowDialog
+            )
+        }
+
         Text(
             modifier = Modifier.fillMaxWidth(widthPercent),
             textAlign = TextAlign.Center,
@@ -69,8 +81,12 @@ fun ForgotPassword(
                     viewModel.sendLink(
                         email = email,
                         onSuccess = { onEmailSend(navController = navController) },
-                        onFailure = {}
+                        onFailure = {
+                            setShowDialog(true)
+                            setDialogMessage(it)
+                        }
                     )
+                    setEmail("")
                 }
             }
         )
@@ -81,8 +97,12 @@ fun ForgotPassword(
                 viewModel.sendLink(
                     email = email,
                     onSuccess = { onEmailSend(navController = navController) },
-                    onFailure = {}
+                    onFailure = {
+                        setShowDialog(true)
+                        setDialogMessage(it)
+                    }
                 )
+                setEmail("")
             },
             enabled = isEmailValid(email),
             colors = ButtonDefaults.buttonColors(
@@ -97,8 +117,4 @@ fun ForgotPassword(
 
 private fun onEmailSend(navController: NavController) {
     navController.navigateUp()
-}
-
-private fun onError(errorMessage: String) {
-
 }

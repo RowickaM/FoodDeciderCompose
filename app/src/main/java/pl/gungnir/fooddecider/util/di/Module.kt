@@ -1,6 +1,7 @@
 package pl.gungnir.fooddecider.util.di
 
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import pl.gungnir.fooddecider.model.useCase.*
 import pl.gungnir.fooddecider.ui.MainViewModel
@@ -39,6 +40,7 @@ val useCaseModule = module {
     factory { SplitDishesTemplateUseCase(get()) }
     factory { SetFoodListUseCase(get()) }
     factory { LogoutUseCase(get()) }
+    factory { SendRemindPasswordLinkUseCase(get()) }
 }
 
 val appModule = module {
