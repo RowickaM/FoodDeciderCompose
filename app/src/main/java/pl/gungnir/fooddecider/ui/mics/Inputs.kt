@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -41,7 +42,6 @@ fun InputOutlined(
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
-    isError: Boolean,
     hasNext: Boolean = false,
     type: InputsType = InputsType.TEXT,
     onDone: () -> Unit = {}
@@ -95,10 +95,101 @@ fun InputOutlined(
                 )
             }
         },
-        isError = isError,
         singleLine = true,
         maxLines = 1,
     )
+}
+
+@ExperimentalComposeUiApi
+@Composable
+fun InputOutlined(
+    modifier: Modifier = Modifier,
+    focusRequester: FocusRequester? = null,
+    widthPercent: Float,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    onErrorMessage: String,
+    isValidValue: (String) -> Boolean,
+    hasNext: Boolean = false,
+    type: InputsType = InputsType.TEXT,
+    onDone: () -> Unit = {}
+) {
+    val keyboardType = when (type) {
+        InputsType.TEXT -> KeyboardType.Text
+        InputsType.EMAIL -> KeyboardType.Email
+        InputsType.PASSWORD -> KeyboardType.Password
+    }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val (showPassword, setShowPassword) = remember { mutableStateOf(false) }
+    val transformation = if (type == InputsType.PASSWORD) {
+        if (showPassword) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        }
+    } else {
+        VisualTransformation.None
+    }
+
+    val hasError = remember { mutableStateOf(false) }
+    val hasFocus = remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        modifier = Modifier
+            .fillMaxWidth(widthPercent)
+            .onFocusChanged {
+                if (!it.isFocused && hasFocus.value) {
+                    hasFocus.value = false
+                    hasError.value = !isValidValue(value)
+                }
+
+                if (it.isFocused) {
+                    hasFocus.value = true
+                }
+            }
+            .then(modifier),
+        value = value,
+        onValueChange = {
+            if (hasError.value) {
+                hasError.value = !isValidValue(it)
+            }
+            onValueChange(it)
+        },
+        label = { Text(text = label) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType,
+            imeAction = if (hasNext) ImeAction.Next else ImeAction.Done
+        ),
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboardController?.hide()
+                onDone()
+            },
+            onNext = {
+                focusRequester?.requestFocus()
+            }),
+
+        visualTransformation = transformation,
+        trailingIcon = {
+            if (type == InputsType.PASSWORD) {
+                Icon(
+                    imageVector = if (showPassword) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+                    contentDescription = stringResource(id = R.string.content_description_toggle_password),
+                    modifier = Modifier.nonRippleClickable {
+                        setShowPassword(!showPassword)
+                    }
+                )
+            }
+        },
+        isError = hasError.value,
+        singleLine = true,
+        maxLines = 1,
+    )
+
+    if (hasError.value) {
+        ErrorMessageInput(text = onErrorMessage, widthPercent = widthPercent)
+    }
 }
 
 @Composable
