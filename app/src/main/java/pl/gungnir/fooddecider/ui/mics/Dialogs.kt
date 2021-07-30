@@ -54,7 +54,7 @@ fun DialogDisplay(
     AlertDialog(
         onDismissRequest = { onChangeVisible(false) },
         buttons = buttons,
-        title = { Text(text = title, style = MaterialTheme.typography.h6) },
+        title = { Text(text = title, style = MaterialTheme.typography.h1) },
         text = body
     )
 }

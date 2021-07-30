@@ -96,21 +96,13 @@ private fun LoginScreen(
             focusRequester = focusRequester,
             widthPercent = widthPercent,
             value = login,
-            onValueChange = {
-                emailError.value = if (isEmailValid(login)) {
-                    null
-                } else {
-                    emailErrorText
-                }
-                setLogin(it)
-            },
+            onValueChange = { setLogin(it) },
             label = stringResource(id = R.string.email),
-            isError = !emailError.value.isNullOrEmpty(),
+            onErrorMessage = emailErrorText,
             hasNext = true,
             type = InputsType.EMAIL,
+            isValidValue = { isEmailValid(it) }
         )
-
-        ErrorMessageInput(text = emailError.value ?: "", widthPercent = widthPercent)
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_xlarge)))
 
@@ -118,16 +110,10 @@ private fun LoginScreen(
             modifier = Modifier.focusRequester(focusRequester),
             widthPercent = widthPercent,
             value = password,
-            onValueChange = {
-                passwordError.value = if (isPasswordValid(password)) {
-                    null
-                } else {
-                    passwordErrorText
-                }
-                setPassword(it)
-            },
+            onValueChange = { setPassword(it) },
             label = stringResource(id = R.string.password),
-            isError = !passwordError.value.isNullOrEmpty(),
+            onErrorMessage = passwordErrorText,
+            isValidValue = { isPasswordValid(it) },
             type = InputsType.PASSWORD,
             onDone = {
                 onLogin(
@@ -140,8 +126,6 @@ private fun LoginScreen(
                 )
             }
         )
-
-        ErrorMessageInput(text = passwordError.value ?: "", widthPercent = widthPercent)
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_xlarge)))
 
