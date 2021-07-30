@@ -8,7 +8,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -18,6 +17,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
@@ -64,14 +64,9 @@ private fun LoginScreen(
 
     val widthPercent = 0.8f
     val focusRequester = remember { FocusRequester() }
-    val emailErrorText = stringResource(id = R.string.invalid_format)
-    val passwordErrorText = stringResource(id = R.string.too_short)
 
     val (login, setLogin) = remember { mutableStateOf("") }
-    val emailError = remember<MutableState<String?>> { mutableStateOf("") }
-
     val (password, setPassword) = remember { mutableStateOf("") }
-    val passwordError = remember<MutableState<String?>> { mutableStateOf("") }
 
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
     val (dialogMessage, setDialogMessage) = remember { mutableStateOf("") }
@@ -86,7 +81,7 @@ private fun LoginScreen(
     ) {
         if (showDialog) {
             DialogError(
-                title = stringResource(id = R.string.cannot_sing_in),
+                title = stringResource(id = R.string.cannot_send_link),
                 message = dialogMessage,
                 onChangeVisible = setShowDialog
             )
@@ -98,7 +93,7 @@ private fun LoginScreen(
             value = login,
             onValueChange = { setLogin(it) },
             label = stringResource(id = R.string.email),
-            onErrorMessage = emailErrorText,
+            onErrorMessage = stringResource(id = R.string.invalid_format),
             hasNext = true,
             type = InputsType.EMAIL,
             isValidValue = { isEmailValid(it) }
@@ -112,7 +107,7 @@ private fun LoginScreen(
             value = password,
             onValueChange = { setPassword(it) },
             label = stringResource(id = R.string.password),
-            onErrorMessage = passwordErrorText,
+            onErrorMessage = stringResource(id = R.string.too_short),
             isValidValue = { isPasswordValid(it) },
             type = InputsType.PASSWORD,
             onDone = {
@@ -126,6 +121,16 @@ private fun LoginScreen(
                 )
             }
         )
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
+
+        Link(
+            modifier = Modifier.fillMaxWidth(widthPercent),
+            alignment = TextAlign.End,
+            text = "Forgot password?"
+        ) {
+            navController.navigate(NavigationItem.ForgotPassword.route)
+        }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_xlarge)))
 
@@ -142,7 +147,7 @@ private fun LoginScreen(
                     setDialogMessage = setDialogMessage,
                 )
             },
-            enabled = emailError.value == null && passwordError.value == null,
+            enabled = isFormValid(login, password),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = MaterialTheme.colors.background,
                 contentColor = MaterialTheme.colors.primary
@@ -151,6 +156,10 @@ private fun LoginScreen(
             Text(text = stringResource(id = R.string.sing_in))
         }
     }
+}
+
+private fun isFormValid(email: String, password: String): Boolean {
+    return isEmailValid(email) && isPasswordValid(password)
 }
 
 private fun onLogin(

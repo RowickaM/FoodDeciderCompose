@@ -38,7 +38,7 @@ enum class InputsType {
 fun InputOutlined(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester? = null,
-    widthPercent: Float,
+    widthPercent: Float = 1f,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -76,6 +76,7 @@ fun InputOutlined(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
+                focusRequester?.freeFocus()
                 keyboardController?.hide()
                 onDone()
             },
@@ -105,7 +106,7 @@ fun InputOutlined(
 fun InputOutlined(
     modifier: Modifier = Modifier,
     focusRequester: FocusRequester? = null,
-    widthPercent: Float,
+    widthPercent: Float = 1f,
     value: String,
     onValueChange: (String) -> Unit,
     label: String,
@@ -163,6 +164,7 @@ fun InputOutlined(
         ),
         keyboardActions = KeyboardActions(
             onDone = {
+                focusRequester?.freeFocus()
                 keyboardController?.hide()
                 onDone()
             },
@@ -187,9 +189,10 @@ fun InputOutlined(
         maxLines = 1,
     )
 
-    if (hasError.value) {
-        ErrorMessageInput(text = onErrorMessage, widthPercent = widthPercent)
-    }
+    ErrorMessageInput(
+        text = if (hasError.value) onErrorMessage else "",
+        widthPercent = widthPercent
+    )
 }
 
 @Composable

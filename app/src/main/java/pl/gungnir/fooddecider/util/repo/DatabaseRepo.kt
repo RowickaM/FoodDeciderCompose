@@ -22,4 +22,6 @@ interface DatabaseRepo {
     suspend fun setNewFoodList(foods: List<String>): Either<Failure, None>
 
     suspend fun logoutUser(): Either<Failure, None>
+
+    suspend fun sendResetPasswordMail(email:String): Either<Failure, None>
 }

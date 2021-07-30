@@ -9,6 +9,8 @@ interface FirebaseAuthHelper {
 
     fun login(email: String, password: String): Flow<Either<Failure, String>>
 
+    fun resetPasswordLink(email: String): Flow<Either<Failure, None>>
+
     fun userIsLogged(): Boolean
 
     fun getUID(): String
