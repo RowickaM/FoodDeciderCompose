@@ -127,7 +127,7 @@ private fun LoginScreen(
         Link(
             modifier = Modifier.fillMaxWidth(widthPercent),
             alignment = TextAlign.End,
-            text = "Forgot password?"
+            text = stringResource(id = R.string.reset_password)
         ) {
             navController.navigate(NavigationItem.ForgotPassword.route)
         }

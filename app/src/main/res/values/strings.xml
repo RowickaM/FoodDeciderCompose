@@ -42,4 +42,7 @@
     <string name="logout">wyloguj</string>
     <string name="send_link">Wyślij link</string>
     <string name="cannot_send_link">Nie można wysłać linka</string>
+    <string name="reset_password">Zapomniałeś hasła?</string>
+    <string name="reset_password_title">Podaj email powiązany z twoim kontem.</string>
+    <string name="reset_password_description">Wyślemy Ci mail, umożliwiający resetowanie hasła.</string>
 </resources>

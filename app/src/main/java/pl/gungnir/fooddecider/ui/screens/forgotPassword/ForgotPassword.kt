@@ -56,13 +56,13 @@ fun ForgotPassword(
         Text(
             modifier = Modifier.fillMaxWidth(widthPercent),
             textAlign = TextAlign.Center,
-            text = "Podaj email powiązany z twoim kontem.",
+            text = stringResource(id = R.string.reset_password_title),
             style = MaterialTheme.typography.h2
         )
         Text(
             modifier = Modifier.fillMaxWidth(widthPercent),
             textAlign = TextAlign.Center,
-            text = "Wyślwmy Ci mail, umożliwiający resetowanie hasła.",
+            text = stringResource(id = R.string.reset_password_description),
             style = MaterialTheme.typography.h5
         )
 
