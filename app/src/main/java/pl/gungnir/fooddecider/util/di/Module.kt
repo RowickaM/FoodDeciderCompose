@@ -25,7 +25,7 @@ val viewModelModule = module {
     factory { LoginViewModel(get(), get(), get()) }
     factory { MainViewModel(get()) }
     factory { ForgotPasswordViewModel(get(), get()) }
-    factory { RegistrationViewModel(get(), get(), get()) }
+    factory { RegistrationViewModel(get(), get(), get(), get(), get()) }
 }
 
 val databaseModule = module {
@@ -45,6 +45,7 @@ val useCaseModule = module {
     factory { SendRemindPasswordLinkUseCase(get()) }
     factory { SignUpUserUseCase(get()) }
     factory { CreateUserCollectionUseCase(get()) }
+    factory { SendEmailVerificationUseCase(get()) }
 }
 
 val appModule = module {

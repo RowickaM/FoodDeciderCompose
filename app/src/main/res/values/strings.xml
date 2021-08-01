@@ -48,5 +48,8 @@
     <string name="reset_password_title">Podaj email powiązany z twoim kontem.</string>
     <string name="reset_password_description">Wyślemy Ci mail, umożliwiający resetowanie hasła.</string>
     <string name="no_account">Nie masz konta? Zarejestruj się</string>
+
     <string name="cannot_singup_user">Nie można zarejestrować</string>
+    <string name="send_email_verification">Na podany adres email wysłano email weryfikujący. Potwierdź go, aby móc się zalogować do aplikacji.</string>
+    <string name="singup_user_success">Pomyślnie utworzono użytkownika</string>
 </resources>

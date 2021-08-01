@@ -28,4 +28,6 @@ interface DatabaseRepo {
     suspend fun signUpUser(email: String, password: String): Either<Failure, String>
 
     suspend fun createUseCollection(userUID: String): Either<Failure, None>
+
+    suspend fun sendVerificationEmail(userUID: String): Either<Failure, None>
 }

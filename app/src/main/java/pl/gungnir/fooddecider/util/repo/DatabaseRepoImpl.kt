@@ -73,6 +73,12 @@ class DatabaseRepoImpl(
             .first()
     }
 
+    override suspend fun sendVerificationEmail(userUID: String): Either<Failure, None> {
+        return firebaseAuthHelper
+            .sendVerificationEmail()
+            .first()
+    }
+
     override suspend fun logoutUser(): Either<Failure, None> {
         return firebaseAuthHelper.logoutUser()
     }

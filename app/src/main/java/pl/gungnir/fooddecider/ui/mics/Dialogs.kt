@@ -47,6 +47,40 @@ fun DialogError(
 @Composable
 fun DialogDisplay(
     title: String,
+    message: String,
+    buttonText: String = stringResource(id = R.string.ok),
+    onChangeVisible: (Boolean) -> Unit,
+    onButtonClick: () -> Unit = { },
+) {
+    DialogDisplay(
+        title = title,
+        onChangeVisible = onChangeVisible,
+        buttons = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(id = R.dimen.space_large)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                Button(
+                    onClick = {
+                        onChangeVisible(false)
+                        onButtonClick()
+                    }
+                ) {
+                    Text(text = buttonText)
+                }
+            }
+
+        }) {
+        Text(text = message)
+    }
+}
+
+@Composable
+fun DialogDisplay(
+    title: String,
     onChangeVisible: (Boolean) -> Unit,
     buttons: @Composable () -> Unit,
     body: @Composable () -> Unit,

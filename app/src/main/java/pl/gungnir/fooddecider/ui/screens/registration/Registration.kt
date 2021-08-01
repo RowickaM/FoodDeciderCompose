@@ -20,8 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.model.data.NavigationItem
-import pl.gungnir.fooddecider.ui.mics.DialogError
+import pl.gungnir.fooddecider.ui.mics.DialogDisplay
 import pl.gungnir.fooddecider.ui.mics.InputOutlined
 import pl.gungnir.fooddecider.ui.mics.InputsType
 import pl.gungnir.fooddecider.ui.mics.Loading
@@ -44,7 +43,11 @@ fun Registration(
     val (repeatPassword, setRepeatPassword) = remember { mutableStateOf("") }
 
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
-    val (dialogMessage, setDialogMessage) = remember { mutableStateOf("") }
+    val (dialogMessage, setDialogMessage) = remember {
+        mutableStateOf<RegistrationDialog>(
+            RegistrationDialog.Empty
+        )
+    }
 
     val (showLoading, setShowLoading) = remember { mutableStateOf(false) }
 
@@ -57,10 +60,19 @@ fun Registration(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (showDialog) {
-            DialogError(
-                title = stringResource(id = R.string.cannot_singup_user),
-                message = dialogMessage,
-                onChangeVisible = setShowDialog
+            DialogDisplay(
+                title = if (dialogMessage is RegistrationDialog.OnSuccess) {
+                    stringResource(id = R.string.singup_user_success)
+                } else {
+                    stringResource(id = R.string.cannot_singup_user)
+                },
+                message = dialogMessage.message,
+                onChangeVisible = setShowDialog,
+                onButtonClick = {
+                    if (dialogMessage is RegistrationDialog.OnSuccess) {
+                        navController.navigateUp()
+                    }
+                }
             )
         }
 
@@ -108,7 +120,6 @@ fun Registration(
             onDone = {
                 onRegistration(
                     viewModel = viewModel,
-                    navController = navController,
                     setDialogVisible = setShowDialog,
                     setLoading = setShowLoading,
                     setDialogMessage = setDialogMessage,
@@ -128,7 +139,6 @@ fun Registration(
             onClick = {
                 onRegistration(
                     viewModel = viewModel,
-                    navController = navController,
                     setDialogVisible = setShowDialog,
                     setLoading = setShowLoading,
                     setDialogMessage = setDialogMessage,
@@ -157,10 +167,9 @@ private fun isFormValid(email: String, password: String, repeatPassword: String)
 
 private fun onRegistration(
     viewModel: RegistrationViewModel,
-    navController: NavController,
     setDialogVisible: (Boolean) -> Unit,
     setLoading: (Boolean) -> Unit,
-    setDialogMessage: (String) -> Unit,
+    setDialogMessage: (RegistrationDialog) -> Unit,
     email: String,
     password: String,
     repeatPassword: String,
@@ -169,7 +178,7 @@ private fun onRegistration(
     if (email.isNotEmpty() && password.isNotEmpty() && repeatPassword.isNotEmpty()) {
         if (password != repeatPassword) {
             setDialogVisible(true)
-            setDialogMessage(passwordsNotSameInfo)
+            setDialogMessage(RegistrationDialog.OnFailure(passwordsNotSameInfo))
             return
         } else {
             setLoading(true)
@@ -178,14 +187,21 @@ private fun onRegistration(
                 password = password,
                 afterSuccess = {
                     setLoading(false)
-                    navController.navigate(NavigationItem.Random.route)
+                    setDialogVisible(true)
+                    setDialogMessage(RegistrationDialog.OnSuccess(it))
                 },
                 afterFailure = {
                     setLoading(false)
                     setDialogVisible(true)
-                    setDialogMessage(it)
+                    setDialogMessage(RegistrationDialog.OnFailure(it))
                 },
             )
         }
     }
+}
+
+private sealed class RegistrationDialog(val message: String) {
+    object Empty : RegistrationDialog("")
+    class OnSuccess(msg: String) : RegistrationDialog(msg)
+    class OnFailure(msg: String) : RegistrationDialog(msg)
 }

@@ -107,4 +107,16 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
             awaitClose()
         }.flowOn(Dispatchers.IO)
     }
+
+    @ExperimentalCoroutinesApi
+    override fun sendVerificationEmail(): Flow<Either<Failure, None>> {
+        return channelFlow {
+            auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    trySendBlocking(None.right())
+                }
+            }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
+    }
 }
