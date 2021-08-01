@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.useCase.IsUserLoggedUseCase
 import pl.gungnir.fooddecider.model.useCase.LoginUseCase
+import pl.gungnir.fooddecider.model.useCase.LogoutUseCase
 import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.helper.ResourceProvider
@@ -18,7 +19,8 @@ import pl.gungnir.fooddecider.util.onSuccess
 class LoginViewModel(
     private val resourceProvider: ResourceProvider,
     private val loginUseCase: LoginUseCase,
-    private val isUserLoggedUseCase: IsUserLoggedUseCase
+    private val isUserLoggedUseCase: IsUserLoggedUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     val isUserLogged: MutableState<Boolean?> = mutableStateOf(null)
@@ -48,6 +50,12 @@ class LoginViewModel(
                     val message = when (it) {
                         Failure.UserNotExist -> resourceProvider.getString(R.string.firebase_user_not_exist)
                         Failure.InvalidCredentials -> resourceProvider.getString(R.string.firebase_invalid_credentials)
+                        Failure.UserNotVerify -> {
+                            viewModelScope.launch {
+                                logoutUseCase.run(None)
+                            }
+                            resourceProvider.getString(R.string.firebase_user_not_verify)
+                        }
                         else -> resourceProvider.getString(R.string.firebase_unknown)
                     }
                     afterFailure.invoke(message)

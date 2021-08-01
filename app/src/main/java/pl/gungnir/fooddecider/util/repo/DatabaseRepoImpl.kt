@@ -1,10 +1,8 @@
 package pl.gungnir.fooddecider.util.repo
 
-import android.util.Log
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*

@@ -52,4 +52,5 @@
     <string name="cannot_singup_user">Nie można zarejestrować</string>
     <string name="send_email_verification">Na podany adres email wysłano email weryfikujący. Potwierdź go, aby móc się zalogować do aplikacji.</string>
     <string name="singup_user_success">Pomyślnie utworzono użytkownika</string>
+    <string name="firebase_user_not_verify">Email nie został zweryfikowany</string>
 </resources>

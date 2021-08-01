@@ -27,7 +27,11 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
 
                         if (task.isSuccessful) {
                             task.result?.user?.let {
-                                trySendBlocking(it.uid.right())
+                                if (it.isEmailVerified) {
+                                    trySendBlocking(it.uid.right())
+                                } else {
+                                    trySendBlocking(Failure.UserNotVerify.left())
+                                }
                             } ?: trySendBlocking(Failure.Unknown.left())
                             close()
                         }
