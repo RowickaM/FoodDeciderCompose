@@ -23,5 +23,9 @@ interface DatabaseRepo {
 
     suspend fun logoutUser(): Either<Failure, None>
 
-    suspend fun sendResetPasswordMail(email:String): Either<Failure, None>
+    suspend fun sendResetPasswordMail(email: String): Either<Failure, None>
+
+    suspend fun signUpUser(email: String, password: String): Either<Failure, String>
+
+    suspend fun createUseCollection(userUID: String): Either<Failure, None>
 }

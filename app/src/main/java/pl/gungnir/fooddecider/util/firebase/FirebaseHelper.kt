@@ -15,4 +15,6 @@ interface FirebaseHelper {
     suspend fun getSavedFood(): Flow<List<String>>
 
     suspend fun setSavedFood(list: List<String>): Flow<Either<Failure, None>>
+
+    fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>>
 }

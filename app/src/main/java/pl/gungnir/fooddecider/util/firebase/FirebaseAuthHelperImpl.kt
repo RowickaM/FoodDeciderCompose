@@ -1,9 +1,7 @@
 package pl.gungnir.fooddecider.util.firebase
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import android.util.Log
+import com.google.firebase.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -82,5 +80,31 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
     override fun logoutUser(): Either<Failure, None> {
         auth.signOut()
         return None.right()
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun signUpUser(email: String, password: String): Flow<Either<Failure, String>> {
+        return channelFlow {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    try {
+                        if (!task.isSuccessful) {
+                            task.exception?.let { throw it }
+                        }
+
+                        if (task.isSuccessful) {
+                            task.result?.user?.let {
+                                trySendBlocking(it.uid.right())
+                            } ?: trySendBlocking(Failure.Unknown.left())
+                            close()
+                        }
+                    } catch (e: FirebaseAuthUserCollisionException) {
+                        trySendBlocking(Failure.UserCollision.left())
+                    } catch (e: FirebaseAuthException) {
+                        trySendBlocking(Failure.FirebaseAuthUnknown.left())
+                    }
+                }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
     }
 }

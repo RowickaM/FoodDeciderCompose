@@ -38,6 +38,7 @@ class FirebaseHelperImpl : FirebaseHelper {
         }.flowOn(Dispatchers.IO)
     }
 
+    @ExperimentalCoroutinesApi
     override fun getTemplates(): Flow<List<Template>> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_TEMPLATES)
@@ -71,7 +72,7 @@ class FirebaseHelperImpl : FirebaseHelper {
         }.flowOn(Dispatchers.IO)
     }
 
-    @FlowPreview
+    @ExperimentalCoroutinesApi
     override suspend fun getSavedFood(): Flow<List<String>> {
         auth.uid?.let { uid ->
             return channelFlow {
@@ -92,6 +93,7 @@ class FirebaseHelperImpl : FirebaseHelper {
         } ?: return flowOf(emptyList())
     }
 
+    @ExperimentalCoroutinesApi
     override suspend fun setSavedFood(list: List<String>): Flow<Either<Failure, None>> {
         auth.uid?.let { uid ->
             return channelFlow {
@@ -110,5 +112,24 @@ class FirebaseHelperImpl : FirebaseHelper {
                 awaitClose()
             }.flowOn(Dispatchers.IO)
         } ?: return flowOf(Failure.Unauthorized.left())
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>> {
+        return channelFlow {
+            db.collection(COLLECTION_SAVED_FOOD)
+                .document(userUID)
+                .set(mapOf(KEY_DATA_DISHES to emptyList<String>()))
+                .addOnCompleteListener { task ->
+                    if (task.exception != null) {
+                        trySendBlocking(Failure.Unknown.left())
+                    }
+                    if (task.isSuccessful) {
+                        trySendBlocking(None.right())
+                    }
+                    close()
+                }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
     }
 }

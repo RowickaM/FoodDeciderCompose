@@ -6,8 +6,9 @@
     <string name="password">Hasło</string>
     <string name="ok">OK</string>
 
-    <string name="invalid_format">Nipoprawny format</string>
-    <string name="too_short">Za któtkie</string>
+    <string name="invalid_format">Niepoprawny format</string>
+    <string name="too_short">Za krótkie</string>
+    <string name="passwords_not_same">Hasło i powtórzenie hasła nie są takie same!</string>
 
     <string name="cannot_sing_in">Nie można się zalogować</string>
 
@@ -15,6 +16,7 @@
     <string name="firebase_user_collision">Taki użytkownik już istnieje</string>
     <string name="firebase_invalid_credentials">Niepoprawne dane logowania</string>
     <string name="firebase_unknown">Bład serwera. Spróbuj ponownie później.</string>
+    <string name="error_unknown">Bład serwera. Spróbuj ponownie później.</string>
 
     <string name="bottom_nav_draw_label">Losowanie</string>
     <string name="bottom_nav_list_label">Potrawy</string>
@@ -46,4 +48,5 @@
     <string name="reset_password_title">Podaj email powiązany z twoim kontem.</string>
     <string name="reset_password_description">Wyślemy Ci mail, umożliwiający resetowanie hasła.</string>
     <string name="no_account">Nie masz konta? Zarejestruj się</string>
+    <string name="cannot_singup_user">Nie można zarejestrować</string>
 </resources>

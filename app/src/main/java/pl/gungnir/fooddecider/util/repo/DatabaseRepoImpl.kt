@@ -1,8 +1,10 @@
 package pl.gungnir.fooddecider.util.repo
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.*
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*
@@ -53,6 +55,21 @@ class DatabaseRepoImpl(
                     }
                 )
             }
+            .first()
+    }
+
+    override suspend fun signUpUser(
+        email: String,
+        password: String
+    ): Either<Failure, String> {
+        return firebaseAuthHelper
+            .signUpUser(email, password)
+            .first()
+    }
+
+    override suspend fun createUseCollection(userUID: String): Either<Failure, None> {
+        return firebaseHelper
+            .createCollectionForUser(userUID)
             .first()
     }
 
