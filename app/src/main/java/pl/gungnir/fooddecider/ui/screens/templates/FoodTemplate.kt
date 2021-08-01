@@ -20,8 +20,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
+import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.model.data.Template
-import pl.gungnir.fooddecider.ui.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.*
 import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 

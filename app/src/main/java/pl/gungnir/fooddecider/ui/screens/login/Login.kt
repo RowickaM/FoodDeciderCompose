@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.*
 import pl.gungnir.fooddecider.util.helper.isEmailValid
 import pl.gungnir.fooddecider.util.helper.isPasswordValid
@@ -121,6 +121,16 @@ private fun LoginScreen(
                 )
             }
         )
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
+
+        Link(
+            modifier = Modifier.fillMaxWidth(widthPercent),
+            alignment = TextAlign.End,
+            text = stringResource(id = R.string.no_account)
+        ) {
+            navController.navigate(NavigationItem.Registration.route)
+        }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
 

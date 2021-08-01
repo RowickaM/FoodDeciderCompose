@@ -29,12 +29,14 @@ import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
+import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.screens.forgotPassword.ForgotPassword
 import pl.gungnir.fooddecider.ui.screens.login.Login
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.RandomizeFood
+import pl.gungnir.fooddecider.ui.screens.registration.Registration
 import pl.gungnir.fooddecider.ui.screens.savedFood.SavedFood
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplate
 import pl.gungnir.fooddecider.ui.screens.templatesDetails.FoodTemplateDetails
@@ -115,7 +117,14 @@ class MainActivity : ComponentActivity() {
 
                                 Login(nav)
                             }
-                            composable(route = NavigationItem.ForgotPassword.route){
+                            composable(route = NavigationItem.Registration.route) {
+                                showBottomBar.value = false
+                                showToolbar.value = false
+                                toolbarTitle.value = ""
+
+                                Registration(nav)
+                            }
+                            composable(route = NavigationItem.ForgotPassword.route) {
                                 showBottomBar.value = false
                                 showToolbar.value = false
 
@@ -217,13 +226,4 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-}
-
-sealed class NavigationItem(val route: String) {
-    object Login : NavigationItem("login")
-    object ForgotPassword : NavigationItem("forget_password")
-    object Random : NavigationItem("random")
-    object RandomList : NavigationItem("random_list")
-    object FoodTemplates : NavigationItem("food_templates")
-    object FoodTemplateDetails : NavigationItem("food_template_details/{id}")
 }
