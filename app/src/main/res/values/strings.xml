@@ -43,14 +43,17 @@
     <string name="add">Dodaj</string>
     <string name="logout">wyloguj</string>
     <string name="send_link">Wyślij link</string>
-    <string name="cannot_send_link">Nie można wysłać linka</string>
+
+    <string name="cannot_sing_in_user">Nie można siż zalogować</string>
     <string name="reset_password">Zapomniałeś hasła?</string>
     <string name="reset_password_title">Podaj email powiązany z twoim kontem.</string>
     <string name="reset_password_description">Wyślemy Ci mail, umożliwiający resetowanie hasła.</string>
     <string name="no_account">Nie masz konta? Zarejestruj się</string>
 
     <string name="cannot_singup_user">Nie można zarejestrować</string>
-    <string name="send_email_verification">Na podany adres email wysłano email weryfikujący. Potwierdź go, aby móc się zalogować do aplikacji.</string>
+    <string name="send_email_verification_title">Wysłano email weryfikujacy</string>
+    <string name="send_email_verification">Na podany adres wysłano email weryfikujący. Potwierdź go, aby móc się zalogować do aplikacji.</string>
     <string name="singup_user_success">Pomyślnie utworzono użytkownika</string>
     <string name="firebase_user_not_verify">Email nie został zweryfikowany</string>
+    <string name="send_email_button">Wyślij email weryfikujący ponownie</string>
 </resources>

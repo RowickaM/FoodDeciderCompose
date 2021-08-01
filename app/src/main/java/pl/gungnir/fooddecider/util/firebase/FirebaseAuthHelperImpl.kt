@@ -30,7 +30,7 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
                                 if (it.isEmailVerified) {
                                     trySendBlocking(it.uid.right())
                                 } else {
-                                    trySendBlocking(Failure.UserNotVerify.left())
+                                    trySendBlocking(Failure.UserNotVerify(it.uid).left())
                                 }
                             } ?: trySendBlocking(Failure.Unknown.left())
                             close()
@@ -74,7 +74,7 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
     }
 
     override fun userIsLogged(): Boolean {
-        return auth.currentUser != null
+        return auth.currentUser != null && auth.currentUser?.isEmailVerified == true
     }
 
     override fun getUID(): String {
@@ -115,6 +115,10 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
     @ExperimentalCoroutinesApi
     override fun sendVerificationEmail(): Flow<Either<Failure, None>> {
         return channelFlow {
+            Log.d(
+                "MRMRMR",
+                "FirebaseAuthHelperImpl.kt sendVerificationEmail: ${auth.currentUser == null}"
+            )
             auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
                 if (it.isSuccessful) {
                     trySendBlocking(None.right())

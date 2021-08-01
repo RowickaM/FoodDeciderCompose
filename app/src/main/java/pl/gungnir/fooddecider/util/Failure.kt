@@ -5,7 +5,7 @@ sealed class Failure {
     object UserNotExist : Failure()
     object InvalidCredentials : Failure()
     object UserCollision : Failure()
-    object UserNotVerify : Failure()
     object FirebaseAuthUnknown : Failure()
     object Unauthorized : Failure()
+    class UserNotVerify(val userUID: String) : Failure()
 }
