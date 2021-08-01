@@ -1,9 +1,7 @@
 package pl.gungnir.fooddecider.util.firebase
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import android.util.Log
+import com.google.firebase.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -29,7 +27,11 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
 
                         if (task.isSuccessful) {
                             task.result?.user?.let {
-                                trySendBlocking(it.uid.right())
+                                if (it.isEmailVerified) {
+                                    trySendBlocking(it.uid.right())
+                                } else {
+                                    trySendBlocking(Failure.UserNotVerify(it.uid).left())
+                                }
                             } ?: trySendBlocking(Failure.Unknown.left())
                             close()
                         }
@@ -72,7 +74,7 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
     }
 
     override fun userIsLogged(): Boolean {
-        return auth.currentUser != null
+        return auth.currentUser != null && auth.currentUser?.isEmailVerified == true
     }
 
     override fun getUID(): String {
@@ -82,5 +84,47 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
     override fun logoutUser(): Either<Failure, None> {
         auth.signOut()
         return None.right()
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun signUpUser(email: String, password: String): Flow<Either<Failure, String>> {
+        return channelFlow {
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    try {
+                        if (!task.isSuccessful) {
+                            task.exception?.let { throw it }
+                        }
+
+                        if (task.isSuccessful) {
+                            task.result?.user?.let {
+                                trySendBlocking(it.uid.right())
+                            } ?: trySendBlocking(Failure.Unknown.left())
+                            close()
+                        }
+                    } catch (e: FirebaseAuthUserCollisionException) {
+                        trySendBlocking(Failure.UserCollision.left())
+                    } catch (e: FirebaseAuthException) {
+                        trySendBlocking(Failure.FirebaseAuthUnknown.left())
+                    }
+                }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun sendVerificationEmail(): Flow<Either<Failure, None>> {
+        return channelFlow {
+            Log.d(
+                "MRMRMR",
+                "FirebaseAuthHelperImpl.kt sendVerificationEmail: ${auth.currentUser == null}"
+            )
+            auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
+                if (it.isSuccessful) {
+                    trySendBlocking(None.right())
+                }
+            }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
     }
 }

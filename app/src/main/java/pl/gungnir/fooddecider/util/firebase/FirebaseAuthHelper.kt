@@ -16,4 +16,8 @@ interface FirebaseAuthHelper {
     fun getUID(): String
 
     fun logoutUser(): Either<Failure, None>
+
+    fun signUpUser(email: String, password: String): Flow<Either<Failure, String>>
+
+    fun sendVerificationEmail(): Flow<Either<Failure, None>>
 }

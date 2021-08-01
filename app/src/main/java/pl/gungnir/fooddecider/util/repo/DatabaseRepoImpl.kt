@@ -56,6 +56,27 @@ class DatabaseRepoImpl(
             .first()
     }
 
+    override suspend fun signUpUser(
+        email: String,
+        password: String
+    ): Either<Failure, String> {
+        return firebaseAuthHelper
+            .signUpUser(email, password)
+            .first()
+    }
+
+    override suspend fun createUseCollection(userUID: String): Either<Failure, None> {
+        return firebaseHelper
+            .createCollectionForUser(userUID)
+            .first()
+    }
+
+    override suspend fun sendVerificationEmail(userUID: String): Either<Failure, None> {
+        return firebaseAuthHelper
+            .sendVerificationEmail()
+            .first()
+    }
+
     override suspend fun logoutUser(): Either<Failure, None> {
         return firebaseAuthHelper.logoutUser()
     }

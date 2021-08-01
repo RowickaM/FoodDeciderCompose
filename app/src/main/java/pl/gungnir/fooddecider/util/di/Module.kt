@@ -8,6 +8,7 @@ import pl.gungnir.fooddecider.ui.MainViewModel
 import pl.gungnir.fooddecider.ui.screens.forgotPassword.ForgotPasswordViewModel
 import pl.gungnir.fooddecider.ui.screens.login.LoginViewModel
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
+import pl.gungnir.fooddecider.ui.screens.registration.RegistrationViewModel
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelperImpl
@@ -21,9 +22,10 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
 val viewModelModule = module {
     single { SaveFoodShareViewModel(get(), get()) }
     single { FoodTemplatesSharedViewModel(get(), get(), get()) }
-    factory { LoginViewModel(get(), get(), get()) }
+    factory { LoginViewModel(get(), get(), get(), get(), get()) }
     factory { MainViewModel(get()) }
     factory { ForgotPasswordViewModel(get(), get()) }
+    factory { RegistrationViewModel(get(), get(), get(), get(), get()) }
 }
 
 val databaseModule = module {
@@ -41,6 +43,9 @@ val useCaseModule = module {
     factory { SetFoodListUseCase(get()) }
     factory { LogoutUseCase(get()) }
     factory { SendRemindPasswordLinkUseCase(get()) }
+    factory { SignUpUserUseCase(get()) }
+    factory { CreateUserCollectionUseCase(get()) }
+    factory { SendEmailVerificationUseCase(get()) }
 }
 
 val appModule = module {

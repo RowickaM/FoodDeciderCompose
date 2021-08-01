@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.model.data.NavigationItem
 
 @ExperimentalAnimationApi
 @Composable

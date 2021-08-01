@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.ui.NavigationItem
+import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.*
 import pl.gungnir.fooddecider.util.helper.isEmailValid
 import pl.gungnir.fooddecider.util.helper.isPasswordValid
@@ -69,7 +69,7 @@ private fun LoginScreen(
     val (password, setPassword) = remember { mutableStateOf("") }
 
     val (showDialog, setShowDialog) = remember { mutableStateOf(false) }
-    val (dialogMessage, setDialogMessage) = remember { mutableStateOf("") }
+    val (dialogMessage, setDialogMessage) = remember { mutableStateOf<LoginDialog>(LoginDialog.Empty) }
 
     Column(
         modifier = Modifier
@@ -80,10 +80,27 @@ private fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         if (showDialog) {
-            DialogError(
-                title = stringResource(id = R.string.cannot_send_link),
-                message = dialogMessage,
-                onChangeVisible = setShowDialog
+            DialogDisplay(
+                title = if (dialogMessage is LoginDialog.OnSuccess) {
+                    stringResource(id = R.string.send_email_verification)
+                } else {
+                    stringResource(id = R.string.cannot_sing_in_user)
+                },
+                message = dialogMessage.message,
+                onChangeVisible = setShowDialog,
+                buttonText = if (dialogMessage is LoginDialog.OnEmailNotVerify) {
+                    stringResource(id = R.string.send_email_button)
+                } else {
+                    stringResource(id = R.string.ok)
+                },
+                onButtonClick = {
+                    if (dialogMessage is LoginDialog.OnEmailNotVerify) {
+                        viewModel.onSendEmailVerification {
+                            setShowDialog(true)
+                            setDialogMessage(LoginDialog.OnSuccess(it))
+                        }
+                    }
+                }
             )
         }
 
@@ -121,6 +138,16 @@ private fun LoginScreen(
                 )
             }
         )
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
+
+        Link(
+            modifier = Modifier.fillMaxWidth(widthPercent),
+            alignment = TextAlign.End,
+            text = stringResource(id = R.string.no_account)
+        ) {
+            navController.navigate(NavigationItem.Registration.route)
+        }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
 
@@ -166,7 +193,7 @@ private fun onLogin(
     viewModel: LoginViewModel,
     navController: NavController,
     setDialogVisible: (Boolean) -> Unit,
-    setDialogMessage: (String) -> Unit,
+    setDialogMessage: (LoginDialog) -> Unit,
     email: String,
     password: String,
 ) {
@@ -175,10 +202,21 @@ private fun onLogin(
             email = email,
             password = password,
             afterSuccess = { navController.navigate(NavigationItem.Random.route) },
-            afterFailure = {
+            afterFailure = { isEmailVerifyError, message ->
                 setDialogVisible(true)
-                setDialogMessage(it)
+                if (isEmailVerifyError) {
+                    setDialogMessage(LoginDialog.OnEmailNotVerify(message))
+                } else {
+                    setDialogMessage(LoginDialog.OnFailure(message))
+                }
             }
         )
     }
+}
+
+private sealed class LoginDialog(val message: String) {
+    object Empty : LoginDialog("")
+    class OnSuccess(msg: String) : LoginDialog(msg)
+    class OnFailure(msg: String) : LoginDialog(msg)
+    class OnEmailNotVerify(msg: String) : LoginDialog(msg)
 }

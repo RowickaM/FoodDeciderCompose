@@ -4,11 +4,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.flow.flowOn
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.util.*
 
@@ -38,6 +36,7 @@ class FirebaseHelperImpl : FirebaseHelper {
         }.flowOn(Dispatchers.IO)
     }
 
+    @ExperimentalCoroutinesApi
     override fun getTemplates(): Flow<List<Template>> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_TEMPLATES)
@@ -71,7 +70,7 @@ class FirebaseHelperImpl : FirebaseHelper {
         }.flowOn(Dispatchers.IO)
     }
 
-    @FlowPreview
+    @ExperimentalCoroutinesApi
     override suspend fun getSavedFood(): Flow<List<String>> {
         auth.uid?.let { uid ->
             return channelFlow {
@@ -92,6 +91,7 @@ class FirebaseHelperImpl : FirebaseHelper {
         } ?: return flowOf(emptyList())
     }
 
+    @ExperimentalCoroutinesApi
     override suspend fun setSavedFood(list: List<String>): Flow<Either<Failure, None>> {
         auth.uid?.let { uid ->
             return channelFlow {
@@ -110,5 +110,24 @@ class FirebaseHelperImpl : FirebaseHelper {
                 awaitClose()
             }.flowOn(Dispatchers.IO)
         } ?: return flowOf(Failure.Unauthorized.left())
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>> {
+        return channelFlow {
+            db.collection(COLLECTION_SAVED_FOOD)
+                .document(userUID)
+                .set(mapOf(KEY_DATA_DISHES to emptyList<String>()))
+                .addOnCompleteListener { task ->
+                    if (task.exception != null) {
+                        trySendBlocking(Failure.Unknown.left())
+                    }
+                    if (task.isSuccessful) {
+                        trySendBlocking(None.right())
+                    }
+                    close()
+                }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
     }
 }
