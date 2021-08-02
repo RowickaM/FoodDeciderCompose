@@ -15,19 +15,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.NavController
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.model.data.Template
-import pl.gungnir.fooddecider.ui.mics.*
-import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
+import pl.gungnir.fooddecider.ui.mics.EmptyInfo
+import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
+import pl.gungnir.fooddecider.ui.mics.Loading
+import pl.gungnir.fooddecider.ui.mics.Tag
 
 @Composable
 fun FoodTemplate(
-    navController: NavController
+    navToTemplateDetails: (String) -> Unit
 ) {
     val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
     viewModel.onInitialize()
@@ -49,7 +49,7 @@ fun FoodTemplate(
                         items(it) { template ->
                             FoodTemplateItem(
                                 template = template,
-                                onClick = { navigateToDetails(navController, template.id) }
+                                onClick = { navToTemplateDetails(template.id) }
                             )
                             Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
                         }
@@ -118,16 +118,4 @@ fun FoodTemplateItem(
             }
         }
     }
-}
-
-private fun navigateToDetails(
-    navController: NavController,
-    id: String
-) {
-    navController.navigate(
-        NavigationItem.FoodTemplateDetails.route.replace(
-            "{$KEY_TEMPLATE_ID}",
-            id
-        )
-    )
 }

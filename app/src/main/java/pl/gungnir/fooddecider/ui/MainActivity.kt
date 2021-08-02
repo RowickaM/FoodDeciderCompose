@@ -42,6 +42,7 @@ import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplate
 import pl.gungnir.fooddecider.ui.screens.templatesDetails.FoodTemplateDetails
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
+import pl.gungnir.fooddecider.util.navigation.Actions
 
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
@@ -54,6 +55,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val action = remember(navController) { Actions(navController) }
+
             navController = rememberNavController()
             val bottomNavigationList = arrayListOf(
                 BottomBarItem.RandomFoodList(stringResource(id = R.string.bottom_nav_list_label)),
@@ -115,20 +118,28 @@ class MainActivity : ComponentActivity() {
                                 showToolbar.value = false
                                 toolbarTitle.value = ""
 
-                                Login(nav)
+                                Login(
+                                    navToHome = action.navToHome,
+                                    navToRegistration = action.navToRegistration,
+                                    navToRememberPassword = action.navToRememberPassword
+                                )
                             }
                             composable(route = NavigationItem.Registration.route) {
                                 showBottomBar.value = false
                                 showToolbar.value = false
                                 toolbarTitle.value = ""
 
-                                Registration(nav)
+                                Registration(
+                                    navBack = action.navBack
+                                )
                             }
                             composable(route = NavigationItem.ForgotPassword.route) {
                                 showBottomBar.value = false
                                 showToolbar.value = false
 
-                                ForgotPassword(nav)
+                                ForgotPassword(
+                                    navBack = action.navBack
+                                )
                             }
                             composable(route = NavigationItem.Random.route) {
                                 showBottomBar.value = true
@@ -139,7 +150,7 @@ class MainActivity : ComponentActivity() {
                                     .find { it is BottomBarItem.RandomFood }
 
                                 setActiveIndex(bottomNavigationList.indexOf(navItem))
-                                RandomizeFood(nav)
+                                RandomizeFood()
                             }
                             composable(route = NavigationItem.RandomList.route) {
                                 showBottomBar.value = true
@@ -161,7 +172,9 @@ class MainActivity : ComponentActivity() {
                                     .find { it is BottomBarItem.TemplateFood }
 
                                 setActiveIndex(bottomNavigationList.indexOf(navItem))
-                                FoodTemplate(nav)
+                                FoodTemplate(
+                                    navToTemplateDetails = action.navToTemplateDetails
+                                )
                             }
                             composable(
                                 route = NavigationItem.FoodTemplateDetails.route,

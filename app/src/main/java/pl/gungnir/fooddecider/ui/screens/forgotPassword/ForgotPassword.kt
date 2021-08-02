@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.DialogError
@@ -27,7 +26,7 @@ import pl.gungnir.fooddecider.util.helper.isEmailValid
 @ExperimentalComposeUiApi
 @Composable
 fun ForgotPassword(
-    navController: NavController
+    navBack: () -> Unit,
 ) {
     val viewModel by inject<ForgotPasswordViewModel>(ForgotPasswordViewModel::class.java)
 
@@ -80,7 +79,7 @@ fun ForgotPassword(
                 if (isEmailValid(email)) {
                     viewModel.sendLink(
                         email = email,
-                        onSuccess = { onEmailSend(navController = navController) },
+                        onSuccess = { navBack() },
                         onFailure = {
                             setShowDialog(true)
                             setDialogMessage(it)
@@ -96,7 +95,7 @@ fun ForgotPassword(
             onClick = {
                 viewModel.sendLink(
                     email = email,
-                    onSuccess = { onEmailSend(navController = navController) },
+                    onSuccess = { navBack() },
                     onFailure = {
                         setShowDialog(true)
                         setDialogMessage(it)
@@ -113,8 +112,4 @@ fun ForgotPassword(
             Text(text = stringResource(id = R.string.send_link))
         }
     }
-}
-
-private fun onEmailSend(navController: NavController) {
-    navController.navigateUp()
 }

@@ -18,10 +18,8 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.*
 import pl.gungnir.fooddecider.util.helper.isEmailValid
 import pl.gungnir.fooddecider.util.helper.isPasswordValid
@@ -29,7 +27,9 @@ import pl.gungnir.fooddecider.util.helper.isPasswordValid
 @ExperimentalComposeUiApi
 @Composable
 fun Login(
-    navController: NavController
+    navToHome: () -> Unit,
+    navToRegistration: () -> Unit,
+    navToRememberPassword: () -> Unit,
 ) {
     val viewModel by inject<LoginViewModel>(LoginViewModel::class.java)
 
@@ -45,12 +45,14 @@ fun Login(
             null -> Loading()
             true -> {
                 Loading()
-                navController.navigate(NavigationItem.Random.route)
+                navToHome()
             }
         }
         LoginScreen(
-            navController = navController,
-            viewModel = viewModel
+            viewModel = viewModel,
+            navToHome = navToHome,
+            navToRegistration = navToRegistration,
+            navToRememberPassword = navToRememberPassword,
         )
     }
 }
@@ -58,8 +60,10 @@ fun Login(
 @ExperimentalComposeUiApi
 @Composable
 private fun LoginScreen(
-    navController: NavController,
-    viewModel: LoginViewModel
+    viewModel: LoginViewModel,
+    navToHome: () -> Unit,
+    navToRegistration: () -> Unit,
+    navToRememberPassword: () -> Unit
 ) {
 
     val widthPercent = 0.8f
@@ -130,7 +134,7 @@ private fun LoginScreen(
             onDone = {
                 onLogin(
                     viewModel = viewModel,
-                    navController = navController,
+                    navToHome = navToHome,
                     setDialogVisible = setShowDialog,
                     email = login,
                     password = password,
@@ -146,7 +150,7 @@ private fun LoginScreen(
             alignment = TextAlign.End,
             text = stringResource(id = R.string.no_account)
         ) {
-            navController.navigate(NavigationItem.Registration.route)
+            navToRegistration()
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
@@ -156,7 +160,7 @@ private fun LoginScreen(
             alignment = TextAlign.End,
             text = stringResource(id = R.string.reset_password)
         ) {
-            navController.navigate(NavigationItem.ForgotPassword.route)
+            navToRememberPassword()
         }
 
         Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_xlarge)))
@@ -167,7 +171,7 @@ private fun LoginScreen(
             onClick = {
                 onLogin(
                     viewModel = viewModel,
-                    navController = navController,
+                    navToHome = navToHome,
                     setDialogVisible = setShowDialog,
                     email = login,
                     password = password,
@@ -191,7 +195,7 @@ private fun isFormValid(email: String, password: String): Boolean {
 
 private fun onLogin(
     viewModel: LoginViewModel,
-    navController: NavController,
+    navToHome: () -> Unit,
     setDialogVisible: (Boolean) -> Unit,
     setDialogMessage: (LoginDialog) -> Unit,
     email: String,
@@ -201,7 +205,7 @@ private fun onLogin(
         viewModel.onLoginClick(
             email = email,
             password = password,
-            afterSuccess = { navController.navigate(NavigationItem.Random.route) },
+            afterSuccess = { navToHome() },
             afterFailure = { isEmailVerifyError, message ->
                 setDialogVisible(true)
                 if (isEmailVerifyError) {
