@@ -50,7 +50,7 @@ class MainViewModel(
         this.showBottomBar.value = show
     }
 
-    fun getIndex(navigationItem: NavigationItem): Int {
+    fun setIndex(navigationItem: NavigationItem): Int {
         val bottomBarItem = bottomNavigationList.find { it.navItem.route == navigationItem.route }
         val index = bottomNavigationList.indexOf(bottomBarItem)
 

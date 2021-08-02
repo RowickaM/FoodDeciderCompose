@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.NavigationItem
@@ -32,54 +31,54 @@ import pl.gungnir.fooddecider.util.navigation.NavHostImpl
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
 
-    private var navController: NavHostController? = null
+    private var actions: Actions? = null
     private val viewModel by inject<MainViewModel>(MainViewModel::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            navController = rememberNavController()
+            val navController = rememberNavController()
 
-            val action = remember(navController) { Actions(navController) }
+            actions = remember(navController) { Actions(navController) }
             val bottomNavigationList = viewModel.bottomNavigationList
 
-            FoodDeciderTheme {
-                Scaffold(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = MaterialTheme.colors.background),
-                    bottomBar = {
-                        if (viewModel.showBottomBar.value) {
-                            BottomBar(
-                                navigationList = bottomNavigationList,
-                                activeIndex = viewModel.selectedBottomItem.value,
-                                setActiveIndex = viewModel::setSelectedBottomNavItem,
-                                onItemCLick = action.navigateTo
-                            )
+            actions?.let { action ->
+                FoodDeciderTheme {
+                    Scaffold(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = MaterialTheme.colors.background),
+                        bottomBar = {
+                            if (viewModel.showBottomBar.value) {
+                                BottomBar(
+                                    navigationList = bottomNavigationList,
+                                    activeIndex = viewModel.selectedBottomItem.value,
+                                    setActiveIndex = viewModel::setSelectedBottomNavItem,
+                                    onItemCLick = action.navigateTo
+                                )
+                            }
+                        },
+                        topBar = {
+                            if (viewModel.showToolbar.value) {
+                                Toolbar(
+                                    title = viewModel.title.value,
+                                    icon = additionalIcon(actualNav = action.getActualNavigationItem()),
+                                    onIconClick = {
+                                        additionalIconAction(
+                                            actualNav = action.getActualNavigationItem(),
+                                            navToList = action.navToFoodList
+                                        )
+                                    },
+                                    onLogout = {
+                                        viewModel.logout { clearHistoryStack() }
+                                    }
+                                )
+                            }
                         }
-                    },
-                    topBar = {
-                        if (viewModel.showToolbar.value) {
-                            Toolbar(
-                                title = viewModel.title.value,
-                                icon = additionalIcon(actualNav = action.getActualNavigationItem()),
-                                onIconClick = {
-                                    additionalIconAction(
-                                        actualNav = action.getActualNavigationItem(),
-                                        navToList = action.navToFoodList
-                                    )
-                                },
-                                onLogout = {
-                                    viewModel.logout { clearHistoryStack() }
-                                }
-                            )
-                        }
-                    }
-                ) {
-                    navController?.let { nav ->
+                    ) {
                         NavHostImpl(
                             viewModel = viewModel,
-                            navController = nav,
+                            navController = navController,
                             navToHome = action.navToHome,
                             navToRememberPassword = action.navToRememberPassword,
                             navToRegistration = action.navToRegistration,
@@ -87,8 +86,8 @@ class MainActivity : ComponentActivity() {
                             navBack = action.navBack,
                         )
                     }
-                }
 
+                }
             }
         }
     }
@@ -112,8 +111,9 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onBackPressed() {
-        if (navController?.currentDestination?.route != NavigationItem.Random.route) {
+        if (actions?.getActualNavigationItem()?.route != NavigationItem.Random.route) {
             super.onBackPressed()
+            actions?.getActualNavigationItem()?.let { viewModel.setIndex(it) }
         } else {
             finish()
         }

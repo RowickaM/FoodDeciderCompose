@@ -5,7 +5,9 @@ import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 
-class Actions(private val navController: NavController?) {
+class Actions(
+    private val navController: NavController?
+) {
 
     val navToHome: () -> Unit = {
         navController?.navigate(NavigationItem.Random.route)
