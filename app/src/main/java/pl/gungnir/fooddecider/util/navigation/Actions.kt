@@ -2,9 +2,10 @@ package pl.gungnir.fooddecider.util.navigation
 
 import androidx.navigation.NavController
 import pl.gungnir.fooddecider.model.data.NavigationItem
+import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 
-class Actions(navController: NavController?) {
+class Actions(private val navController: NavController?) {
 
     val navToHome: () -> Unit = {
         navController?.navigate(NavigationItem.Random.route)
@@ -28,5 +29,24 @@ class Actions(navController: NavController?) {
                 it
             )
         )
+    }
+
+    val navToFoodList: () -> Unit = {
+        navController?.navigate(NavigationItem.RandomList.route)
+    }
+
+    val navigateTo: (BottomBarItem) -> Unit = {
+        navController?.navigate(it.navItem.route)
+    }
+
+    fun getActualNavigationItem(): NavigationItem {
+        return when (navController?.currentDestination?.route) {
+            NavigationItem.Login.route -> NavigationItem.Login
+            NavigationItem.Random.route -> NavigationItem.Random
+            NavigationItem.RandomList.route -> NavigationItem.RandomList
+            NavigationItem.FoodTemplates.route -> NavigationItem.FoodTemplates
+            NavigationItem.FoodTemplateDetails.route -> NavigationItem.FoodTemplateDetails
+            else -> NavigationItem.Random
+        }
     }
 }
