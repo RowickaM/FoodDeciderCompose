@@ -82,13 +82,19 @@ fun DialogDisplay(
 fun DialogDisplay(
     title: String,
     onChangeVisible: (Boolean) -> Unit,
-    buttons: @Composable () -> Unit,
+    buttons: @Composable () -> Unit = {},
     body: @Composable () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = { onChangeVisible(false) },
         buttons = buttons,
-        title = { Text(text = title, style = MaterialTheme.typography.h1) },
+        title = {
+            Text(
+                modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.space_default)),
+                text = title,
+                style = MaterialTheme.typography.h1
+            )
+        },
         text = body
     )
 }

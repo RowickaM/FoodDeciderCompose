@@ -56,4 +56,9 @@
     <string name="singup_user_success">Pomyślnie utworzono użytkownika</string>
     <string name="firebase_user_not_verify">Email nie został zweryfikowany</string>
     <string name="send_email_button">Wyślij email weryfikujący ponownie</string>
+
+    <string name="credits">Specjalne podziękowania</string>
+    <string name="photos_in_app">Zdjęcia z propozycji potraw.</string>
+    <string name="authors">Autorzy:</string>
+    <string name="icons_in_app">Ikony z Material Design oraz FlatIcon. Niektóre ikony zostały przerobione na własne potrzeby.</string>
 </resources>

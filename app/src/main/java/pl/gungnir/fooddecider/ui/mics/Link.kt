@@ -13,7 +13,7 @@ fun Link(
     modifier: Modifier = Modifier,
     alignment: TextAlign? = null,
     text: String,
-    onClick: () -> Unit
+    onClick: () -> Unit = {}
 ) {
     Text(
         modifier = Modifier
