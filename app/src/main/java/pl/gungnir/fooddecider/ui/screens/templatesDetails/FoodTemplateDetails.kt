@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
@@ -26,8 +26,10 @@ import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.ui.mics.Tag
+import pl.gungnir.fooddecider.ui.mics.getImage
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
 
+@ExperimentalCoilApi
 @Composable
 fun FoodTemplateDetails(
     templateId: String
@@ -50,64 +52,58 @@ fun FoodTemplateDetails(
     } ?: HeaderFoodTemplateDetails(template = null)
 }
 
+@ExperimentalCoilApi
 @Composable
 private fun HeaderFoodTemplateDetails(
     template: TemplateDetails?
 ) {
     val height = dimensionResource(id = R.dimen.height_food_template_details)
-    val image = rememberImagePainter(
-        data = template?.imageUrl ?: "",
-        builder = {
-            placeholder(R.drawable.ic_steak)
-            error(R.drawable.background_template_default)
-        }
-    )
+    val image = template?.imageUrl.getImage()
+
     Surface(
         modifier = Modifier.height(height),
         elevation = dimensionResource(id = R.dimen.elevation_small)
     ) {
-        Box {
-            template?.let {
-                ImageBackgroundColumn(
-                    modifier = Modifier.height(height),
-                    image = image
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        text = template.categoryFoodName.uppercase(),
-                        style = MaterialTheme.typography.h1,
-                        color = MaterialTheme.colors.onPrimary
-                    )
-
-                    LazyRow(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = dimensionResource(id = R.dimen.space_xMedium),
-                                vertical = dimensionResource(id = R.dimen.space_default)
-                            ),
-                    ) {
-                        itemsIndexed(template.foodTags) { index, tag ->
-                            Tag(tagValue = tag)
-                            if (index != template.foodTags.size - 1) {
-                                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_default)))
-                            }
-                        }
-                    }
-                }
-            } ?: ImageBackgroundColumn(
+        template?.let {
+            ImageBackgroundColumn(
                 modifier = Modifier.height(height),
-                verticalAlignment = Arrangement.Center
+                image = image
             ) {
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = stringResource(id = R.string.templates_template_no_exist),
+                    text = template.categoryFoodName.uppercase(),
                     style = MaterialTheme.typography.h1,
                     color = MaterialTheme.colors.onPrimary
                 )
+
+                LazyRow(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = dimensionResource(id = R.dimen.space_xMedium),
+                            vertical = dimensionResource(id = R.dimen.space_default)
+                        ),
+                ) {
+                    itemsIndexed(template.foodTags) { index, tag ->
+                        Tag(tagValue = tag)
+                        if (index != template.foodTags.size - 1) {
+                            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.space_default)))
+                        }
+                    }
+                }
             }
+        } ?: ImageBackgroundColumn(
+            modifier = Modifier.height(height),
+            verticalAlignment = Arrangement.Center
+        ) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = stringResource(id = R.string.templates_template_no_exist),
+                style = MaterialTheme.typography.h1,
+                color = MaterialTheme.colors.onPrimary
+            )
         }
     }
 }
