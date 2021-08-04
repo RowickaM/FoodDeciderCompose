@@ -51,9 +51,11 @@ class FirebaseHelperImpl : FirebaseHelper {
                                     val category = data[KEY_DATA_CATEGORY] as Map<String, Any>
                                     val categoryName = category[KEY_DATA_NAME] as String
                                     val tags = category[KEY_DATA_TAGS] as List<String>
+                                    val imageUrl = category[KEY_DATA_IMAGE] as String?
 
                                     Template(
                                         id = it.id,
+                                        imageUrl = imageUrl,
                                         categoryFoodName = categoryName,
                                         foodCount = foods.size,
                                         foodTags = tags,

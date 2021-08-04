@@ -2,6 +2,7 @@ package pl.gungnir.fooddecider.model.data
 
 data class TemplateDetails(
     val id: String,
+    val imageUrl: String?,
     val categoryFoodName: String,
     val foodCount: Int,
     val foodTags: List<String>,

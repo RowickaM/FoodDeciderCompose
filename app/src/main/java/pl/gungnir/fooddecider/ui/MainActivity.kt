@@ -18,6 +18,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.mics.BottomBar
@@ -26,6 +27,7 @@ import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 import pl.gungnir.fooddecider.util.navigation.Actions
 import pl.gungnir.fooddecider.util.navigation.NavHostImpl
 
+@ExperimentalCoilApi
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -86,7 +88,6 @@ class MainActivity : ComponentActivity() {
                             navBack = action.navBack,
                         )
                     }
-
                 }
             }
         }
