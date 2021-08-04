@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
@@ -54,6 +55,13 @@ private fun HeaderFoodTemplateDetails(
     template: TemplateDetails?
 ) {
     val height = dimensionResource(id = R.dimen.height_food_template_details)
+    val image = rememberImagePainter(
+        data = template?.imageUrl ?: "",
+        builder = {
+            placeholder(R.drawable.ic_steak)
+            error(R.drawable.background_template_default)
+        }
+    )
     Surface(
         modifier = Modifier.height(height),
         elevation = dimensionResource(id = R.dimen.elevation_small)
@@ -62,6 +70,7 @@ private fun HeaderFoodTemplateDetails(
             template?.let {
                 ImageBackgroundColumn(
                     modifier = Modifier.height(height),
+                    image = image
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
