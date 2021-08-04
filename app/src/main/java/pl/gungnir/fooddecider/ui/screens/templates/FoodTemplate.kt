@@ -21,10 +21,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.Template
-import pl.gungnir.fooddecider.ui.mics.EmptyInfo
-import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
-import pl.gungnir.fooddecider.ui.mics.Loading
-import pl.gungnir.fooddecider.ui.mics.Tag
+import pl.gungnir.fooddecider.ui.mics.*
 
 @ExperimentalCoilApi
 @Composable
