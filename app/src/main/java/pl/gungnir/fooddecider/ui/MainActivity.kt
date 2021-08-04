@@ -27,6 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
+import coil.annotation.ExperimentalCoilApi
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.NavigationItem
@@ -43,14 +44,15 @@ import pl.gungnir.fooddecider.ui.screens.templatesDetails.FoodTemplateDetails
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 
+@ExperimentalCoilApi
 @ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@ExperimentalComposeUiApi
 class MainActivity : ComponentActivity() {
 
     private var navController: NavHostController? = null
     private val viewModel by inject<MainViewModel>(MainViewModel::class.java)
 
-    @ExperimentalMaterialApi
-    @ExperimentalComposeUiApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -108,7 +110,7 @@ class MainActivity : ComponentActivity() {
                         NavHost(
                             modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.height_bottom_bar)),
                             navController = nav,
-                            startDestination = NavigationItem.Login.route
+                            startDestination = NavigationItem.FoodTemplates.route
                         ) {
                             composable(route = NavigationItem.Login.route) {
                                 showBottomBar.value = false

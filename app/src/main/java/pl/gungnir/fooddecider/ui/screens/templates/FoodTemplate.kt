@@ -16,7 +16,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
@@ -26,6 +26,7 @@ import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.ui.mics.*
 import pl.gungnir.fooddecider.util.KEY_TEMPLATE_ID
 
+@ExperimentalCoilApi
 @Composable
 fun FoodTemplate(
     navController: NavController
@@ -62,19 +63,15 @@ fun FoodTemplate(
     }
 }
 
+@ExperimentalCoilApi
 @Composable
 fun FoodTemplateItem(
     template: Template,
     onClick: () -> Unit
 ) {
     val height = dimensionResource(id = R.dimen.height_food_template_item)
-    val image = rememberImagePainter(
-        data = template.imageUrl ?: "",
-        builder = {
-            placeholder(R.drawable.ic_logo_foreground)
-            error(R.drawable.ic_logo_foreground)
-        }
-    )
+    val image = template.imageUrl.getImage()
+
     Surface(
         modifier = Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.space_large))
@@ -83,50 +80,49 @@ fun FoodTemplateItem(
         shape = MaterialTheme.shapes.medium,
         elevation = dimensionResource(id = R.dimen.elevation_small)
     ) {
-        Box {
-            ImageBackgroundColumn(
-                modifier = Modifier.height(height),
-                image = image
+        ImageBackgroundColumn(
+            modifier = Modifier.height(height),
+            image = image
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        end = dimensionResource(id = R.dimen.space_large),
+                        top = dimensionResource(id = R.dimen.space_default)
+                    ),
+                textAlign = TextAlign.End,
+                text = stringResource(id = R.string.count_template, template.foodCount),
+                style = MaterialTheme.typography.subtitle2,
+                color = MaterialTheme.colors.onPrimary
+            )
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                text = template.categoryFoodName.uppercase(),
+                style = MaterialTheme.typography.h1,
+                color = MaterialTheme.colors.onPrimary
+            )
+            LazyRow(
+                modifier = Modifier
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.space_xMedium),
+                        vertical = dimensionResource(id = R.dimen.space_default)
+                    )
             ) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            end = dimensionResource(id = R.dimen.space_large),
-                            top = dimensionResource(id = R.dimen.space_default)
-                        ),
-                    textAlign = TextAlign.End,
-                    text = stringResource(id = R.string.count_template, template.foodCount),
-                    style = MaterialTheme.typography.subtitle2,
-                    color = MaterialTheme.colors.onPrimary
-                )
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    text = template.categoryFoodName.uppercase(),
-                    style = MaterialTheme.typography.h1,
-                    color = MaterialTheme.colors.onPrimary
-                )
-                LazyRow(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = dimensionResource(id = R.dimen.space_xMedium),
-                            vertical = dimensionResource(id = R.dimen.space_default)
+                itemsIndexed(template.foodTags) { index, tag ->
+                    Tag(tagValue = tag)
+                    if (index != template.foodTags.size - 1) {
+                        Spacer(
+                            modifier = Modifier
+                                .width(dimensionResource(id = R.dimen.space_default))
                         )
-                ) {
-                    itemsIndexed(template.foodTags) { index, tag ->
-                        Tag(tagValue = tag)
-                        if (index != template.foodTags.size - 1) {
-                            Spacer(
-                                modifier = Modifier
-                                    .width(dimensionResource(id = R.dimen.space_default))
-                            )
-                        }
                     }
                 }
             }
         }
     }
+//}
 }
 
 private fun navigateToDetails(
