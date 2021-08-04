@@ -4,6 +4,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -132,6 +134,13 @@ fun FoodAnimationOnClick(
 }
 
 @ExperimentalAnimationApi
+@Preview(showBackground = true)
+@Composable
+private fun FoodAnimationOnClickView() {
+    FoodAnimationOnClick(onClick = {}, enabledClick = true)
+}
+
+@ExperimentalAnimationApi
 @Composable
 private fun FadeInFadeOutAnimation(
     visible: Boolean,
@@ -155,4 +164,24 @@ private fun FadeInFadeOutAnimation(
             targetOffset = { IntOffset(-delta, 0) }),
         content = content
     )
+}
+
+@ExperimentalAnimationApi
+@Preview(showBackground = true)
+@Composable
+private fun FadeInFadeOutAnimationView() {
+    val visible = remember { mutableStateOf(true) }
+    Box(modifier = Modifier
+        .size(height = 50.dp, width = 50.dp)
+        .clickable { visible.value = !visible.value }) {
+        FadeInFadeOutAnimation(
+            visible = visible.value,
+            durationAnimation = 500
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_apple),
+                contentDescription = null
+            )
+        }
+    }
 }
