@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import coil.annotation.ExperimentalCoilApi
@@ -25,11 +24,6 @@ fun ImageBackground(
         contentDescription = null,
         modifier = Modifier.then(modifier),
         contentScale = ContentScale.Crop,
-        colorFilter = if (image?.state is ImagePainter.State.Success) {
-            ColorFilter.lighting(Color(0x80313131), Color(0x80313131))
-        } else {
-            null
-        }
     )
 }
 
@@ -42,11 +36,6 @@ fun ImageBackgroundColumn(
     verticalAlignment: Arrangement.HorizontalOrVertical = Arrangement.SpaceBetween,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    val background = if (image?.state is ImagePainter.State.Success) {
-        Color.Transparent
-    } else {
-        Color(0x80313131)
-    }
     Box {
         ImageBackground(
             modifier = Modifier
@@ -57,7 +46,7 @@ fun ImageBackgroundColumn(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(background)
+                .background(Color(0x80313131))
                 .then(modifier),
             verticalArrangement = verticalAlignment,
             content = content

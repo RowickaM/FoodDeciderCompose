@@ -12,12 +12,15 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import pl.gungnir.fooddecider.R
@@ -51,6 +54,23 @@ fun BottomBar(
             )
         }
     }
+}
+
+@ExperimentalAnimationApi
+@Preview(showBackground = true)
+@Composable
+private fun BottomBarView() {
+    val (activeIndex, setActiveIndex) = remember { mutableStateOf(1) }
+    BottomBar(
+        navigationList = listOf(
+            BottomBarItem.RandomFoodList("list"),
+            BottomBarItem.RandomFood("home"),
+            BottomBarItem.TemplateFood("template")
+        ),
+        activeIndex = activeIndex,
+        setActiveIndex = setActiveIndex,
+        onItemCLick = {},
+    )
 }
 
 @ExperimentalAnimationApi
@@ -102,6 +122,20 @@ private fun BottomBarItem(
     }
 }
 
+@ExperimentalAnimationApi
+@Preview(showBackground = true)
+@Composable
+private fun BottomBarItemView() {
+
+    BottomBarItem(
+        isActive = 1,
+        item = BottomBarItem.RandomFood("home"),
+        index = 1,
+        onCLick = {},
+        setActiveItem = {},
+    )
+}
+
 @Composable
 private fun ExpandedBottomBarItem(
     item: BottomBarItem,
@@ -138,6 +172,18 @@ private fun ExpandedBottomBarItem(
     }
 }
 
+@Preview(showBackground = true)
+@Composable
+private fun ExpandedBottomBarItemView() {
+    ExpandedBottomBarItem(
+        item = BottomBarItem.RandomFood("home"),
+        color = MaterialTheme.colors.primary,
+        backgroundColor = MaterialTheme.colors.primary,
+        onItemCLick = {}
+    )
+}
+
+
 @Composable
 private fun CollapsedBottomBarItem(
     item: BottomBarItem,
@@ -166,6 +212,16 @@ private fun CollapsedBottomBarItem(
             )
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CollapsedBottomBarItemView() {
+    CollapsedBottomBarItem(
+        item = BottomBarItem.RandomFood("home"),
+        color = MaterialTheme.colors.primary,
+        onItemCLick = {}
+    )
 }
 
 sealed class BottomBarItem(
