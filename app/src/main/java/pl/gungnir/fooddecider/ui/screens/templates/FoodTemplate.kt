@@ -71,8 +71,8 @@ fun FoodTemplateItem(
     val image = rememberImagePainter(
         data = template.imageUrl ?: "",
         builder = {
-            placeholder(R.drawable.ic_steak)
-            error(R.drawable.background_template_default)
+            placeholder(R.drawable.ic_logo_foreground)
+            error(R.drawable.ic_logo_foreground)
         }
     )
     Surface(

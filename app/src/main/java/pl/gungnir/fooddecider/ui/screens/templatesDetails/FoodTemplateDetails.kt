@@ -59,7 +59,7 @@ private fun HeaderFoodTemplateDetails(
         data = template?.imageUrl ?: "",
         builder = {
             placeholder(R.drawable.ic_steak)
-            error(R.drawable.background_template_default)
+            error(R.drawable.ic_logo_foreground)
         }
     )
     Surface(
