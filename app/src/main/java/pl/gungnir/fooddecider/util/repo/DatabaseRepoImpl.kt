@@ -108,6 +108,7 @@ class DatabaseRepoImpl(
         return Pair(
             TemplateDetails(
                 id = template.id,
+                imageUrl = template.imageUrl,
                 categoryFoodName = template.categoryFoodName,
                 foodCount = template.foodCount,
                 foodTags = template.foodTags,
