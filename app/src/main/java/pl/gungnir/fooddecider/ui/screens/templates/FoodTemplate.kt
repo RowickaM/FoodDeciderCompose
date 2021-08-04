@@ -16,6 +16,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
@@ -67,6 +68,13 @@ fun FoodTemplateItem(
     onClick: () -> Unit
 ) {
     val height = dimensionResource(id = R.dimen.height_food_template_item)
+    val image = rememberImagePainter(
+        data = template.imageUrl ?: "",
+        builder = {
+            placeholder(R.drawable.ic_steak)
+            error(R.drawable.background_template_default)
+        }
+    )
     Surface(
         modifier = Modifier
             .padding(horizontal = dimensionResource(id = R.dimen.space_large))
@@ -77,7 +85,8 @@ fun FoodTemplateItem(
     ) {
         Box {
             ImageBackgroundColumn(
-                modifier = Modifier.height(height)
+                modifier = Modifier.height(height),
+                image = image
             ) {
                 Text(
                     modifier = Modifier
