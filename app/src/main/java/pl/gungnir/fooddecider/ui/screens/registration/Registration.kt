@@ -17,7 +17,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.DialogDisplay
@@ -30,7 +29,7 @@ import pl.gungnir.fooddecider.util.helper.isPasswordValid
 @ExperimentalComposeUiApi
 @Composable
 fun Registration(
-    navController: NavController
+    navBack: () -> Unit
 ) {
     val viewModel by inject<RegistrationViewModel>(RegistrationViewModel::class.java)
 
@@ -70,7 +69,7 @@ fun Registration(
                 onChangeVisible = setShowDialog,
                 onButtonClick = {
                     if (dialogMessage is RegistrationDialog.OnSuccess) {
-                        navController.navigateUp()
+                        navBack()
                     }
                 }
             )

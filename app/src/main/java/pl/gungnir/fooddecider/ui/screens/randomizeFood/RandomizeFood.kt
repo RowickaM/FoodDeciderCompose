@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.navigation.NavController
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.FoodAnimationOnClick
@@ -18,9 +17,7 @@ import pl.gungnir.fooddecider.util.RANDOM_FOOD_TIME
 
 @ExperimentalAnimationApi
 @Composable
-fun RandomizeFood(
-    navController: NavController,
-) {
+fun RandomizeFood() {
     val viewModel by inject<SaveFoodShareViewModel>(SaveFoodShareViewModel::class.java)
 
     viewModel.onInitialize()

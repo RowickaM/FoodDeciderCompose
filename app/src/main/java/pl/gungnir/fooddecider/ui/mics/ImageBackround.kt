@@ -1,6 +1,7 @@
 package pl.gungnir.fooddecider.ui.mics
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,6 +42,11 @@ fun ImageBackgroundColumn(
     verticalAlignment: Arrangement.HorizontalOrVertical = Arrangement.SpaceBetween,
     content: @Composable ColumnScope.() -> Unit
 ) {
+    val background = if (image?.state is ImagePainter.State.Success) {
+        Color.Transparent
+    } else {
+        Color(0x80313131)
+    }
     Box {
         ImageBackground(
             modifier = Modifier
@@ -51,6 +57,7 @@ fun ImageBackgroundColumn(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .background(background)
                 .then(modifier),
             verticalArrangement = verticalAlignment,
             content = content
