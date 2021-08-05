@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import pl.gungnir.fooddecider.R
 
 enum class InputsType {
@@ -98,6 +99,19 @@ fun InputOutlined(
         },
         singleLine = true,
         maxLines = 1,
+    )
+}
+
+@ExperimentalComposeUiApi
+@Preview(showBackground = true)
+@Composable
+private fun InputOutlinedView() {
+    val (value, onValueChange) = remember { mutableStateOf("") }
+    InputOutlined(
+        value = value,
+        onValueChange = onValueChange,
+        label = "label",
+        type = InputsType.PASSWORD
     )
 }
 
@@ -195,6 +209,22 @@ fun InputOutlined(
     )
 }
 
+@ExperimentalComposeUiApi
+@Preview(showBackground = true)
+@Composable
+private fun InputOutlinedWithErrorView() {
+    val (value, onValueChange) = remember { mutableStateOf("") }
+    val hasError = value.isNotEmpty()
+    InputOutlined(
+        value = value,
+        onValueChange = onValueChange,
+        label = "label",
+        onErrorMessage = "error",
+        isValidValue = { hasError },
+        type = InputsType.PASSWORD
+    )
+}
+
 @Composable
 fun ErrorMessageInput(text: String, widthPercent: Float) {
     Text(
@@ -203,5 +233,15 @@ fun ErrorMessageInput(text: String, widthPercent: Float) {
         style = MaterialTheme.typography.caption,
         modifier = Modifier.fillMaxWidth(widthPercent),
         textAlign = TextAlign.End
+    )
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun ErrorMessageInputView() {
+    ErrorMessageInput(
+        text = "error message",
+        widthPercent = 1f
     )
 }
