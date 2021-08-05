@@ -3,17 +3,18 @@ package pl.gungnir.fooddecider.ui.mics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import coil.annotation.ExperimentalCoilApi
+import androidx.compose.ui.tooling.preview.Preview
 import coil.compose.ImagePainter
 import pl.gungnir.fooddecider.R
 
-@ExperimentalCoilApi
 @Composable
 fun ImageBackground(
     modifier: Modifier = Modifier,
@@ -27,7 +28,18 @@ fun ImageBackground(
     )
 }
 
-@ExperimentalCoilApi
+@Preview(showBackground = true)
+@Composable
+private fun ImageBackgroundView() {
+    Box {
+        ImageBackground(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .height(dimensionResource(id = R.dimen.height_food_template_item)),
+        )
+    }
+}
+
 @Composable
 fun ImageBackgroundColumn(
     modifier: Modifier = Modifier,
@@ -51,5 +63,20 @@ fun ImageBackgroundColumn(
             verticalArrangement = verticalAlignment,
             content = content
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ImageBackgroundColumnView() {
+    Box {
+        ImageBackgroundColumn(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .height(dimensionResource(id = R.dimen.height_food_template_item)),
+            modifierImage = Modifier.height(dimensionResource(id = R.dimen.height_food_template_item))
+        ) {
+            Text(text = "content")
+        }
     }
 }
