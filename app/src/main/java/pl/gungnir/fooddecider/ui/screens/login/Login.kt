@@ -18,6 +18,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.*
@@ -55,6 +56,17 @@ fun Login(
             navToRememberPassword = navToRememberPassword,
         )
     }
+}
+
+@ExperimentalComposeUiApi
+@Preview(showBackground = true)
+@Composable
+private fun LoginView() {
+    Login(
+        navToHome = {},
+        navToRegistration = {},
+        navToRememberPassword = {}
+    )
 }
 
 @ExperimentalComposeUiApi
