@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -61,6 +62,13 @@ fun FoodTemplate(
 }
 
 @ExperimentalCoilApi
+@Preview(showBackground = true)
+@Composable
+private fun FoodTemplateView() {
+    FoodTemplate(navToTemplateDetails = {})
+}
+
+
 @Composable
 fun FoodTemplateItem(
     template: Template,
@@ -119,4 +127,20 @@ fun FoodTemplateItem(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FoodTemplateItemView() {
+    FoodTemplateItem(
+        template = Template(
+            id = "1",
+            imageUrl = null,
+            categoryFoodName = "category",
+            foodCount = 2,
+            foodTags = listOf("tag 1", "tag 2"),
+            foodList = listOf("food 1", "food 2")
+        ),
+        onClick = {},
+    )
 }
