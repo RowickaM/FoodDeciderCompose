@@ -1,15 +1,16 @@
 package pl.gungnir.fooddecider.ui.mics
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.Composable
@@ -18,20 +19,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat.startActivity
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.credits.iconAuthors
 import pl.gungnir.fooddecider.credits.unsplashAuthors
-import androidx.core.content.ContextCompat.startActivity
-
-import android.content.Intent
-import android.net.Uri
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 
 
 @Composable
@@ -41,40 +38,14 @@ fun Toolbar(
     title: String? = null,
     onLogout: (() -> Unit)? = null
 ) {
-    val context = LocalContext.current
+
     val (showInfoDialog, setShowInfoDialog) = remember { mutableStateOf(false) }
 
     if (showInfoDialog) {
         DialogDisplay(
             title = stringResource(id = R.string.credits),
             onChangeVisible = setShowInfoDialog,
-            body = {
-                Column {
-                    Text(stringResource(id = R.string.photos_in_app))
-                    Text(stringResource(id = R.string.authors))
-                    LazyColumn {
-                        items(items = unsplashAuthors) { credits ->
-                            Link(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { openLink(context, credits.link) }
-                                    .padding(horizontal = dimensionResource(id = R.dimen.space_small)),
-                                text = credits.author
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
-
-                    Text(stringResource(id = R.string.icons_in_app))
-                    Text(stringResource(id = R.string.authors))
-                    LazyColumn{
-                        items(items = iconAuthors){ author ->
-                            Text(text = author)
-                        }
-                    }
-                }
-            },
+            body = { BodyCreditsDialog() },
         )
     }
 
@@ -93,13 +64,12 @@ fun Toolbar(
                 .align(alignment = Alignment.CenterStart),
         ) {
             onLogout?.let {
-                IconButton(onClick = onLogout) {
-                    Icon(
-                        modifier = Modifier.wrapContentWidth(Alignment.Start),
-                        imageVector = Icons.Outlined.Logout,
-                        contentDescription = stringResource(id = R.string.logout),
-                    )
-                }
+                IconButton(
+                    onClick = onLogout,
+                    modifier = Modifier.wrapContentWidth(Alignment.Start),
+                    icon = Icons.Outlined.Logout,
+                    contentDescription = stringResource(id = R.string.logout),
+                )
             }
         }
 
@@ -118,32 +88,69 @@ fun Toolbar(
                 .align(alignment = Alignment.CenterEnd),
         ) {
             icon?.let {
-                IconButton(onClick = onIconClick) {
-                    Icon(
-                        modifier = Modifier.wrapContentWidth(Alignment.End),
-                        imageVector = icon,
-                        contentDescription = null,
-                    )
-                }
-            }
-
-            IconButton(
-                onClick = {
-                    setShowInfoDialog(true)
-                }
-            ) {
-                Icon(
+                IconButton(
+                    onClick = onIconClick,
                     modifier = Modifier.wrapContentWidth(Alignment.End),
-                    imageVector = Icons.Outlined.Info,
+                    icon = icon,
                     contentDescription = null,
                 )
             }
+
+            IconButton(
+                modifier = Modifier.wrapContentWidth(Alignment.End),
+                icon = Icons.Outlined.Info,
+                contentDescription = null,
+                onClick = { setShowInfoDialog(true) }
+            )
         }
     }
 }
 
-private fun openLink(context:Context, link: String){
+private fun openLink(context: Context, link: String) {
     val intent = Intent(Intent.ACTION_VIEW)
     intent.data = Uri.parse(link)
     startActivity(context, intent, null)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ToolbarView() {
+
+    Toolbar(
+        icon = Icons.Default.Add,
+        onIconClick = {},
+        title = "title",
+        onLogout = {}
+    )
+}
+
+@Composable
+private fun BodyCreditsDialog() {
+    val context = LocalContext.current
+
+    Column {
+        Text(stringResource(id = R.string.photos_in_app))
+        Text(stringResource(id = R.string.authors))
+        LazyColumn {
+            items(items = unsplashAuthors) { credits ->
+                Link(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { openLink(context, credits.link) }
+                        .padding(horizontal = dimensionResource(id = R.dimen.space_small)),
+                    text = credits.author
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_small)))
+
+        Text(stringResource(id = R.string.icons_in_app))
+        Text(stringResource(id = R.string.authors))
+        LazyColumn {
+            items(items = iconAuthors) { author ->
+                Text(text = author)
+            }
+        }
+    }
 }

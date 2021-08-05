@@ -70,6 +70,7 @@ class MainActivity : ComponentActivity() {
                                             actualNav = action.getActualNavigationItem(),
                                             navToList = action.navToFoodList
                                         )
+                                        viewModel.setSelectedBottomNavItem(0)
                                     },
                                     onLogout = {
                                         viewModel.logout { clearHistoryStack() }
