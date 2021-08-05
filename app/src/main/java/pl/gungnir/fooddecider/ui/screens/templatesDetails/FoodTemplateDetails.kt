@@ -17,8 +17,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import org.koin.java.KoinJavaComponent.inject
@@ -29,7 +29,6 @@ import pl.gungnir.fooddecider.ui.mics.Tag
 import pl.gungnir.fooddecider.ui.mics.getImage
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
 
-@ExperimentalCoilApi
 @Composable
 fun FoodTemplateDetails(
     templateId: String
@@ -52,7 +51,12 @@ fun FoodTemplateDetails(
     } ?: HeaderFoodTemplateDetails(template = null)
 }
 
-@ExperimentalCoilApi
+@Preview(showBackground = true)
+@Composable
+private fun FoodTemplateDetailsView() {
+    FoodTemplateDetails(templateId = "template id")
+}
+
 @Composable
 private fun HeaderFoodTemplateDetails(
     template: TemplateDetails?
@@ -106,6 +110,22 @@ private fun HeaderFoodTemplateDetails(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HeaderFoodTemplateDetailsView() {
+    HeaderFoodTemplateDetails(
+        template = TemplateDetails(
+            id = "template id",
+            imageUrl = null,
+            categoryFoodName = "category",
+            foodCount = 3,
+            foodTags = listOf("tag"),
+            added = listOf("food 1"),
+            notAdded = listOf("food 2", "food 3")
+        )
+    )
 }
 
 @Composable
@@ -182,4 +202,21 @@ private fun FoodTemplateDetailsLists(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun FoodTemplateDetailsListsView() {
+    FoodTemplateDetailsLists(
+        template = TemplateDetails(
+            id = "template id",
+            imageUrl = null,
+            categoryFoodName = "category",
+            foodCount = 3,
+            foodTags = listOf("tag"),
+            added = listOf("food 1"),
+            notAdded = listOf("food 2", "food 3")
+        ),
+        onAdd = {}
+    )
 }
