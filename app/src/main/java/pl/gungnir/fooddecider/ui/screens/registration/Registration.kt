@@ -17,6 +17,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.DialogDisplay
@@ -203,4 +204,11 @@ private sealed class RegistrationDialog(val message: String) {
     object Empty : RegistrationDialog("")
     class OnSuccess(msg: String) : RegistrationDialog(msg)
     class OnFailure(msg: String) : RegistrationDialog(msg)
+}
+
+@ExperimentalComposeUiApi
+@Preview(showBackground = true)
+@Composable
+private fun RegistrationView() {
+    Registration(navBack = {})
 }
