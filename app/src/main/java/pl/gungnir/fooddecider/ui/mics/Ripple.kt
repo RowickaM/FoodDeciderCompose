@@ -2,11 +2,14 @@ package pl.gungnir.fooddecider.ui.mics
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.tooling.preview.Preview
+import kotlin.random.Random
 
 fun Modifier.nonRippleClickable(enabled: Boolean = true, onClick: () -> Unit) = composed {
     Modifier
@@ -18,12 +21,14 @@ fun Modifier.nonRippleClickable(enabled: Boolean = true, onClick: () -> Unit) = 
         )
 }
 
+@Preview(showBackground = true)
 @Composable
-fun RippleWrapper(
-    onClick: () -> Unit,
-    content: @Composable () -> Unit
-) {
-    Box(modifier = Modifier.clickable(onClick = onClick)) {
-        content.invoke()
-    }
+private fun NonRippleClickableElement() {
+    val (text, changeText) = remember { mutableStateOf("Text. Click to random") }
+    Text(
+        modifier = Modifier.nonRippleClickable {
+            changeText("Link text. Random number ${Random.nextInt(0, 10)}")
+        },
+        text = text
+    )
 }
