@@ -7,16 +7,23 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.ui.mics.*
+import pl.gungnir.fooddecider.ui.mics.EmptyInfo
+import pl.gungnir.fooddecider.ui.mics.InputOutlined
+import pl.gungnir.fooddecider.ui.mics.ItemWithSwipe
+import pl.gungnir.fooddecider.ui.mics.Loading
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.Result
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
+import kotlin.random.Random
 
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -35,6 +42,14 @@ fun SavedFood() {
             else -> EmptyInfo(text = stringResource(id = R.string.list_foods_no_foods))
         }
     }
+}
+
+@ExperimentalMaterialApi
+@ExperimentalComposeUiApi
+@Preview(showBackground = true)
+@Composable
+private fun SavedFoodView() {
+    SavedFood()
 }
 
 @ExperimentalMaterialApi
@@ -91,4 +106,16 @@ fun SavedFoodItem(
             style = MaterialTheme.typography.body1
         )
     }
+}
+
+@ExperimentalMaterialApi
+@Preview(showBackground = true)
+@Composable
+private fun SavedFoodItemView() {
+    val (text, onTextChange) = remember { mutableStateOf("swipe to change text") }
+    SavedFoodItem(
+        name = text,
+        onSwipe = {
+            onTextChange("swipe, change text ${Random.nextInt(0, 10)}")
+        })
 }
