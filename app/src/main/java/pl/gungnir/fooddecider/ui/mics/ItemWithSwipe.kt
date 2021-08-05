@@ -12,16 +12,21 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 
 @ExperimentalMaterialApi
 @Composable
 fun ItemWithSwipe(
+    modifier: Modifier = Modifier,
     onSwipe: () -> Unit,
     icon: ImageVector = Icons.Default.Delete,
     backgroundOnSwipe: Color = Color.Red,
@@ -40,7 +45,9 @@ fun ItemWithSwipe(
 
     SwipeToDismiss(
         state = dismissState,
-        modifier = Modifier.padding(vertical = 4.dp),
+        modifier = Modifier
+            .padding(vertical = 4.dp)
+            .then(modifier),
         directions = setOf(DismissDirection.EndToStart),
         dismissThresholds = { FractionalThreshold(0.1f) },
         background = {
@@ -80,5 +87,19 @@ fun ItemWithSwipe(
 
         dismissContent = body
     )
+}
 
+@ExperimentalMaterialApi
+@Preview(showBackground = true)
+@Composable
+private fun ItemWithSwipeView() {
+    val (text, changeText) = remember { mutableStateOf("swipe to action") }
+    ItemWithSwipe(
+        modifier = Modifier.fillMaxWidth(),
+        onSwipe = {
+            changeText("change text, random number: ${Random.nextInt(0, 10)}")
+        }
+    ) {
+        Text(text = text)
+    }
 }
