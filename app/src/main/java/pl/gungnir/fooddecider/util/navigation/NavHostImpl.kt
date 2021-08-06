@@ -44,6 +44,8 @@ fun NavHostImpl(
         startDestination = NavigationItem.Login.route
     ) {
         composable(route = NavigationItem.Login.route) {
+            CrashlyticsLog.log(NAV_LOGIN_LOG)
+
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
@@ -55,6 +57,8 @@ fun NavHostImpl(
             )
         }
         composable(route = NavigationItem.Registration.route) {
+            CrashlyticsLog.log(NAV_REGISTRATION_LOG)
+
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
@@ -64,6 +68,7 @@ fun NavHostImpl(
             )
         }
         composable(route = NavigationItem.ForgotPassword.route) {
+            CrashlyticsLog.log(NAV_FORGOT_PASSWORD_LOG)
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
@@ -73,6 +78,7 @@ fun NavHostImpl(
             )
         }
         composable(route = NavigationItem.Random.route) {
+            CrashlyticsLog.log(NAV_RANDOM_LOG)
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
             viewModel.setTitle("")
@@ -80,6 +86,7 @@ fun NavHostImpl(
             RandomizeFood()
         }
         composable(route = NavigationItem.RandomList.route) {
+            CrashlyticsLog.log(NAV_RANDOM_LIST_LOG)
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
             viewModel.setTitle(stringResource(id = R.string.templates_title))
@@ -87,6 +94,7 @@ fun NavHostImpl(
             SavedFood()
         }
         composable(route = NavigationItem.FoodTemplates.route) {
+            CrashlyticsLog.log(NAV_FOOD_TEMPLATE_LOG)
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
             viewModel.setTitle(stringResource(id = R.string.list_foods_title))
@@ -103,6 +111,7 @@ fun NavHostImpl(
                 }
             )
         ) {
+            CrashlyticsLog.log(NAV_FOOD_TEMPLATE_DETAILS_LOG)
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
