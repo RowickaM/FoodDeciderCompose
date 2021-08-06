@@ -30,7 +30,6 @@ import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.credits.iconAuthors
 import pl.gungnir.fooddecider.credits.unsplashAuthors
 
-
 @Composable
 fun Toolbar(
     icon: ImageVector? = null,
