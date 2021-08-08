@@ -6,6 +6,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        config_release {
+            storeFile file(FOOD_DECIDER_KEYSTORE)
+            storePassword FOOD_DECIDER_STORE_PASSWORD
+            keyAlias FOOD_DECIDER_KEY_ALIAS
+            keyPassword FOOD_DECIDER_PASSWORD
+        }
+    }
     compileSdk 30
     buildToolsVersion "30.0.3"
 
@@ -25,7 +33,14 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"true"]
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config_release
+        }
+
+        debug {
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
+            applicationIdSuffix ".debug"
         }
     }
     compileOptions {
