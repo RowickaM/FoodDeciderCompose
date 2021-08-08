@@ -7,8 +7,8 @@ Firebase
 Compose
 Coil
 
-# Testowanie aplikacji
-Email: test.user.gungnir@gmail.com
+# Credentials for test
+Email: test.user.gungnir@gmail.com <br />
 Password: FoodDecider2021
 
 # Credits
