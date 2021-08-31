@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-        id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.crashlytics'
     id 'com.google.gms.google-services'
 }
 
@@ -13,6 +13,13 @@ android {
             keyAlias FOOD_DECIDER_KEY_ALIAS
             keyPassword FOOD_DECIDER_PASSWORD
         }
+        externalOverride {
+            storeFile file("app/$FOOD_DECIDER_KEYSTORE")
+            storePassword FOOD_DECIDER_STORE_PASSWORD
+            keyAlias FOOD_DECIDER_KEY_ALIAS
+            keyPassword FOOD_DECIDER_PASSWORD
+        }
+
     }
     compileSdk 30
     buildToolsVersion "30.0.3"
@@ -21,8 +28,8 @@ android {
         applicationId "pl.gungnir.fooddecider"
         minSdk 23
         targetSdk 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
