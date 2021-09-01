@@ -70,7 +70,7 @@ fun InputOutlined(
             .then(modifier),
         value = value,
         onValueChange = onValueChange,
-        label = { Text(text = label) },
+        label = { Text(text = label, style = MaterialTheme.typography.h5) },
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = if (hasNext) ImeAction.Next else ImeAction.Done
@@ -171,7 +171,7 @@ fun InputOutlined(
             }
             onValueChange(it)
         },
-        label = { Text(text = label) },
+        label = { Text(text = label, style = MaterialTheme.typography.h5) },
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = if (hasNext) ImeAction.Next else ImeAction.Done
@@ -235,7 +235,6 @@ fun ErrorMessageInput(text: String, widthPercent: Float) {
         textAlign = TextAlign.End
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable
