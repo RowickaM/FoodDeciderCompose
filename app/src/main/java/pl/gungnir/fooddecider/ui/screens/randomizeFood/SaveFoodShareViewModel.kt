@@ -14,6 +14,7 @@ import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
 import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.RANDOM_FOOD_TIME
+import pl.gungnir.fooddecider.util.onFailure
 import pl.gungnir.fooddecider.util.onSuccess
 import kotlin.random.Random
 
@@ -44,11 +45,11 @@ class SaveFoodShareViewModel(
         }
     }
 
-    fun drawFood() {
+    fun drawFood(delay: Long = RANDOM_FOOD_TIME.toLong()) {
         if (!_listOfSavedFood.isNullOrEmpty()) {
             viewModelScope.launch {
                 randomFood.value = Result.Loading
-                delay(RANDOM_FOOD_TIME.toLong())
+                delay(delay)
                 val index = Random.nextInt(0, _listOfSavedFood.size)
                 randomFood.value = Result.Success(_listOfSavedFood[index])
             }
@@ -63,9 +64,13 @@ class SaveFoodShareViewModel(
     fun onAddFoodClick() {
         _listOfSavedFood.add(newFood.value)
         viewModelScope.launch {
-            setFoodListUseCase.run(_listOfSavedFood).onSuccess {
-                newFood.value = ""
-            }
+            setFoodListUseCase.run(_listOfSavedFood)
+                .onSuccess {
+                    newFood.value = ""
+                }
+                .onFailure {
+                    _listOfSavedFood.remove(newFood.value)
+                }
         }
     }
 
