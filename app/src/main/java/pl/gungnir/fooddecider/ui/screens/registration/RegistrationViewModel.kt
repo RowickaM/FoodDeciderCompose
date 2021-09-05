@@ -2,7 +2,6 @@ package pl.gungnir.fooddecider.ui.screens.registration
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.useCase.CreateUserCollectionUseCase
@@ -12,7 +11,6 @@ import pl.gungnir.fooddecider.model.useCase.SignUpUserUseCase
 import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.helper.ResourceProvider
-import pl.gungnir.fooddecider.util.onSuccess
 
 class RegistrationViewModel(
     private val resourceProvider: ResourceProvider,
@@ -32,6 +30,7 @@ class RegistrationViewModel(
             signUpUserUseCase.run(SignUpUserUseCase.Params(email, password))
                 .fold(
                     {
+                        println("fail!!")
                         val message = when (it) {
                             Failure.UserCollision -> resourceProvider.getString(R.string.firebase_user_collision)
                             Failure.FirebaseAuthUnknown -> resourceProvider.getString(R.string.firebase_unknown)
@@ -70,7 +69,7 @@ class RegistrationViewModel(
     ) {
         sendEmailVerificationUseCase.run(userUID)
             .fold({}) {
-                logoutUseCase.invoke(None)
+                logoutUseCase.run(None)
                     .run {
                         afterSuccess.invoke(resourceProvider.getString(R.string.send_email_verification))
                     }
