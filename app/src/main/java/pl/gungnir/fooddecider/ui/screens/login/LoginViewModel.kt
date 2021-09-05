@@ -4,7 +4,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.useCase.IsUserLoggedUseCase
@@ -31,7 +30,6 @@ class LoginViewModel(
 
     fun onInitialize() {
         isUserLogged.value ?: viewModelScope.launch {
-            delay(800)
             isUserLoggedUseCase.run(None)
                 .onSuccess {
                     isUserLogged.value = it
@@ -71,10 +69,8 @@ class LoginViewModel(
         viewModelScope.launch {
             sendEmailVerificationUseCase.run(uid)
                 .fold({}) {
-                    logoutUseCase.invoke(None)
-                        .run {
-                            afterSuccess.invoke(resourceProvider.getString(R.string.send_email_verification))
-                        }
+                    isUserLogged.value = false
+                    afterSuccess.invoke(resourceProvider.getString(R.string.send_email_verification))
                 }
         }
     }
