@@ -54,7 +54,7 @@ class LoginViewModelTest : BaseTest() {
 
     private val onSuccessString: (String) -> Unit = { }
 
-    private val onFailure: (Boolean, String) -> Unit = { _, _ -> Unit }
+    private val onFailure: (Boolean, String) -> Unit = { _, _ -> }
 
     override fun setup() {
         super.setup()
@@ -63,7 +63,6 @@ class LoginViewModelTest : BaseTest() {
             resourceProvider,
             loginUseCase,
             isUserLoggedUseCase,
-            logoutUseCase,
             sendEmailVerificationUseCase,
         )
     }

@@ -20,7 +20,6 @@ class LoginViewModel(
     private val resourceProvider: ResourceProvider,
     private val loginUseCase: LoginUseCase,
     private val isUserLoggedUseCase: IsUserLoggedUseCase,
-    private val logoutUseCase: LogoutUseCase,
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
 ) : ViewModel() {
 
