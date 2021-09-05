@@ -66,24 +66,24 @@ class FoodTemplatesSharedViewModel(
             }
     }
 
-    fun onRefresh() {
+    fun onRefresh(delay: Long = 500) {
         isRefreshing.value = true
         viewModelScope.launch {
             templates.value = Result.Loading
-            delay(500)
+            delay(delay)
             fetchData()
         }
         isRefreshing.value = false
     }
 
-    fun onRefreshDetails() {
+    fun onRefreshDetails(delay: Long = 500) {
         isRefreshing.value = true
         viewModelScope.launch {
             templateDetails.value = templateDetails.value?.copy(
                 added = emptyList(),
                 notAdded = emptyList()
             )
-            delay(500)
+            delay(delay)
             getTemplateById(templateId.value)
         }
         isRefreshing.value = false

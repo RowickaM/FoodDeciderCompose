@@ -21,7 +21,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
 val viewModelModule = module {
     single { SaveFoodShareViewModel(get(), get()) }
     single { FoodTemplatesSharedViewModel(get(), get(), get()) }
-    factory { LoginViewModel(get(), get(), get(), get(), get()) }
+    factory { LoginViewModel(get(), get(), get(), get()) }
     factory { MainViewModel(get(), get()) }
     factory { ForgotPasswordViewModel(get(), get()) }
     factory { RegistrationViewModel(get(), get(), get(), get(), get()) }
