@@ -154,7 +154,7 @@ fun Registration(
                 contentColor = MaterialTheme.colors.primary
             )
         ) {
-            Text(text = stringResource(id = R.string.sing_in))
+            Text(text = stringResource(id = R.string.sing_up))
         }
     }
 }

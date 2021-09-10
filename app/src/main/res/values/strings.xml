@@ -2,6 +2,7 @@
     <string name="app_name">FoodDecider</string>
 
     <string name="sing_in">Zaloguj się</string>
+    <string name="sing_up">Zarejestruj się</string>
     <string name="email">E-mail</string>
     <string name="password">Hasło</string>
     <string name="ok">OK</string>
@@ -30,7 +31,7 @@
     <string name="list_foods_no_foods">Brak zapisanych potraw</string>
 
     <string name="templates_title">Lista propozycji</string>
-    <string name="templates_no_templates">Brak propozycji do wyświeltenia</string>
+    <string name="templates_no_templates">Brak propozycji do wyświetlenia</string>
     <string name="templates_template_no_exist">Propozycja nie istnieje</string>
     <string name="templates_to_add_list">Potrawy do dodania</string>
     <string name="templates_added_list">Potrawy już w twojej liście</string>
@@ -44,14 +45,14 @@
     <string name="logout">wyloguj</string>
     <string name="send_link">Wyślij link</string>
 
-    <string name="cannot_sing_in_user">Nie można siż zalogować</string>
+    <string name="cannot_sing_in_user">Nie można się zalogować</string>
     <string name="reset_password">Zapomniałeś hasła?</string>
     <string name="reset_password_title">Podaj email powiązany z twoim kontem.</string>
-    <string name="reset_password_description">Wyślemy Ci mail, umożliwiający resetowanie hasła.</string>
+    <string name="reset_password_description">Wyślemy Ci email, umożliwiający resetowanie hasła.</string>
     <string name="no_account">Nie masz konta? Zarejestruj się</string>
 
     <string name="cannot_singup_user">Nie można zarejestrować</string>
-    <string name="send_email_verification_title">Wysłano email weryfikujacy</string>
+    <string name="send_email_verification_title">Wysłano email weryfikujący</string>
     <string name="send_email_verification">Na podany adres wysłano email weryfikujący. Potwierdź go, aby móc się zalogować do aplikacji.</string>
     <string name="singup_user_success">Pomyślnie utworzono użytkownika</string>
     <string name="firebase_user_not_verify">Email nie został zweryfikowany</string>
