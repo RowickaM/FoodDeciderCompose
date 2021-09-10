@@ -7,19 +7,20 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.NavigationItem
+import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetType
+import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetWrapper
+import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.AddElementToListBottomSheet
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
@@ -37,55 +38,76 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val coroutineScope = rememberCoroutineScope()
             val navController = rememberNavController()
 
             actions = remember(navController) { Actions(navController) }
             val bottomNavigationList = viewModel.bottomNavigationList
 
+            val bottomSheetState = rememberModalBottomSheetState(
+                initialValue = ModalBottomSheetValue.Hidden
+            )
+            val (bottomSheetType, changeBottomSheet) = remember<MutableState<BottomSheetType?>> {
+                mutableStateOf(null)
+            }
+            val openSheet: (BottomSheetType) -> Unit = {
+                coroutineScope.launch {
+                    changeBottomSheet(it)
+                    bottomSheetState.show()
+                }
+            }
+            val hideSheet: () -> Unit = {
+                coroutineScope.launch {
+                    bottomSheetState.hide()
+                }
+            }
+
             actions?.let { action ->
                 FoodDeciderTheme {
-                    Scaffold(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(color = MaterialTheme.colors.background),
-                        bottomBar = {
-                            if (viewModel.showBottomBar.value) {
-                                BottomBar(
-                                    navigationList = bottomNavigationList,
-                                    activeIndex = viewModel.selectedBottomItem.value,
-                                    setActiveIndex = viewModel::setSelectedBottomNavItem,
-                                    onItemCLick = action.navigateTo
-                                )
-                            }
-                        },
-                        topBar = {
-                            if (viewModel.showToolbar.value) {
-                                Toolbar(
-                                    title = viewModel.title.value,
-                                    icon = additionalIcon(actualNav = action.getActualNavigationItem()),
-                                    onIconClick = {
-                                        additionalIconAction(
-                                            actualNav = action.getActualNavigationItem(),
-                                            navToList = action.navToFoodList
-                                        )
-                                        viewModel.setSelectedBottomNavItem(0)
-                                    },
-                                    onLogout = {
-                                        viewModel.logout { clearHistoryStack() }
-                                    }
-                                )
-                            }
-                        }
+                    BottomSheetWrapper(
+                        state = bottomSheetState,
+                        sheetState = bottomSheetType,
+                        addElementToList = { AddElementToListBottomSheet(hideSheet) }
                     ) {
-                        NavHostImpl(
-                            viewModel = viewModel,
-                            navController = navController,
-                            navToHome = action.navToHome,
-                            navToRememberPassword = action.navToRememberPassword,
-                            navToRegistration = action.navToRegistration,
-                            navToTemplateDetails = action.navToTemplateDetails,
-                            navBack = action.navBack,
-                        )
+                        Scaffold(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(color = MaterialTheme.colors.background),
+                            bottomBar = {
+                                if (viewModel.showBottomBar.value) {
+                                    BottomBar(
+                                        navigationList = bottomNavigationList,
+                                        activeIndex = viewModel.selectedBottomItem.value,
+                                        setActiveIndex = viewModel::setSelectedBottomNavItem,
+                                        onItemCLick = action.navigateTo
+                                    )
+                                }
+                            },
+                            topBar = {
+                                if (viewModel.showToolbar.value) {
+                                    Toolbar(
+                                        title = viewModel.title.value,
+                                        icon = additionalIcon(actualNav = action.getActualNavigationItem()),
+                                        onIconClick = {
+                                            openSheet(BottomSheetType.AddElementToList)
+                                        },
+                                        onLogout = {
+                                            viewModel.logout { clearHistoryStack() }
+                                        }
+                                    )
+                                }
+                            }
+                        ) {
+                            NavHostImpl(
+                                viewModel = viewModel,
+                                navController = navController,
+                                navToHome = action.navToHome,
+                                navToRememberPassword = action.navToRememberPassword,
+                                navToRegistration = action.navToRegistration,
+                                navToTemplateDetails = action.navToTemplateDetails,
+                                navBack = action.navBack,
+                            )
+                        }
                     }
                 }
             }
@@ -97,16 +119,6 @@ class MainActivity : ComponentActivity() {
         return when (actualNav) {
             NavigationItem.Random -> Icons.Default.Add
             else -> null
-        }
-    }
-
-    private fun additionalIconAction(
-        actualNav: NavigationItem,
-        navToList: () -> Unit
-    ) {
-        return when (actualNav) {
-            NavigationItem.Random -> navToList()
-            else -> Unit
         }
     }
 

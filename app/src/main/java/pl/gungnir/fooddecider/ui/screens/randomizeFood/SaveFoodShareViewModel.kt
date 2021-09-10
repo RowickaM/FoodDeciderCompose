@@ -61,12 +61,13 @@ class SaveFoodShareViewModel(
         newFood.value = newFoodName
     }
 
-    fun onAddFoodClick() {
+    fun onAddFoodClick(onSuccess: () -> Unit) {
         _listOfSavedFood.add(newFood.value)
         viewModelScope.launch {
             setFoodListUseCase.run(_listOfSavedFood)
                 .onSuccess {
                     newFood.value = ""
+                    onSuccess()
                 }
                 .onFailure {
                     _listOfSavedFood.remove(newFood.value)

@@ -28,8 +28,8 @@ android {
         applicationId "pl.gungnir.fooddecider"
         minSdk 23
         targetSdk 30
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 5
+        versionName "1.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
