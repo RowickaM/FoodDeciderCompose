@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.useCase.IsUserLoggedUseCase
 import pl.gungnir.fooddecider.model.useCase.LoginUseCase
-import pl.gungnir.fooddecider.model.useCase.LogoutUseCase
 import pl.gungnir.fooddecider.model.useCase.SendEmailVerificationUseCase
 import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.None
@@ -57,6 +56,7 @@ class LoginViewModel(
                         }
                         else -> resourceProvider.getString(R.string.firebase_unknown)
                     }
+                    isUserLogged.value = false
                     afterFailure.invoke(it is Failure.UserNotVerify, message)
                 }
         }
