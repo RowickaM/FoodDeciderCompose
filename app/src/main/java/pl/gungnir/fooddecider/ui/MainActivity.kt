@@ -118,6 +118,7 @@ class MainActivity : ComponentActivity() {
     private fun additionalIcon(actualNav: NavigationItem): ImageVector? {
         return when (actualNav) {
             NavigationItem.Random -> Icons.Default.Add
+            NavigationItem.RandomList -> Icons.Default.Add
             else -> null
         }
     }
