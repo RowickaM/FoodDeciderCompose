@@ -1,6 +1,8 @@
 package pl.gungnir.fooddecider.ui.screens.savedFood
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.ExperimentalMaterialApi
@@ -9,7 +11,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -18,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.EmptyInfo
-import pl.gungnir.fooddecider.ui.mics.InputOutlined
 import pl.gungnir.fooddecider.ui.mics.ItemWithSwipe
 import pl.gungnir.fooddecider.ui.mics.Loading
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.Result
@@ -59,23 +59,6 @@ fun SaveFoodContent(
     viewModel: SaveFoodShareViewModel,
     listFood: List<String>
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.space_large)),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        InputOutlined(
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.space_large)),
-            widthPercent = 1f,
-            value = viewModel.newFood.value,
-            onValueChange = { viewModel.onFoodNameChange(it) },
-            label = stringResource(id = R.string.food_name),
-            onDone = { viewModel.onAddFoodClick() }
-        )
-    }
     LazyColumn {
         itemsIndexed(listFood) { index, food ->
             SavedFoodItem(
