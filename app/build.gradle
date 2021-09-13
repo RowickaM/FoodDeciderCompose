@@ -49,6 +49,14 @@ android {
             manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
             applicationIdSuffix ".debug"
         }
+        debugMock {
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.config_release
+        }
+        repo {
+            manifestPlaceholders = [crashlyticsCollectionEnabled:"false"]
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -62,6 +70,28 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
+    }
+    sourceSets {
+        debugMock {
+            java {
+                srcDirs 'src/main/java', 'src/release/java', 'src/debugMock/java'
+            }
+        }
+        release {
+            java {
+                srcDirs 'src/main/java', 'src/release/java', 'src/repo/java'
+            }
+        }
+        debug {
+            java {
+                srcDirs 'src/main/java', 'src/debug/java', 'src/repo/java'
+            }
+        }
+        repo {
+            java {
+                srcDirs 'src/repo/java'
+            }
+        }
     }
 }
 
