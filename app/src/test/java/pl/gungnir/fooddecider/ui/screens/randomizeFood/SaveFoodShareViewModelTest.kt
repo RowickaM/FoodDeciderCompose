@@ -88,7 +88,7 @@ class SaveFoodShareViewModelTest : BaseTest() {
         val newList = ArrayList(mockFoodList)
         newList.add(MOCK_STRING)
 
-        viewModel.onAddFoodClick()
+        viewModel.onAddFoodClick {}
 
         verify(setFoodListUseCase, times(1)).run(any())
         assertEquals("", viewModel.newFood.value)
@@ -105,7 +105,7 @@ class SaveFoodShareViewModelTest : BaseTest() {
         whenever(setFoodListUseCase.run(any())).thenReturn(Failure.Unknown.left())
         viewModel.onFoodNameChange(MOCK_STRING)
 
-        viewModel.onAddFoodClick()
+        viewModel.onAddFoodClick {}
 
         verify(setFoodListUseCase, times(1)).run(any())
         assertEquals(MOCK_STRING, viewModel.newFood.value)
