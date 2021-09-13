@@ -2,7 +2,7 @@ package pl.gungnir.fooddecider.util.repo
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flowOf
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*
@@ -14,86 +14,93 @@ class DatabaseRepoImpl(
     private val firebaseAuthHelper: FirebaseAuthHelper
 ) : DatabaseRepo {
 
+    private val list: ArrayList<String> = arrayListOf(
+        "food 1",
+        "food 2",
+        "food 3",
+        "food 4",
+        "food 5",
+        "food 6"
+    )
+
+    private val userMail = "email@email.com"
+
+    private val userPassword = "password"
+
+    private val userUUID = "UUIDForUser"
+
+    private val templstes: List<Template> = listOf(
+        Template(
+            id = "1",
+            imageUrl = null,
+            categoryFoodName = "category 1",
+            foodCount = 0,
+            foodTags = listOf(),
+            foodList = listOf()
+        ),
+    )
+
     override fun getSavedFood(): Flow<List<String>>? {
-        val userUUID = firebaseAuthHelper.getUID()
-        if (userUUID.isEmpty())
-            return null
-        return firebaseHelper.getSavedFoodConnection(userUID = userUUID)
+        return flowOf(list)
     }
 
     override suspend fun loginUser(email: String, password: String): Either<Failure, String> {
-        return firebaseAuthHelper
-            .login(email, password)
-            .map {
-                it.fold(
-                    {
-                        it.left()
-                    },
-                    {
-                        if (it.isNotBlank()) {
-                            it.right()
-                        } else {
-                            Failure.Unknown.left()
-                        }
-                    }
-                )
-            }
-            .first()
+        return if (email == userMail && password == userPassword) {
+            userUUID.right()
+        } else {
+            Failure.InvalidCredentials.left()
+        }
     }
 
     override suspend fun sendResetPasswordMail(email: String): Either<Failure, None> {
-        return firebaseAuthHelper.resetPasswordLink(email)
-            .map {
-                it.fold(
-                    {
-                        it.left()
-                    },
-                    {
-                        None.right()
-                    }
-                )
-            }
-            .first()
+        return if (email == userMail) {
+            None.right()
+        } else {
+            Failure.InvalidCredentials.left()
+        }
     }
 
     override suspend fun signUpUser(
         email: String,
         password: String
     ): Either<Failure, String> {
-        return firebaseAuthHelper
-            .signUpUser(email, password)
-            .first()
+        return if (email != userMail) {
+            userUUID.right()
+        } else {
+            Failure.UserCollision.left()
+        }
     }
 
     override suspend fun createUseCollection(userUID: String): Either<Failure, None> {
-        return firebaseHelper
-            .createCollectionForUser(userUID)
-            .first()
+        return if (userUID == userUUID) {
+            None.right()
+        } else {
+            Failure.Unauthorized.left()
+        }
     }
 
     override suspend fun sendVerificationEmail(userUID: String): Either<Failure, None> {
-        return firebaseAuthHelper
-            .sendVerificationEmail()
-            .first()
+        return if (userUID == userUUID) {
+            None.right()
+        } else {
+            Failure.Unauthorized.left()
+        }
     }
 
     override suspend fun logoutUser(): Either<Failure, None> {
-        return firebaseAuthHelper.logoutUser()
+        return None.right()
     }
 
     override fun isUserLogged(): Either<Failure, Boolean> {
-        return firebaseAuthHelper.userIsLogged().right()
+        return false.right()
     }
 
     override suspend fun getTemplates(): Either<Failure, List<Template>> {
-        return firebaseHelper
-            .getTemplates()
-            .first()
-            .right()
+        return templstes.right()
     }
 
     override suspend fun splitFoodsInTemplates(template: Template): Either<Failure, Pair<TemplateDetails, List<String>>> {
-        val allAddedFoods = firebaseHelper.getSavedFood().first()
+        val allAddedFoods = getSavedFood()?.first() ?: return Failure.Unknown.left()
         val addedFood = arrayListOf<String>()
         val noAddedFood = arrayListOf<String>()
 
@@ -120,6 +127,8 @@ class DatabaseRepoImpl(
     }
 
     override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
-        return firebaseHelper.setSavedFood(foods).first()
+        list.clear()
+        list.addAll(foods)
+        return None.right()
     }
 }
