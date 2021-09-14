@@ -5,11 +5,14 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.MainActivity
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
+import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
+import pl.gungnir.fooddecider.util.repo.ServiceDatabaseRepo
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -18,6 +21,11 @@ class ForgotPasswordTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    @Before
+    fun setup() {
+        ServiceDatabaseRepo.changeDatabaseRepo(DatabaseRepoImpl())
+    }
 
     @Test
     fun forgotPasswordDisplayedAllElements() {
@@ -64,9 +72,37 @@ class ForgotPasswordTest {
 
 
         emailInput.performClick()
-            .performTextInput("fistasze.23.21@gmail.com")
+            .performTextInput(DatabaseRepoImpl.userMail)
 
         actionButton.performClick()
+    }
+
+    @Test
+    fun forgotPasswordSendLinkFailed() {
+        composeTestRule.setContent {
+            FoodDeciderTheme {
+                ForgotPassword(navBack = {})
+            }
+        }
+
+        val emailInput = composeTestRule
+            .onNodeWithText(composeTestRule.activity.getString(R.string.email))
+        emailInput.assertIsDisplayed()
+
+        val actionButton = composeTestRule
+            .onNodeWithText(composeTestRule.activity.getString(R.string.send_link))
+        actionButton.assertIsDisplayed()
+            .assertHasClickAction()
+
+
+        emailInput.performClick()
+            .performTextInput("email@example.com")
+
+        actionButton.performClick()
+
+        composeTestRule
+            .onNodeWithText(composeTestRule.activity.getString(R.string.cannot_sing_in))
+
     }
 
     @Test
@@ -88,13 +124,13 @@ class ForgotPasswordTest {
 
 
         emailInput.performClick()
-            .performTextInput("fistasze.23.21")
+            .performTextInput("email")
 
         emailInput.performImeAction()
         actionButton.assertIsNotEnabled()
 
         emailInput.performClick()
-            .performTextInput("@gmail.com")
+            .performTextInput("@email.com")
         actionButton.assertIsEnabled()
     }
 }

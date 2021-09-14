@@ -34,17 +34,17 @@ val databaseModule = module {
 }
 
 val useCaseModule = module {
-    factory { GetAllSavedFoodUseCase(get()) }
-    factory { LoginUseCase(get()) }
-    factory { IsUserLoggedUseCase(get()) }
-    factory { GetTemplatesUseCase(get()) }
-    factory { SplitDishesTemplateUseCase(get()) }
-    factory { SetFoodListUseCase(get()) }
-    factory { LogoutUseCase(get()) }
-    factory { SendRemindPasswordLinkUseCase(get()) }
-    factory { SignUpUserUseCase(get()) }
-    factory { CreateUserCollectionUseCase(get()) }
-    factory { SendEmailVerificationUseCase(get()) }
+    factory { GetAllSavedFoodUseCase() }
+    factory { LoginUseCase() }
+    factory { IsUserLoggedUseCase() }
+    factory { GetTemplatesUseCase() }
+    factory { SplitDishesTemplateUseCase() }
+    factory { SetFoodListUseCase() }
+    factory { LogoutUseCase() }
+    factory { SendRemindPasswordLinkUseCase() }
+    factory { SignUpUserUseCase() }
+    factory { CreateUserCollectionUseCase() }
+    factory { SendEmailVerificationUseCase() }
 }
 
 val appModule = module {
