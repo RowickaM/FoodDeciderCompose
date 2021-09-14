@@ -86,6 +86,7 @@ fun DialogDisplay(
     body: @Composable () -> Unit,
 ) {
     AlertDialog(
+//        modifier = Modifier.testTag("dialog"),
         onDismissRequest = { onChangeVisible(false) },
         buttons = buttons,
         title = {
