@@ -1,34 +1,17 @@
-package pl.gungnir.fooddecider.util.repo
-
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*
-import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
-import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelperImpl
-import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
-import pl.gungnir.fooddecider.util.firebase.FirebaseHelperImpl
+import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 
-class DatabaseRepoImpl(
-    private val firebaseHelper: FirebaseHelper = FirebaseHelperImpl(),
-    private val firebaseAuthHelper: FirebaseAuthHelper = FirebaseAuthHelperImpl(),
-) : DatabaseRepo {
+class FakeDatabaseRepoImpl : DatabaseRepo {
 
     companion object {
         const val userMail = "email@email.com"
         const val userPassword = "password"
         const val userUUID = "UUIDForUser"
-
-        val list: ArrayList<String> = arrayListOf(
-            "food 1",
-            "food 2",
-            "food 3",
-            "food 4",
-            "food 5",
-            "food 6"
-        )
 
         val templstes: List<Template> = listOf(
             Template(
@@ -40,6 +23,19 @@ class DatabaseRepoImpl(
                 foodList = listOf()
             ),
         )
+    }
+
+    var list: ArrayList<String> = arrayListOf(
+        "food 1",
+        "food 2",
+        "food 3",
+        "food 4",
+        "food 5",
+        "food 6"
+    )
+
+    fun changeList(list: ArrayList<String>) {
+        this.list = list
     }
 
     override fun getSavedFood(): Flow<List<String>>? {
