@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.ui.screens.randomizeFood
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,10 +39,18 @@ class SaveFoodShareViewModel(
                             listOfSavedFood.value = Result.Loading
                             _listOfSavedFood.clear()
                             _listOfSavedFood.addAll(it)
-                            listOfSavedFood.value = Result.SuccessFetch(_listOfSavedFood)
+                            savedResult(it)
                         }.launchIn(this)
                     }
             }
+        }
+    }
+
+    private fun savedResult(list: List<String>) {
+        if (list.isEmpty()) {
+            listOfSavedFood.value = Result.Empty
+        } else {
+            listOfSavedFood.value = Result.SuccessFetch(list)
         }
     }
 
@@ -80,6 +89,18 @@ class SaveFoodShareViewModel(
         viewModelScope.launch {
             setFoodListUseCase.run(_listOfSavedFood)
         }
+    }
+
+    @VisibleForTesting
+    fun changeList(list: List<String>) {
+        _listOfSavedFood.clear()
+        _listOfSavedFood.addAll(list)
+        listOfSavedFood.value = Result.SuccessFetch(list)
+    }
+
+    @VisibleForTesting
+    fun changeList() {
+        savedResult(_listOfSavedFood)
     }
 }
 
