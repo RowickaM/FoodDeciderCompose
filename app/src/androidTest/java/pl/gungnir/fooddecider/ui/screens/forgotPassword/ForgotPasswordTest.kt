@@ -7,8 +7,10 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.MainActivity
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
@@ -21,14 +23,24 @@ class ForgotPasswordTest : BaseTest() {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @Test
-    fun forgotPasswordDisplayedAllElements() {
+    private lateinit var viewModel: ForgotPasswordViewModel
+
+    @Before
+    fun setupView() {
         composeTestRule.setContent {
+            viewModel = getViewModel()
+
             FoodDeciderTheme {
-                ForgotPassword(navBack = {})
+                ForgotPassword(
+                    navBack = {},
+                    viewModel = viewModel
+                )
             }
         }
+    }
 
+    @Test
+    fun forgotPasswordDisplayedAllElements() {
         composeTestRule
             .onNodeWithText(composeTestRule.activity.getString(R.string.reset_password_title))
             .assertIsDisplayed()
@@ -49,12 +61,6 @@ class ForgotPasswordTest : BaseTest() {
 
     @Test
     fun forgotPasswordSendLinkSuccessful() {
-        composeTestRule.setContent {
-            FoodDeciderTheme {
-                ForgotPassword(navBack = {})
-            }
-        }
-
         val emailInput = composeTestRule
             .onNodeWithText(composeTestRule.activity.getString(R.string.email))
         emailInput.assertIsDisplayed()
@@ -73,11 +79,6 @@ class ForgotPasswordTest : BaseTest() {
 
     @Test
     fun forgotPasswordSendLinkFailed() {
-        composeTestRule.setContent {
-            FoodDeciderTheme {
-                ForgotPassword(navBack = {})
-            }
-        }
 
         val emailInput = composeTestRule
             .onNodeWithText(composeTestRule.activity.getString(R.string.email))
@@ -94,6 +95,7 @@ class ForgotPasswordTest : BaseTest() {
 
         actionButton.performClick()
 
+        //todo couldn't check if dialog displayed!
         composeTestRule
             .onNodeWithText(composeTestRule.activity.getString(R.string.cannot_sing_in))
 
@@ -101,12 +103,6 @@ class ForgotPasswordTest : BaseTest() {
 
     @Test
     fun forgotPasswordEmailInvalidFormat() {
-        composeTestRule.setContent {
-            FoodDeciderTheme {
-                ForgotPassword(navBack = {})
-            }
-        }
-
         val emailInput = composeTestRule
             .onNodeWithText(composeTestRule.activity.getString(R.string.email))
         emailInput.assertIsDisplayed()
