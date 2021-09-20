@@ -30,7 +30,6 @@ class RegistrationViewModel(
             signUpUserUseCase.run(SignUpUserUseCase.Params(email, password))
                 .fold(
                     {
-                        println("fail!!")
                         val message = when (it) {
                             Failure.UserCollision -> resourceProvider.getString(R.string.firebase_user_collision)
                             Failure.FirebaseAuthUnknown -> resourceProvider.getString(R.string.firebase_unknown)
