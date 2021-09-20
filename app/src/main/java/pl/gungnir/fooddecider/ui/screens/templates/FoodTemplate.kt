@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.ui.mics.*
@@ -27,9 +27,9 @@ import pl.gungnir.fooddecider.ui.mics.*
 @ExperimentalCoilApi
 @Composable
 fun FoodTemplate(
-    navToTemplateDetails: (String) -> Unit
+    navToTemplateDetails: (String) -> Unit,
+    viewModel: FoodTemplatesSharedViewModel = getViewModel(),
 ) {
-    val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
     viewModel.onInitialize()
     val templates = remember { viewModel.templates }
     val isRefreshing = remember { viewModel.isRefreshing }

@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
@@ -31,9 +31,9 @@ import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
 
 @Composable
 fun FoodTemplateDetails(
-    templateId: String
+    templateId: String,
+    viewModel: FoodTemplatesSharedViewModel = getViewModel(),
 ) {
-    val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
     viewModel.getTemplateById(templateId)
     val template = remember { viewModel.templateDetails }
     val isRefreshing = remember { viewModel.isRefreshing }
