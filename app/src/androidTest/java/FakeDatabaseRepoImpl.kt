@@ -18,9 +18,73 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
                 id = "1",
                 imageUrl = null,
                 categoryFoodName = "category 1",
-                foodCount = 0,
+                foodCount = 2,
                 foodTags = listOf(),
-                foodList = listOf()
+                foodList = listOf("food 1", "food 6")
+            ),
+            Template(
+                id = "2",
+                imageUrl = null,
+                categoryFoodName = "category 2",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 1")
+            ),
+            Template(
+                id = "3",
+                imageUrl = null,
+                categoryFoodName = "category 3",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 1")
+            ),
+            Template(
+                id = "4",
+                imageUrl = null,
+                categoryFoodName = "category 4",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 3")
+            ),
+            Template(
+                id = "5",
+                imageUrl = null,
+                categoryFoodName = "category 5",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 7")
+            ),
+            Template(
+                id = "6",
+                imageUrl = null,
+                categoryFoodName = "category 6",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 1")
+            ),
+            Template(
+                id = "7",
+                imageUrl = null,
+                categoryFoodName = "category 7",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 1")
+            ),
+            Template(
+                id = "8",
+                imageUrl = null,
+                categoryFoodName = "category 8",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 1")
+            ),
+            Template(
+                id = "9",
+                imageUrl = null,
+                categoryFoodName = "category 9",
+                foodCount = 1,
+                foodTags = listOf(),
+                foodList = listOf("food 1")
             ),
         )
     }

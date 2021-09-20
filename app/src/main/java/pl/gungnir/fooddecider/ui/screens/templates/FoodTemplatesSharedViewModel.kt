@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.ui.screens.templates
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -110,6 +111,15 @@ class FoodTemplatesSharedViewModel(
                     notAdded = noAdded
                 )
             }
+        }
+    }
+
+    @VisibleForTesting
+    fun changeList(list: List<Template>) {
+        if (list.isEmpty()) {
+            templates.value = Result.Empty
+        } else {
+            templates.value = Result.Success(list)
         }
     }
 }

@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -44,20 +45,13 @@ fun FoodTemplate(
             when (templates.value) {
                 Result.Loading -> Loading()
                 Result.Empty -> EmptyInfo(text = stringResource(id = R.string.templates_no_templates))
-                is Result.Success -> LazyColumn {
-                    (templates.value as? Result.Success)?.result?.let {
-                        items(it) { template ->
-                            FoodTemplateItem(
-                                template = template,
-                                onClick = { navToTemplateDetails(template.id) }
-                            )
-                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
-                        }
-                    }
-                }
+                is Result.Success -> FoodList(
+                    (templates.value as Result.Success).result,
+                    navToTemplateDetails
+                )
             }
-
         }
+
     }
 }
 
@@ -68,11 +62,27 @@ private fun FoodTemplateView() {
     FoodTemplate(navToTemplateDetails = {})
 }
 
+@Composable
+private fun FoodList(
+    templates: List<Template>,
+    navToTemplateDetails: (String) -> Unit,
+) {
+    LazyColumn(modifier = Modifier.testTag("templateList")) {
+        items(templates) { template ->
+            FoodTemplateItem(
+                template = template,
+                onClick = { navToTemplateDetails(template.id) }
+            )
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
+        }
+    }
+}
+
 
 @Composable
 fun FoodTemplateItem(
     template: Template,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val height = dimensionResource(id = R.dimen.height_food_template_item)
     val image = template.imageUrl.getImage()
