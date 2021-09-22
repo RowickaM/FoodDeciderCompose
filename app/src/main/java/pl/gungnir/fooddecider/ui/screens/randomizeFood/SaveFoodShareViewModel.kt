@@ -70,23 +70,36 @@ class SaveFoodShareViewModel(
     }
 
     fun onAddFoodClick(onSuccess: () -> Unit) {
+        println("${_listOfSavedFood.size}")
         _listOfSavedFood.add(newFood.value)
         viewModelScope.launch {
             setFoodListUseCase.run(_listOfSavedFood)
                 .onSuccess {
+                    println("success")
+                    println("${_listOfSavedFood.size}")
                     newFood.value = ""
                     onSuccess()
                 }
                 .onFailure {
+                    println("failure")
                     _listOfSavedFood.remove(newFood.value)
                 }
         }
     }
 
     fun onRemoveFood(foodIndex: Int) {
+        println("${_listOfSavedFood.size}")
+
         _listOfSavedFood.removeAt(foodIndex)
         viewModelScope.launch {
+            println("${_listOfSavedFood.size}")
             setFoodListUseCase.run(_listOfSavedFood)
+                .onSuccess {
+                    println("success")
+                }
+                .onFailure {
+                    println("failure")
+                }
         }
     }
 }
