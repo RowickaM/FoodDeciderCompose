@@ -18,7 +18,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.DialogDisplay
 import pl.gungnir.fooddecider.ui.mics.InputOutlined
@@ -30,10 +30,9 @@ import pl.gungnir.fooddecider.util.helper.isPasswordValid
 @ExperimentalComposeUiApi
 @Composable
 fun Registration(
-    navBack: () -> Unit
+    navBack: () -> Unit,
+    viewModel: RegistrationViewModel = getViewModel(),
 ) {
-    val viewModel by inject<RegistrationViewModel>(RegistrationViewModel::class.java)
-
     val widthPercent = 0.8f
     val passwordsNotSameErrorMessage = stringResource(id = R.string.passwords_not_same)
     val focusRequester = remember { FocusRequester() }

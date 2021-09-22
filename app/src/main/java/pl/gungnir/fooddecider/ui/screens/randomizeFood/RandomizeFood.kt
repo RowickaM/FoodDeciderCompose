@@ -13,7 +13,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.FoodAnimationOnClick
 import pl.gungnir.fooddecider.ui.mics.nonRippleClickable
@@ -21,9 +21,9 @@ import pl.gungnir.fooddecider.util.RANDOM_FOOD_TIME
 
 @ExperimentalAnimationApi
 @Composable
-fun RandomizeFood() {
-    val viewModel by inject<SaveFoodShareViewModel>(SaveFoodShareViewModel::class.java)
-
+fun RandomizeFood(
+    viewModel: SaveFoodShareViewModel = getViewModel(),
+) {
     viewModel.onInitialize()
     val foodResult = viewModel.randomFood.value
 

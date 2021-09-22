@@ -19,7 +19,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.*
 import pl.gungnir.fooddecider.util.helper.isEmailValid
@@ -31,9 +31,8 @@ fun Login(
     navToHome: () -> Unit,
     navToRegistration: () -> Unit,
     navToRememberPassword: () -> Unit,
+    viewModel: LoginViewModel = getViewModel(),
 ) {
-    val viewModel by inject<LoginViewModel>(LoginViewModel::class.java)
-
     val isUserLogged = remember { viewModel.isUserLogged }
 
     viewModel.onInitialize()
@@ -75,7 +74,7 @@ private fun LoginScreen(
     viewModel: LoginViewModel,
     navToHome: () -> Unit,
     navToRegistration: () -> Unit,
-    navToRememberPassword: () -> Unit
+    navToRememberPassword: () -> Unit,
 ) {
 
     val widthPercent = 0.8f

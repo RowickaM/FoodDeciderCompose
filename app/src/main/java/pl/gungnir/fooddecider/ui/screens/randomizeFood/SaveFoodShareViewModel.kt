@@ -38,10 +38,18 @@ class SaveFoodShareViewModel(
                             listOfSavedFood.value = Result.Loading
                             _listOfSavedFood.clear()
                             _listOfSavedFood.addAll(it)
-                            listOfSavedFood.value = Result.SuccessFetch(_listOfSavedFood)
+                            savedResult(it)
                         }.launchIn(this)
                     }
             }
+        }
+    }
+
+    private fun savedResult(list: List<String>) {
+        if (list.isEmpty()) {
+            listOfSavedFood.value = Result.Empty
+        } else {
+            listOfSavedFood.value = Result.SuccessFetch(list)
         }
     }
 
