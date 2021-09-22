@@ -78,7 +78,6 @@ private fun FoodList(
     }
 }
 
-
 @Composable
 fun FoodTemplateItem(
     template: Template,
