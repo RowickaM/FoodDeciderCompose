@@ -27,12 +27,11 @@ import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.ui.mics.Tag
 import pl.gungnir.fooddecider.ui.mics.getImage
-import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
 
 @Composable
 fun FoodTemplateDetails(
     templateId: String,
-    viewModel: FoodTemplatesSharedViewModel = getViewModel(),
+    viewModel: TemplateDetailsViewModel = getViewModel(),
 ) {
     viewModel.getTemplateById(templateId)
     val template = remember { viewModel.templateDetails }

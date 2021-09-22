@@ -9,6 +9,7 @@ import pl.gungnir.fooddecider.ui.screens.login.LoginViewModel
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
 import pl.gungnir.fooddecider.ui.screens.registration.RegistrationViewModel
 import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
+import pl.gungnir.fooddecider.ui.screens.templatesDetails.TemplateDetailsViewModel
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelperImpl
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
@@ -20,7 +21,8 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
 
 val viewModelModule = module {
     single { SaveFoodShareViewModel(get(), get()) }
-    single { FoodTemplatesSharedViewModel(get(), get(), get()) }
+    single { FoodTemplatesSharedViewModel(get()) }
+    factory { TemplateDetailsViewModel(get(), get()) }
     factory { LoginViewModel(get(), get(), get(), get()) }
     factory { MainViewModel(get(), get()) }
     factory { ForgotPasswordViewModel(get(), get()) }
@@ -38,13 +40,14 @@ val useCaseModule = module {
     factory { LoginUseCase(get()) }
     factory { IsUserLoggedUseCase(get()) }
     factory { GetTemplatesUseCase(get()) }
-    factory { SplitDishesTemplateUseCase(get()) }
+    factory { GetTemplateDetailsUseCase(get()) }
     factory { SetFoodListUseCase(get()) }
     factory { LogoutUseCase(get()) }
     factory { SendRemindPasswordLinkUseCase(get()) }
     factory { SignUpUserUseCase(get()) }
     factory { CreateUserCollectionUseCase(get()) }
     factory { SendEmailVerificationUseCase(get()) }
+    factory { SaveItemToListUseCase(get()) }
 }
 
 val appModule = module {
