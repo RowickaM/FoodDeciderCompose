@@ -6,7 +6,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.ServiceDatabaseRepo
 
 class LoginUseCase(
-    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo(),
+    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo()
 ) : BaseUseCase<String, LoginUseCase.Params>() {
 
     data class Params(

@@ -7,7 +7,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.ServiceDatabaseRepo
 
 class CreateUserCollectionUseCase(
-    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo(),
+    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo()
 ) : BaseUseCase<None, String>() {
 
     override suspend fun run(params: String): Either<Failure, None> {
