@@ -17,6 +17,7 @@ class FirebaseHelperImpl : FirebaseHelper {
 
     @ExperimentalCoroutinesApi
     override fun getSavedFoodConnection(userUID: String): Flow<List<String>> {
+        val listName = KEY_SAVED_LIST_NAME_DEFAULT
         return channelFlow {
             db.collection(COLLECTION_SAVED_FOOD)
                 .document(userUID)
@@ -27,8 +28,17 @@ class FirebaseHelperImpl : FirebaseHelper {
                     }
 
                     value?.let { querySnapshot ->
-                        val data = querySnapshot.data?.get(KEY_DATA_DISHES)
-                        trySendBlocking(data as? List<String> ?: emptyList())
+//                        val data = querySnapshot.data?.get(KEY_DATA_DISHES)
+                        //todo if (data as? List<String> != null) should change structure!
+//                        trySendBlocking(data as? List<String> ?: emptyList())
+
+                        querySnapshot.data?.let { data ->
+                            val arrays = data[KEY_SAVED_LIST] as Map<String, Any>
+                            val lists = arrays[listName] as Map<String, Any?>
+                            val items = lists[KEY_SAVED_ITEM] as? List<String>
+
+                            trySendBlocking(items ?: emptyList())
+                        }
                     }
                 }
 
@@ -116,6 +126,8 @@ class FirebaseHelperImpl : FirebaseHelper {
                         if (task.isSuccessful) {
                             val data =
                                 task.result?.data?.get(KEY_DATA_DISHES) ?: emptyList<String>()
+
+
                             trySendBlocking(data as? List<String> ?: emptyList())
                         }
                         close()
@@ -149,15 +161,15 @@ class FirebaseHelperImpl : FirebaseHelper {
 
     @ExperimentalCoroutinesApi
     override fun getActualDatabaseVersion(): Flow<Either<Failure, String>> = channelFlow {
-        db.collection("setup")
-            .document("DbSetup")
+        db.collection(COLLECTION_SETUP)
+            .document(KEY_SETUP_DB)
             .get()
             .addOnCompleteListener { task ->
                 if (task.exception != null) {
                     trySendBlocking(Failure.Unknown.left())
                 }
                 if (task.isSuccessful) {
-                    val version = task.result?.data?.get("version") as String
+                    val version = task.result?.data?.get(KEY_SETUP_DB_VERSION) as String
                     trySendBlocking(version.right())
                 }
                 close()
@@ -176,7 +188,11 @@ class FirebaseHelperImpl : FirebaseHelper {
             .document(uid)
             .set(
                 mapOf<String, Any>(
-                    "arrays" to mapOf<String, Any>("lista" to mapOf(KEY_DATA_DISHES to oldList))
+                    KEY_SAVED_LIST to mapOf<String, Any>(
+                        KEY_SAVED_LIST_NAME_DEFAULT to mapOf(
+                            KEY_SAVED_ITEM to oldList
+                        )
+                    )
                 )
             )
             .addOnCompleteListener { task ->
@@ -193,13 +209,17 @@ class FirebaseHelperImpl : FirebaseHelper {
 
     @ExperimentalCoroutinesApi
     override fun updateStructure(uid: String) = channelFlow {
-        val oldList = getSavedFood().first()
+        val oldList = getOldSavedFood().first()
 
         db.collection(COLLECTION_SAVED_FOOD)
             .document(uid)
             .set(
                 mapOf<String, Any>(
-                    "arrays" to mapOf<String, Any>("lista" to mapOf(KEY_DATA_DISHES to oldList))
+                    KEY_SAVED_LIST to mapOf<String, Any>(
+                        KEY_SAVED_LIST_NAME_DEFAULT to mapOf(
+                            KEY_SAVED_ITEM to oldList
+                        )
+                    )
                 )
             )
             .addOnCompleteListener { task ->
@@ -213,4 +233,24 @@ class FirebaseHelperImpl : FirebaseHelper {
             }
         awaitClose()
     }.flowOn(Dispatchers.IO)
+
+    private suspend fun getOldSavedFood(): Flow<List<String>> {
+        auth.uid?.let { uid ->
+            return channelFlow {
+                db.collection(COLLECTION_SAVED_FOOD)
+                    .document(uid)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val data =
+                                task.result?.data?.get(KEY_DATA_DISHES) ?: emptyList<String>()
+                            trySendBlocking(data as? List<String> ?: emptyList())
+                        }
+                        close()
+                    }
+                awaitClose()
+            }.flowOn(Dispatchers.IO)
+
+        } ?: return flowOf(emptyList())
+    }
 }

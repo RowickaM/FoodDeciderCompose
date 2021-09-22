@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
 import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
-import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.RANDOM_FOOD_TIME
 import pl.gungnir.fooddecider.util.onFailure
 import pl.gungnir.fooddecider.util.onSuccess
@@ -32,7 +31,7 @@ class SaveFoodShareViewModel(
     fun onInitialize() {
         if (_listOfSavedFood.isEmpty()) {
             viewModelScope.launch {
-                getAllSavedFoodUseCase.run(None)
+                getAllSavedFoodUseCase.run("")
                     .onSuccess {
                         it.map {
                             listOfSavedFood.value = Result.Loading
@@ -70,36 +69,23 @@ class SaveFoodShareViewModel(
     }
 
     fun onAddFoodClick(onSuccess: () -> Unit) {
-        println("${_listOfSavedFood.size}")
         _listOfSavedFood.add(newFood.value)
         viewModelScope.launch {
             setFoodListUseCase.run(_listOfSavedFood)
                 .onSuccess {
-                    println("success")
-                    println("${_listOfSavedFood.size}")
                     newFood.value = ""
                     onSuccess()
                 }
                 .onFailure {
-                    println("failure")
                     _listOfSavedFood.remove(newFood.value)
                 }
         }
     }
 
     fun onRemoveFood(foodIndex: Int) {
-        println("${_listOfSavedFood.size}")
-
         _listOfSavedFood.removeAt(foodIndex)
         viewModelScope.launch {
-            println("${_listOfSavedFood.size}")
             setFoodListUseCase.run(_listOfSavedFood)
-                .onSuccess {
-                    println("success")
-                }
-                .onFailure {
-                    println("failure")
-                }
         }
     }
 }
