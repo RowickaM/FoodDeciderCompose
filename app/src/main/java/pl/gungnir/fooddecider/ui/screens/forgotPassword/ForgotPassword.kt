@@ -17,7 +17,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.DialogError
 import pl.gungnir.fooddecider.ui.mics.InputOutlined
@@ -28,9 +28,8 @@ import pl.gungnir.fooddecider.util.helper.isEmailValid
 @Composable
 fun ForgotPassword(
     navBack: () -> Unit,
+    viewModel: ForgotPasswordViewModel = getViewModel(),
 ) {
-    val viewModel by inject<ForgotPasswordViewModel>(ForgotPasswordViewModel::class.java)
-
     val widthPercent = 0.8f
     val (email, setEmail) = remember { mutableStateOf("") }
 
