@@ -4,8 +4,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
-import pl.gungnir.fooddecider.BaseTest
 import org.mockito.Mockito.*
+import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.TestCoroutineRule
 import pl.gungnir.fooddecider.model.data.Template
@@ -62,7 +62,7 @@ class SplitDishesTemplateUseCaseTest : BaseTest() {
 
     @Test
     fun splitDishesTemplateUseCase_Failure() = testCoroutineRule.runBlockingTest {
-        whenever(databaseRepo.splitFoodsInTemplates(any())).thenReturn(Failure.UserNotExist.left())
+        whenever(databaseRepo.splitFoodsInTemplates(template = any())).thenReturn(Failure.UserNotExist.left())
 
         val result = useCase.run(mockTemplate)
 
@@ -72,7 +72,7 @@ class SplitDishesTemplateUseCaseTest : BaseTest() {
 
     @Test
     fun splitDishesTemplateUseCase_None() = testCoroutineRule.runBlockingTest {
-        whenever(databaseRepo.splitFoodsInTemplates(any()))
+        whenever(databaseRepo.splitFoodsInTemplates(template = any()))
             .thenReturn(Pair(mockTemplateDetails, emptyList<String>()).right())
 
         val result = useCase.run(mockTemplate)

@@ -1,3 +1,4 @@
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
@@ -10,6 +11,18 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
 
     companion object {
 
+        fun getTemplateDetails(template: Template): TemplateDetails {
+            return TemplateDetails(
+                id = template.id,
+                imageUrl = template.imageUrl,
+                categoryFoodName = template.categoryFoodName,
+                foodCount = template.foodCount,
+                foodTags = template.foodTags,
+                added = listOf("food 1", "food 6"),
+                notAdded = listOf("food 29")
+            )
+        }
+
         const val userMail = "email@email.com"
         const val userPassword = "password"
         const val userUUID = "UUIDForUser"
@@ -19,9 +32,9 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
                 id = "1",
                 imageUrl = null,
                 categoryFoodName = "category 1",
-                foodCount = 2,
+                foodCount = 3,
                 foodTags = listOf(),
-                foodList = listOf("food 1", "food 6")
+                foodList = listOf("food 1", "food 6", "food 29")
             ),
             Template(
                 id = "2",
@@ -99,10 +112,6 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         "food 6"
     )
 
-    fun changeList(list: ArrayList<String>) {
-        this.list = list
-    }
-
     override fun getSavedFood(): Flow<List<String>>? {
         return flowOf(list)
     }
@@ -163,6 +172,8 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
     }
 
     override suspend fun splitFoodsInTemplates(template: Template): Either<Failure, Pair<TemplateDetails, List<String>>> {
+        Log.d("MRMRMR", "no dalej, no!")
+
         val allAddedFoods = getSavedFood()?.first() ?: return Failure.Unknown.left()
         val addedFood = arrayListOf<String>()
         val noAddedFood = arrayListOf<String>()
@@ -193,5 +204,22 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         list.clear()
         list.addAll(foods)
         return None.right()
+    }
+
+    override suspend fun splitFoodsInTemplates(id: String): Either<Failure, Pair<TemplateDetails, List<String>>> {
+        val template = templstes.find { id == it.id }
+        template ?: return Failure.Unknown.left()
+
+        return splitFoodsInTemplates(template = template)
+    }
+
+    override suspend fun addNewFood(food: String): Either<Failure, None>? {
+        val allSavedFoodForList = getSavedFood()?.first()
+        allSavedFoodForList ?: return null
+
+        val newList = ArrayList(allSavedFoodForList)
+        newList.add(food)
+
+        return setNewFoodList(newList)
     }
 }

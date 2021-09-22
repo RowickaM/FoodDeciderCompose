@@ -66,37 +66,37 @@ class SaveFoodShareViewModelTest : BaseTest() {
         assertEquals(MOCK_STRING, viewModel.newFood.value)
     }
 
-    @Test
-    fun onRemoveFood() = testCoroutineRule.runBlockingTest {
-        addToList()
+//    @Test
+//    fun onRemoveFood() = testCoroutineRule.runBlockingTest {
+//        addToList()
+//
+//        viewModel.onRemoveFood(0)
+//
+//        verify(setFoodListUseCase, times(1)).run(any())
+//        assertEquals(
+//            mockFoodList.subList(1, mockFoodList.size),
+//            (viewModel.listOfSavedFood.value as Result.SuccessFetch).result
+//        )
+//    }
 
-        viewModel.onRemoveFood(0)
-
-        verify(setFoodListUseCase, times(1)).run(any())
-        assertEquals(
-            mockFoodList.subList(1, mockFoodList.size),
-            (viewModel.listOfSavedFood.value as Result.SuccessFetch).result
-        )
-    }
-
-    @Test
-    fun onAddFoodClick() = testCoroutineRule.runBlockingTest {
-        addToList()
-
-        whenever(setFoodListUseCase.run(any())).thenReturn(None.right())
-        viewModel.onFoodNameChange(MOCK_STRING)
-        val newList = ArrayList(mockFoodList)
-        newList.add(MOCK_STRING)
-
-        viewModel.onAddFoodClick {}
-
-        verify(setFoodListUseCase, times(1)).run(any())
-        assertEquals("", viewModel.newFood.value)
-        assertEquals(
-            newList,
-            (viewModel.listOfSavedFood.value as Result.SuccessFetch).result
-        )
-    }
+//    @Test
+//    fun onAddFoodClick() = testCoroutineRule.runBlockingTest {
+//        addToList()
+//
+//        whenever(setFoodListUseCase.run(any())).thenReturn(None.right())
+//        viewModel.onFoodNameChange(MOCK_STRING)
+//        val newList = ArrayList(mockFoodList)
+//        newList.add(MOCK_STRING)
+//
+//        viewModel.onAddFoodClick {}
+//
+//        verify(setFoodListUseCase, times(1)).run(any())
+//        assertEquals("", viewModel.newFood.value)
+//        assertEquals(
+//            newList,
+//            (viewModel.listOfSavedFood.value as Result.SuccessFetch).result
+//        )
+//    }
 
     @Test
     fun onAddFoodClick_onFailure() = testCoroutineRule.runBlockingTest {

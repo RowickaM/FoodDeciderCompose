@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -27,12 +28,11 @@ import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.ui.mics.Tag
 import pl.gungnir.fooddecider.ui.mics.getImage
-import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
 
 @Composable
 fun FoodTemplateDetails(
     templateId: String,
-    viewModel: FoodTemplatesSharedViewModel = getViewModel(),
+    viewModel: FoodTemplateDetailsViewModel = getViewModel(),
 ) {
     viewModel.getTemplateById(templateId)
     val template = remember { viewModel.templateDetails }
@@ -185,7 +185,9 @@ private fun FoodTemplateDetailsLists(
                 fontWeight = FontWeight.Bold
             )
         }
-        Column {
+        Column(
+            modifier = Modifier.testTag("addedList")
+        ) {
             template.added.forEach { food ->
                 Row(
                     modifier = Modifier

@@ -119,7 +119,22 @@ class DatabaseRepoImpl(
         ).right()
     }
 
+    override suspend fun splitFoodsInTemplates(id: String): Either<Failure, Pair<TemplateDetails, List<String>>> {
+        val template = firebaseHelper.getTemplatesById(id).first()
+        return template?.let { splitFoodsInTemplates(it) } ?: Failure.Unknown.left()
+    }
+
     override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
         return firebaseHelper.setSavedFood(foods).first()
+    }
+
+    override suspend fun addNewFood(food: String): Either<Failure, None>? {
+        val allSavedFoodForList = getSavedFood()?.first()
+        allSavedFoodForList ?: return null
+
+        val newList = ArrayList(allSavedFoodForList)
+        newList.add(food)
+
+        return setNewFoodList(newList)
     }
 }
