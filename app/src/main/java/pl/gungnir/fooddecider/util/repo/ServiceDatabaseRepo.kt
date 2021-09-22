@@ -2,6 +2,7 @@ package pl.gungnir.fooddecider.util.repo
 
 import androidx.annotation.VisibleForTesting
 import org.koin.java.KoinJavaComponent
+import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
 
@@ -11,6 +12,7 @@ object ServiceDatabaseRepo {
     private val firebaseAuthHelper by KoinJavaComponent.inject<FirebaseAuthHelper>(
         FirebaseAuthHelper::class.java
     )
+    private val config by KoinJavaComponent.inject<Config>(Config::class.java)
 
     @Volatile
     private var databaseRepo: DatabaseRepo? = null
@@ -28,6 +30,7 @@ object ServiceDatabaseRepo {
         return DatabaseRepoImpl(
             firebaseHelper,
             firebaseAuthHelper,
+            config
         )
     }
 

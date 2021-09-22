@@ -12,3 +12,5 @@ const val KEY_DATA_IMAGE = "imageUrl"
 const val KEY_TEMPLATE_ID = "id"
 
 const val RANDOM_FOOD_TIME = 1000
+
+const val DB_VERSION_IN_APP = "2"

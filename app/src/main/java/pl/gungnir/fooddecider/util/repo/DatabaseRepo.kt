@@ -9,6 +9,10 @@ import pl.gungnir.fooddecider.util.None
 
 interface DatabaseRepo {
 
+    suspend fun isUserDatabaseVersionActual(): Either<Failure, Boolean>
+
+    suspend fun changeStructure(): Either<Failure, None>
+
     fun getSavedFood(): Flow<List<String>>?
 
     suspend fun loginUser(email: String, password: String): Either<Failure, String>

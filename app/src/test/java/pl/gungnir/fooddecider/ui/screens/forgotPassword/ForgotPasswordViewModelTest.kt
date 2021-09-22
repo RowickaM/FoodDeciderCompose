@@ -16,6 +16,7 @@ import pl.gungnir.fooddecider.util.helper.ResourceProvider
 import pl.gungnir.fooddecider.util.left
 import pl.gungnir.fooddecider.util.right
 
+@ExperimentalCoroutinesApi
 class ForgotPasswordViewModelTest : BaseTest() {
 
     private lateinit var viewModel: ForgotPasswordViewModel
@@ -23,7 +24,6 @@ class ForgotPasswordViewModelTest : BaseTest() {
     @get:Rule
     val coroutineRule = MainCoroutineRule()
 
-    @ExperimentalCoroutinesApi
     val testCoroutineRule = TestCoroutineRule()
 
     @Mock

@@ -148,21 +148,69 @@ class FirebaseHelperImpl : FirebaseHelper {
     }
 
     @ExperimentalCoroutinesApi
-    override fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>> {
-        return channelFlow {
-            db.collection(COLLECTION_SAVED_FOOD)
-                .document(userUID)
-                .set(mapOf(KEY_DATA_DISHES to emptyList<String>()))
-                .addOnCompleteListener { task ->
-                    if (task.exception != null) {
-                        trySendBlocking(Failure.Unknown.left())
-                    }
-                    if (task.isSuccessful) {
-                        trySendBlocking(None.right())
-                    }
-                    close()
+    override fun getActualDatabaseVersion(): Flow<Either<Failure, String>> = channelFlow {
+        db.collection("setup")
+            .document("DbSetup")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.exception != null) {
+                    trySendBlocking(Failure.Unknown.left())
                 }
-            awaitClose()
-        }.flowOn(Dispatchers.IO)
+                if (task.isSuccessful) {
+                    val version = task.result?.data?.get("version") as String
+                    trySendBlocking(version.right())
+                }
+                close()
+            }
+        awaitClose()
+    }.flowOn(Dispatchers.IO)
+
+    @ExperimentalCoroutinesApi
+    override fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>> {
+        return saveInNewStructure(userUID, emptyList())
     }
+
+    @ExperimentalCoroutinesApi
+    override fun saveInNewStructure(uid: String, oldList: List<String>) = channelFlow {
+        db.collection(COLLECTION_SAVED_FOOD)
+            .document(uid)
+            .set(
+                mapOf<String, Any>(
+                    "arrays" to mapOf<String, Any>("lista" to mapOf(KEY_DATA_DISHES to oldList))
+                )
+            )
+            .addOnCompleteListener { task ->
+                if (task.exception != null) {
+                    trySendBlocking(Failure.Unknown.left())
+                }
+                if (task.isSuccessful) {
+                    trySendBlocking(None.right())
+                }
+                close()
+            }
+        awaitClose()
+    }.flowOn(Dispatchers.IO)
+
+    @ExperimentalCoroutinesApi
+    override fun updateStructure(uid: String) = channelFlow {
+        val oldList = getSavedFood().first()
+
+        db.collection(COLLECTION_SAVED_FOOD)
+            .document(uid)
+            .set(
+                mapOf<String, Any>(
+                    "arrays" to mapOf<String, Any>("lista" to mapOf(KEY_DATA_DISHES to oldList))
+                )
+            )
+            .addOnCompleteListener { task ->
+                if (task.exception != null) {
+                    trySendBlocking(Failure.Unknown.left())
+                }
+                if (task.isSuccessful) {
+                    trySendBlocking(None.right())
+                }
+                close()
+            }
+        awaitClose()
+    }.flowOn(Dispatchers.IO)
 }

@@ -28,7 +28,6 @@ class LoginViewModelTest : BaseTest() {
     @get:Rule
     val coroutineRule = MainCoroutineRule()
 
-    @ExperimentalCoroutinesApi
     val testCoroutineRule = TestCoroutineRule()
 
     @Mock

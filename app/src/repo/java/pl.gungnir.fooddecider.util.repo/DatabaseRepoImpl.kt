@@ -6,13 +6,25 @@ import kotlinx.coroutines.flow.map
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*
+import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
 
 class DatabaseRepoImpl(
     private val firebaseHelper: FirebaseHelper,
-    private val firebaseAuthHelper: FirebaseAuthHelper
+    private val firebaseAuthHelper: FirebaseAuthHelper,
+    private val config: Config
 ) : DatabaseRepo {
+
+    override suspend fun isUserDatabaseVersionActual(): Either<Failure, Boolean> {
+        return firebaseHelper.getActualDatabaseVersion().first()
+            .fold(
+                { it.left() },
+                {
+                    (it == config.databaseVersion).right()
+                }
+            )
+    }
 
     override fun getSavedFood(): Flow<List<String>>? {
         val userUUID = firebaseAuthHelper.getUID()
@@ -129,6 +141,12 @@ class DatabaseRepoImpl(
         newList.add(item)
 
         return firebaseHelper.setSavedFood(newList).first()
+    }
+
+    override suspend fun changeStructure(): Either<Failure, None> {
+        return firebaseHelper.updateStructure(
+            firebaseAuthHelper.getUID()
+        ).first()
     }
 
     private suspend fun getTemplateById(id: String): Template? {

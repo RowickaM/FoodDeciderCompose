@@ -19,4 +19,10 @@ interface FirebaseHelper {
     suspend fun setSavedFood(list: List<String>): Flow<Either<Failure, None>>
 
     fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>>
+
+    fun getActualDatabaseVersion(): Flow<Either<Failure, String>>
+
+    fun saveInNewStructure(uid: String, oldList: List<String>): Flow<Either<Failure.Unknown, None>>
+
+    fun updateStructure(uid: String): Flow<Either<Failure.Unknown, None>>
 }

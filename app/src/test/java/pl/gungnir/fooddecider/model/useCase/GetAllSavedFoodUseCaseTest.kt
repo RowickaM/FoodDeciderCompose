@@ -11,7 +11,10 @@ import org.mockito.Mockito.*
 import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.TestCoroutineRule
-import pl.gungnir.fooddecider.util.*
+import pl.gungnir.fooddecider.util.Failure
+import pl.gungnir.fooddecider.util.None
+import pl.gungnir.fooddecider.util.left
+import pl.gungnir.fooddecider.util.onSuccess
 import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 
 @ExperimentalCoroutinesApi
