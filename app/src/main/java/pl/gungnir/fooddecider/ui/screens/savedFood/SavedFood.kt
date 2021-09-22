@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.mics.EmptyInfo
 import pl.gungnir.fooddecider.ui.mics.ItemWithSwipe
@@ -28,8 +28,9 @@ import kotlin.random.Random
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 @Composable
-fun SavedFood() {
-    val viewModel by inject<SaveFoodShareViewModel>(SaveFoodShareViewModel::class.java)
+fun SavedFood(
+    viewModel: SaveFoodShareViewModel = getViewModel(),
+) {
     val listFood = viewModel.listOfSavedFood.value
 
     Column {
@@ -57,7 +58,7 @@ private fun SavedFoodView() {
 @Composable
 fun SaveFoodContent(
     viewModel: SaveFoodShareViewModel,
-    listFood: List<String>
+    listFood: List<String>,
 ) {
     LazyColumn {
         itemsIndexed(listFood) { index, food ->
@@ -73,7 +74,7 @@ fun SaveFoodContent(
 @Composable
 fun SavedFoodItem(
     name: String,
-    onSwipe: () -> Unit
+    onSwipe: () -> Unit,
 ) {
     ItemWithSwipe(
         onSwipe = onSwipe

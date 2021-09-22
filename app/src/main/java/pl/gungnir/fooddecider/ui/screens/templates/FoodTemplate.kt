@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import coil.annotation.ExperimentalCoilApi
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
-import org.koin.java.KoinJavaComponent.inject
+import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.ui.mics.*
@@ -27,9 +27,9 @@ import pl.gungnir.fooddecider.ui.mics.*
 @ExperimentalCoilApi
 @Composable
 fun FoodTemplate(
-    navToTemplateDetails: (String) -> Unit
+    navToTemplateDetails: (String) -> Unit,
+    viewModel: FoodTemplatesSharedViewModel = getViewModel(),
 ) {
-    val viewModel by inject<FoodTemplatesSharedViewModel>(FoodTemplatesSharedViewModel::class.java)
     viewModel.onInitialize()
     val templates = remember { viewModel.templates }
     val isRefreshing = remember { viewModel.isRefreshing }
@@ -44,19 +44,11 @@ fun FoodTemplate(
             when (templates.value) {
                 Result.Loading -> Loading()
                 Result.Empty -> EmptyInfo(text = stringResource(id = R.string.templates_no_templates))
-                is Result.Success -> LazyColumn {
-                    (templates.value as? Result.Success)?.result?.let {
-                        items(it) { template ->
-                            FoodTemplateItem(
-                                template = template,
-                                onClick = { navToTemplateDetails(template.id) }
-                            )
-                            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
-                        }
-                    }
-                }
+                is Result.Success -> FoodList(
+                    (templates.value as Result.Success).result,
+                    navToTemplateDetails
+                )
             }
-
         }
     }
 }
@@ -68,6 +60,21 @@ private fun FoodTemplateView() {
     FoodTemplate(navToTemplateDetails = {})
 }
 
+@Composable
+private fun FoodList(
+    templates: List<Template>,
+    navToTemplateDetails: (String) -> Unit,
+) {
+    LazyColumn {
+        items(templates) { template ->
+            FoodTemplateItem(
+                template = template,
+                onClick = { navToTemplateDetails(template.id) }
+            )
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_large)))
+        }
+    }
+}
 
 @Composable
 fun FoodTemplateItem(
