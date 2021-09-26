@@ -18,9 +18,9 @@ import pl.gungnir.fooddecider.util.onSuccess
 import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 
 @ExperimentalCoroutinesApi
-class GetAllSavedFoodUseCaseTest : BaseTest() {
+class GetSavedItemsCollectionUseCaseTest : BaseTest() {
 
-    private lateinit var useCase: GetAllSavedFoodUseCase
+    private lateinit var useCase: GetSavedItemsCollectionUseCase
 
     @Mock
     private lateinit var databaseRepo: DatabaseRepo
@@ -33,7 +33,7 @@ class GetAllSavedFoodUseCaseTest : BaseTest() {
     override fun setup() {
         super.setup()
 
-        useCase = GetAllSavedFoodUseCase(databaseRepo)
+        useCase = GetSavedItemsCollectionUseCase(databaseRepo)
     }
 
     override fun tearDown() {
