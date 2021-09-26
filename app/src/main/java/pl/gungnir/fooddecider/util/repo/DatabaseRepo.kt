@@ -13,7 +13,7 @@ interface DatabaseRepo {
 
     suspend fun changeStructure(): Either<Failure, None>
 
-    fun getSavedFood(): Flow<List<String>>?
+    fun getSavedFood(listName: String): Flow<List<String>>?
 
     suspend fun loginUser(email: String, password: String): Either<Failure, String>
 

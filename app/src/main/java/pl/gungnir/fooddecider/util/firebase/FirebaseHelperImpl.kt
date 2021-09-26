@@ -16,8 +16,7 @@ class FirebaseHelperImpl : FirebaseHelper {
     private val auth by lazy { FirebaseAuth.getInstance() }
 
     @ExperimentalCoroutinesApi
-    override fun getSavedFoodConnection(userUID: String): Flow<List<String>> {
-        val listName = KEY_SAVED_LIST_NAME_DEFAULT
+    override fun getSavedFoodConnection(userUID: String, listName: String): Flow<List<String>> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_FOOD)
                 .document(userUID)
@@ -34,8 +33,8 @@ class FirebaseHelperImpl : FirebaseHelper {
 
                         querySnapshot.data?.let { data ->
                             val arrays = data[KEY_SAVED_LIST] as Map<String, Any>
-                            val lists = arrays[listName] as Map<String, Any?>
-                            val items = lists[KEY_SAVED_ITEM] as? List<String>
+                            val lists = arrays[listName] as? Map<String, Any?>
+                            val items = lists?.get(KEY_SAVED_ITEM) as? List<String>
 
                             trySendBlocking(items ?: emptyList())
                         }

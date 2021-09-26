@@ -13,6 +13,6 @@ class GetAllSavedFoodUseCase(
 ) : BaseUseCase<Flow<List<String>>, String>() {
 
     override suspend fun run(params: String): Either<Failure, Flow<List<String>>> {
-        return databaseRepo.getSavedFood()?.right() ?: Failure.UserNotExist.left()
+        return databaseRepo.getSavedFood(listName = params)?.right() ?: Failure.UserNotExist.left()
     }
 }

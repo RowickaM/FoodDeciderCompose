@@ -26,11 +26,11 @@ class DatabaseRepoImpl(
             )
     }
 
-    override fun getSavedFood(): Flow<List<String>>? {
+    override fun getSavedFood(listName: String): Flow<List<String>>? {
         val userUUID = firebaseAuthHelper.getUID()
         if (userUUID.isEmpty())
             return null
-        return firebaseHelper.getSavedFoodConnection(userUID = userUUID)
+        return firebaseHelper.getSavedFoodConnection(userUID = userUUID, listName = listName)
     }
 
     override suspend fun loginUser(email: String, password: String): Either<Failure, String> {

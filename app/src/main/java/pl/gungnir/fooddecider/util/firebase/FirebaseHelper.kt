@@ -8,7 +8,7 @@ import pl.gungnir.fooddecider.util.None
 
 interface FirebaseHelper {
 
-    fun getSavedFoodConnection(userUID: String): Flow<List<String>>
+    fun getSavedFoodConnection(userUID: String, listName: String): Flow<List<String>>
 
     fun getTemplates(): Flow<List<Template>>
 

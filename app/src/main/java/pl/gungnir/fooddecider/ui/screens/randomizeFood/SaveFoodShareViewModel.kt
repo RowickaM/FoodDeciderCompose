@@ -53,7 +53,7 @@ class SaveFoodShareViewModel(
 
     private fun getList() {
         viewModelScope.launch {
-            getAllSavedFoodUseCase.run("")
+            getAllSavedFoodUseCase.run(config.listName)
                 .onSuccess {
                     it.map {
                         listOfSavedFood.value = Result.Loading
