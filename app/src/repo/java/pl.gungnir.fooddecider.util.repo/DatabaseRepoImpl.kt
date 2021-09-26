@@ -131,7 +131,7 @@ class DatabaseRepoImpl(
     }
 
     override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
-        return firebaseHelper.setSavedFood(foods).first()
+        return firebaseHelper.setSavedFood(config.listName, foods).first()
     }
 
     override suspend fun saveNewFoodToList(item: String): Either<Failure, None> {
@@ -140,7 +140,7 @@ class DatabaseRepoImpl(
 
         newList.add(item)
 
-        return firebaseHelper.setSavedFood(newList).first()
+        return firebaseHelper.setSavedFood(config.listName, newList).first()
     }
 
     override suspend fun changeStructure(): Either<Failure, None> {

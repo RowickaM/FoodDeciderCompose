@@ -138,12 +138,19 @@ class FirebaseHelperImpl : FirebaseHelper {
     }
 
     @ExperimentalCoroutinesApi
-    override suspend fun setSavedFood(list: List<String>): Flow<Either<Failure, None>> {
+    override suspend fun setSavedFood(
+        listName: String,
+        list: List<String>
+    ): Flow<Either<Failure, None>> {
         auth.uid?.let { uid ->
             return channelFlow {
                 db.collection(COLLECTION_SAVED_FOOD)
                     .document(uid)
-                    .set(mapOf(KEY_DATA_DISHES to list))
+                    .update(
+                        mapOf(
+                            "$KEY_SAVED_LIST.$listName.$KEY_SAVED_ITEM" to list
+                        )
+                    )
                     .addOnCompleteListener { task ->
                         if (task.exception != null) {
                             trySendBlocking(Failure.Unknown.left())
