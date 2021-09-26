@@ -10,16 +10,20 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import pl.gungnir.fooddecider.model.useCase.ChangeStructureUseCase
+import pl.gungnir.fooddecider.model.useCase.CheckDBVersion
 import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
 import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
-import pl.gungnir.fooddecider.util.RANDOM_FOOD_TIME
-import pl.gungnir.fooddecider.util.onFailure
-import pl.gungnir.fooddecider.util.onSuccess
+import pl.gungnir.fooddecider.util.*
+import pl.gungnir.fooddecider.util.config.Config
 import kotlin.random.Random
 
 class SaveFoodShareViewModel(
     private val getAllSavedFoodUseCase: GetAllSavedFoodUseCase,
-    private val setFoodListUseCase: SetFoodListUseCase
+    private val setFoodListUseCase: SetFoodListUseCase,
+    private val checkDBVersion: CheckDBVersion,
+    private val changeStructureUseCase: ChangeStructureUseCase,
+    private val config: Config,
 ) : ViewModel() {
 
     private val _listOfSavedFood: SnapshotStateList<String> = mutableStateListOf()
@@ -30,18 +34,49 @@ class SaveFoodShareViewModel(
 
     fun onInitialize() {
         if (_listOfSavedFood.isEmpty()) {
-            viewModelScope.launch {
-                getAllSavedFoodUseCase.run("")
-                    .onSuccess {
-                        it.map {
-                            listOfSavedFood.value = Result.Loading
-                            _listOfSavedFood.clear()
-                            _listOfSavedFood.addAll(it)
-                            savedResult(it)
-                        }.launchIn(this)
-                    }
-            }
+            checkVersion()
         }
+    }
+
+    private fun checkVersion() {
+        viewModelScope.launch {
+            checkDBVersion.run(None)
+                .onSuccess { isActual ->
+                    if (isActual) {
+                        getList()
+                    } else {
+                        changeStructure()
+                    }
+                }
+        }
+    }
+
+    private fun getList() {
+        viewModelScope.launch {
+            getAllSavedFoodUseCase.run("")
+                .onSuccess {
+                    it.map {
+                        listOfSavedFood.value = Result.Loading
+                        _listOfSavedFood.clear()
+                        _listOfSavedFood.addAll(it)
+                        savedResult(it)
+                    }.launchIn(this)
+                }
+        }
+    }
+
+    private fun changeStructure() {
+        viewModelScope.launch {
+            changeStructureUseCase.run(None)
+                .onSuccess {
+                    saveNewDBVersion()
+                    getList()
+                }
+        }
+    }
+
+    private fun saveNewDBVersion() {
+        config.databaseVersion = DB_VERSION_IN_APP
     }
 
     private fun savedResult(list: List<String>) {

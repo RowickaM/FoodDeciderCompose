@@ -22,7 +22,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
 
 val viewModelModule = module {
-    single { SaveFoodShareViewModel(get(), get()) }
+    single { SaveFoodShareViewModel(get(), get(), get(), get(), get()) }
     single { FoodTemplatesSharedViewModel(get()) }
     factory { TemplateDetailsViewModel(get(), get()) }
     factory { LoginViewModel(get(), get(), get(), get(), get(), get(), get()) }
