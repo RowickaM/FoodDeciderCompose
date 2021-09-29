@@ -112,7 +112,7 @@ fun Registration(
             widthPercent = widthPercent,
             value = repeatPassword,
             onValueChange = { setRepeatPassword(it) },
-            label = stringResource(id = R.string.password),
+            label = stringResource(id = R.string.repeat_password),
             onErrorMessage = stringResource(id = R.string.too_short),
             isValidValue = { isPasswordValid(it) },
             type = InputsType.PASSWORD,

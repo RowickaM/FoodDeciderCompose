@@ -5,6 +5,7 @@
     <string name="sing_up">Zarejestruj się</string>
     <string name="email">E-mail</string>
     <string name="password">Hasło</string>
+    <string name="repeat_password">Powtórz hasło</string>
     <string name="ok">OK</string>
 
     <string name="invalid_format">Niepoprawny format</string>
