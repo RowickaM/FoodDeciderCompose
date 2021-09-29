@@ -20,7 +20,7 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
                 categoryFoodName = "category 1",
                 foodCount = 2,
                 foodTags = listOf(),
-                foodList = listOf("food 1", "food 6")
+                foodList = listOf("food 1", "food 6", "food 29")
             ),
             Template(
                 id = "2",
@@ -87,19 +87,19 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
                 foodList = listOf("food 1")
             ),
         )
+
+        var list: List<String> = arrayListOf(
+            "food 1",
+            "food 2",
+            "food 3",
+            "food 4",
+            "food 5",
+            "food 6"
+        )
     }
 
-    var list: ArrayList<String> = arrayListOf(
-        "food 1",
-        "food 2",
-        "food 3",
-        "food 4",
-        "food 5",
-        "food 6"
-    )
-
-    fun changeList(list: ArrayList<String>) {
-        this.list = list
+    fun changeList(list: List<String>) {
+        FakeDatabaseRepoImpl.list = list
     }
 
     override fun getSavedFood(): Flow<List<String>>? {
@@ -189,8 +189,7 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
     }
 
     override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
-        list.clear()
-        list.addAll(foods)
+        changeList(foods)
         return None.right()
     }
 }

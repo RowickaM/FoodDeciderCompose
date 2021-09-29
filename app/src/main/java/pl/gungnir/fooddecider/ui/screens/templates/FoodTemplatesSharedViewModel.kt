@@ -18,7 +18,7 @@ import pl.gungnir.fooddecider.util.onSuccess
 class FoodTemplatesSharedViewModel(
     private val getTemplatesUseCase: GetTemplatesUseCase,
     private val splitDishesTemplateUseCase: SplitDishesTemplateUseCase,
-    private val setFoodListUseCase: SetFoodListUseCase
+    private val setFoodListUseCase: SetFoodListUseCase,
 ) : ViewModel() {
 
     private val allSavedFood: MutableState<ArrayList<String>> = mutableStateOf(arrayListOf())
@@ -51,6 +51,7 @@ class FoodTemplatesSharedViewModel(
 
     fun getTemplateById(id: String) {
         templateId.value = ""
+        templateDetails.value = null
         val templates = (this.templates.value as? Result.Success)?.result
 
         templates?.find { it.id == id }
@@ -115,12 +116,23 @@ class FoodTemplatesSharedViewModel(
     }
 
     @VisibleForTesting
-    fun changeList(list: List<Template>) {
+    fun changeLists(list: List<Template>, saved: List<String>? = null) {
         if (list.isEmpty()) {
             templates.value = Result.Empty
         } else {
             templates.value = Result.Success(list)
         }
+
+        saved?.let {
+            allSavedFood.value.clear()
+            allSavedFood.value.addAll(it)
+        }
+    }
+
+    @VisibleForTesting
+    fun changeTemplateDetails(template: TemplateDetails) {
+        templateDetails.value = template
+        templateId.value = template.id
     }
 }
 
