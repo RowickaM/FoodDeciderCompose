@@ -15,9 +15,9 @@ import pl.gungnir.fooddecider.util.right
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
-class FoodTemplatesSharedViewModelTest : BaseTest() {
+class TemplatesViewModelTest : BaseTest() {
 
-    private lateinit var viewModel: FoodTemplatesSharedViewModel
+    private lateinit var viewModel: TemplatesViewModel
 
     @get:Rule
     val coroutineRule = MainCoroutineRule()
@@ -31,7 +31,7 @@ class FoodTemplatesSharedViewModelTest : BaseTest() {
     override fun setup() {
         super.setup()
 
-        viewModel = FoodTemplatesSharedViewModel(
+        viewModel = TemplatesViewModel(
             getTemplatesUseCase,
         )
     }

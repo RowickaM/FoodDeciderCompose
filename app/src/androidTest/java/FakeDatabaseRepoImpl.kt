@@ -1,5 +1,4 @@
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
@@ -162,8 +161,28 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         return templstes.right()
     }
 
-    override suspend fun splitFoodsInTemplates(template: Template): Either<Failure, Pair<TemplateDetails, List<String>>> {
-        val allAddedFoods = getSavedFood()?.first() ?: return Failure.Unknown.left()
+    override suspend fun splitFoodsInTemplates(templateId: String): Either<Failure, TemplateDetails> {
+        val template = templstes.find { it.id == templateId } ?: return Failure.Unknown.left()
+
+        return splitToTemplateDetails(template = template).right()
+    }
+
+    override suspend fun saveNewFoodToList(item: String): Either<Failure, None> {
+        val newList = ArrayList(list)
+        newList.add(item)
+
+        changeList(newList)
+        return None.right()
+    }
+
+    override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
+        changeList(foods)
+        return None.right()
+    }
+
+    fun splitToTemplateDetails(template: Template): TemplateDetails {
+        val allAddedFoods = list
+
         val addedFood = arrayListOf<String>()
         val noAddedFood = arrayListOf<String>()
 
@@ -175,22 +194,14 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
             }
         }
 
-        return Pair(
-            TemplateDetails(
-                id = template.id,
-                imageUrl = template.imageUrl,
-                categoryFoodName = template.categoryFoodName,
-                foodCount = template.foodCount,
-                foodTags = template.foodTags,
-                added = addedFood,
-                notAdded = noAddedFood
-            ),
-            allAddedFoods
-        ).right()
-    }
-
-    override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
-        changeList(foods)
-        return None.right()
+        return TemplateDetails(
+            id = template.id,
+            imageUrl = template.imageUrl,
+            categoryFoodName = template.categoryFoodName,
+            foodCount = template.foodCount,
+            foodTags = template.foodTags,
+            added = addedFood,
+            notAdded = noAddedFood
+        )
     }
 }

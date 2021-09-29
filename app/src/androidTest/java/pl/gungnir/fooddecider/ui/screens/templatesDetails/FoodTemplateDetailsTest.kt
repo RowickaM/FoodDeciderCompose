@@ -13,7 +13,6 @@ import org.junit.Test
 import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.MainActivity
-import pl.gungnir.fooddecider.ui.screens.templates.FoodTemplatesSharedViewModel
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 
 @ExperimentalAnimationApi
@@ -27,8 +26,7 @@ class FoodTemplateDetailsTest : BaseTest() {
     @Test
     fun templateNotExist() {
         composeTestRule.setContent {
-            val viewModel: FoodTemplatesSharedViewModel = getViewModel()
-            viewModel.changeLists(FakeDatabaseRepoImpl.templstes)
+            val viewModel: TemplateDetailsViewModel = getViewModel()
 
             FoodDeciderTheme {
                 FoodTemplateDetails(templateId = "-1", viewModel)
@@ -38,5 +36,36 @@ class FoodTemplateDetailsTest : BaseTest() {
         composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.templates_template_no_exist))
             .assertExists()
             .assertIsDisplayed()
+    }
+
+
+    @Test
+    fun templateDisplayed() {
+        val index = 0
+        val template = FakeDatabaseRepoImpl.templstes[index]
+
+        composeTestRule.setContent {
+            val viewModel: TemplateDetailsViewModel = getViewModel()
+            viewModel.templateDetails.value = databaseRepo.splitToTemplateDetails(template)
+
+            FoodDeciderTheme {
+                FoodTemplateDetails(templateId = (index + 1).toString(), viewModel)
+            }
+        }
+
+        composeTestRule.onNodeWithText(
+            composeTestRule
+                .activity
+                .getString(R.string.templates_template_no_exist)
+        )
+            .assertDoesNotExist()
+
+        composeTestRule.onNodeWithText(
+            text = template.categoryFoodName,
+            ignoreCase = true
+        )
+            .assertExists()
+            .assertIsDisplayed()
+
     }
 }

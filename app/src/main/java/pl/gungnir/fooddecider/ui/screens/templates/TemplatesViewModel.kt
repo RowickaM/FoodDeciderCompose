@@ -12,7 +12,7 @@ import pl.gungnir.fooddecider.model.useCase.GetTemplatesUseCase
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.onSuccess
 
-class FoodTemplatesSharedViewModel(
+class TemplatesViewModel(
     private val getTemplatesUseCase: GetTemplatesUseCase,
 ) : ViewModel() {
 
