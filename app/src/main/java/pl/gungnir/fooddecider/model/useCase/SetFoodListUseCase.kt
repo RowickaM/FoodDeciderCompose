@@ -7,7 +7,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.ServiceDatabaseRepo
 
 class SetFoodListUseCase(
-    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo(),
+    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo()
 ) : BaseUseCase<None, List<String>>() {
 
     override suspend fun run(params: List<String>): Either<Failure, None> {

@@ -9,6 +9,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 class FakeDatabaseRepoImpl : DatabaseRepo {
 
     companion object {
+
         const val userMail = "email@email.com"
         const val userPassword = "password"
         const val userUUID = "UUIDForUser"

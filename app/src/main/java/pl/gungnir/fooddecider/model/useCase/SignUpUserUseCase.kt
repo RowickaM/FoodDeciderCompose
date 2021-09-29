@@ -6,7 +6,7 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.ServiceDatabaseRepo
 
 class SignUpUserUseCase(
-    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo(),
+    private val databaseRepo: DatabaseRepo = ServiceDatabaseRepo.getDatabaseRepo()
 ) : BaseUseCase<String, SignUpUserUseCase.Params>() {
 
     override suspend fun run(params: Params): Either<Failure, String> {

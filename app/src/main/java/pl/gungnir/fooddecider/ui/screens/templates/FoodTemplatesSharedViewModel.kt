@@ -50,6 +50,7 @@ class FoodTemplatesSharedViewModel(
     }
 
     fun getTemplateById(id: String) {
+        templateDetails.value = null
         templateId.value = ""
         templateDetails.value = null
         val templates = (this.templates.value as? Result.Success)?.result
