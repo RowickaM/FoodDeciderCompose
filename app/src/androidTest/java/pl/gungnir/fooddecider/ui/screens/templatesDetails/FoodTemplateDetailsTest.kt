@@ -46,13 +46,11 @@ class FoodTemplateDetailsTest : BaseTest() {
         )
 
         composeTestRule.setContent {
-            val viewModel: FoodTemplateDetailsViewModel = getViewModel()
+            val viewModel: TemplateDetailsViewModel = getViewModel()
 
             FoodDeciderTheme {
                 FoodTemplateDetails(templateId = template.id, viewModel = viewModel)
             }
-
-            viewModel.setTemplateDetails(template)
         }
 
         composeTestRule.onNodeWithText(template.categoryFoodName.uppercase())

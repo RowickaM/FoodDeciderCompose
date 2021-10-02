@@ -118,11 +118,6 @@ class DatabaseRepoImpl(
         ).right()
     }
 
-    override suspend fun splitFoodsInTemplates(id: String): Either<Failure, Pair<TemplateDetails, List<String>>> {
-        val template = firebaseHelper.getTemplatesById(id).first()
-        return template?.let { splitFoodsInTemplates(it) } ?: Failure.Unknown.left()
-    }
-
     override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
         return firebaseHelper.setSavedFood(foods).first()
     }
@@ -137,7 +132,7 @@ class DatabaseRepoImpl(
     }
 
     private suspend fun getTemplateById(id: String): Template? {
-        return firebaseHelper.getTemplate(id).first()
+        return firebaseHelper.getTemplatesById(id).first()
     }
 
     override suspend fun addNewFood(food: String): Either<Failure, None>? {
