@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.model.useCase.ChangeStructureUseCase
 import pl.gungnir.fooddecider.model.useCase.CheckDBVersion
-import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
+import pl.gungnir.fooddecider.model.useCase.GetSavedItemsCollectionUseCase
 import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
 import pl.gungnir.fooddecider.util.*
 import pl.gungnir.fooddecider.util.config.Config
 import kotlin.random.Random
 
 class SaveFoodShareViewModel(
-    private val getAllSavedFoodUseCase: GetAllSavedFoodUseCase,
+    private val getSavedItemsCollectionUseCase: GetSavedItemsCollectionUseCase,
     private val setFoodListUseCase: SetFoodListUseCase,
     private val checkDBVersion: CheckDBVersion,
     private val changeStructureUseCase: ChangeStructureUseCase,
@@ -32,7 +32,10 @@ class SaveFoodShareViewModel(
 
     val newFood: MutableState<String> = mutableStateOf("")
 
-    fun onInitialize() {
+    private var setSavedList: ((List<String>, String) -> Unit)? = null
+
+    fun onInitialize(setSavedList: (List<String>, String) -> Unit) {
+        this.setSavedList = setSavedList
         if (_listOfSavedFood.isEmpty()) {
             checkVersion()
         }
@@ -53,13 +56,20 @@ class SaveFoodShareViewModel(
 
     private fun getList() {
         viewModelScope.launch {
-            getAllSavedFoodUseCase.run(config.listName)
+            getSavedItemsCollectionUseCase.run(config.listName)
                 .onSuccess {
                     it.map {
                         listOfSavedFood.value = Result.Loading
+
+                        val savedListItems = it.savedList
                         _listOfSavedFood.clear()
-                        _listOfSavedFood.addAll(it)
-                        savedResult(it)
+                        _listOfSavedFood.addAll(savedListItems)
+                        savedResult(savedListItems)
+
+                        setSavedList?.invoke(
+                            it.allListName,
+                            it.selectedList
+                        )
                     }.launchIn(this)
                 }
         }

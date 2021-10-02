@@ -9,6 +9,7 @@ import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.ShowLists
 
 @ExperimentalMaterialApi
 @Composable
@@ -37,11 +38,12 @@ fun BottomSheetWrapper(
 @ExperimentalMaterialApi
 @Composable
 private fun SheetLayout(
-    bottomSheetType: BottomSheetType?,
+    type: BottomSheetType?,
     AddElementToList: @Composable () -> Unit
 ) {
-    when (bottomSheetType) {
+    when (type) {
         BottomSheetType.AddElementToList -> AddElementToList()
+        is BottomSheetType.ShowLists -> ShowLists(list = type.list, selectedList = type.selected)
     }
 }
 

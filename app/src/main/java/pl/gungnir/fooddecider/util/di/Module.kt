@@ -38,7 +38,7 @@ val databaseModule = module {
 }
 
 val useCaseModule = module {
-    factory { GetAllSavedFoodUseCase(get()) }
+    factory { GetSavedItemsCollectionUseCase(get()) }
     factory { LoginUseCase(get()) }
     factory { CheckDBVersion(get()) }
     factory { IsUserLoggedUseCase(get()) }

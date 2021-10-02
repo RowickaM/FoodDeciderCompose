@@ -22,6 +22,7 @@ import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetType
 import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetWrapper
 import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.AddElementToListBottomSheet
 import pl.gungnir.fooddecider.ui.mics.BottomBar
+import pl.gungnir.fooddecider.ui.mics.FloatingActionButton
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 import pl.gungnir.fooddecider.util.navigation.Actions
@@ -96,7 +97,19 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
-                            }
+                            },
+                            floatingActionButton = {
+                                if (viewModel.showFab.value) {
+                                    FloatingActionButton(onClick = {
+                                        openSheet(
+                                            BottomSheetType.ShowLists(
+                                                viewModel.savedList,
+                                                viewModel.selectedList.value
+                                            )
+                                        )
+                                    })
+                                }
+                            },
                         ) {
                             NavHostImpl(
                                 viewModel = viewModel,

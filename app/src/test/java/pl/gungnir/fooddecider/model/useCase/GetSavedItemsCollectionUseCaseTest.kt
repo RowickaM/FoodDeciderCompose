@@ -11,8 +11,8 @@ import org.mockito.Mockito.*
 import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.TestCoroutineRule
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
 import pl.gungnir.fooddecider.util.Failure
-import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.left
 import pl.gungnir.fooddecider.util.onSuccess
 import pl.gungnir.fooddecider.util.repo.DatabaseRepo
@@ -44,25 +44,34 @@ class GetSavedItemsCollectionUseCaseTest : BaseTest() {
 
     @Test
     fun getAllSavedFood_Failure() = testCoroutineRule.runBlockingTest {
-        whenever(databaseRepo.getSavedFood()).thenReturn(null)
+        whenever(databaseRepo.getSavedFood(anyString())).thenReturn(null)
 
-        val result = useCase.run(None)
+        val result = useCase.run("")
 
         assertEquals(Failure.UserNotExist.left(), result)
-        verify(databaseRepo, times(1)).getSavedFood()
+        verify(databaseRepo, times(1)).getSavedFood(anyString())
     }
 
     @Test
     fun getAllSavedFood_None() = testCoroutineRule.runBlockingTest {
-        whenever(databaseRepo.getSavedFood()).thenReturn(flowOf(emptyList()))
+        whenever(databaseRepo.getSavedFood(anyString()))
+            .thenReturn(
+                flowOf(
+                    SavedFoodCollection(
+                        allListName = listOf(),
+                        selectedList = "",
+                        savedList = listOf()
+                    )
+                )
+            )
 
-        val result = useCase.run(None)
+        val result = useCase.run("")
 
         result.onSuccess {
             testCoroutineRule.runBlockingTest {
                 assertEquals(emptyList<String>(), it.first())
             }
         }
-        verify(databaseRepo, times(1)).getSavedFood()
+        verify(databaseRepo, times(1)).getSavedFood(anyString())
     }
 }

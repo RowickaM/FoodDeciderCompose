@@ -49,6 +49,7 @@ fun NavHostImpl(
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
+            viewModel.showFAB(false)
 
             Login(
                 navToHome = navToHome,
@@ -62,6 +63,7 @@ fun NavHostImpl(
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
+            viewModel.showFAB(false)
 
             Registration(
                 navBack = navBack
@@ -72,6 +74,7 @@ fun NavHostImpl(
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
+            viewModel.showFAB(false)
 
             ForgotPassword(
                 navBack = navBack
@@ -82,14 +85,18 @@ fun NavHostImpl(
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
             viewModel.setTitle("")
+            viewModel.showFAB(true)
 
-            RandomizeFood()
+            RandomizeFood(
+                setSavedList = viewModel::setSavedList
+            )
         }
         composable(route = NavigationItem.RandomList.route) {
             CrashlyticsLog.log(NAV_RANDOM_LIST_LOG)
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
             viewModel.setTitle(stringResource(id = R.string.templates_title))
+            viewModel.showFAB(true)
 
             SavedFood()
         }
@@ -98,6 +105,7 @@ fun NavHostImpl(
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
             viewModel.setTitle(stringResource(id = R.string.list_foods_title))
+            viewModel.showFAB(true)
 
             FoodTemplate(
                 navToTemplateDetails = navToTemplateDetails
@@ -115,6 +123,7 @@ fun NavHostImpl(
             viewModel.showBottomBar(false)
             viewModel.showToolbar(false)
             viewModel.setTitle("")
+            viewModel.showFAB(true)
 
             val id = it.arguments?.getString(KEY_TEMPLATE_ID)
             id?.let {

@@ -17,9 +17,14 @@ class MainViewModel(
     resourceProvider: ResourceProvider
 ) : ViewModel() {
 
+    val savedList = mutableListOf<String>()
+    val selectedList = mutableStateOf<String>("")
+
     val title = mutableStateOf("")
     val showToolbar = mutableStateOf(false)
     val showBottomBar = mutableStateOf(false)
+
+    val showFab = mutableStateOf(false)
 
     val selectedBottomItem = mutableStateOf(1)
 
@@ -50,6 +55,10 @@ class MainViewModel(
         this.showBottomBar.value = show
     }
 
+    fun showFAB(show: Boolean) {
+        this.showFab.value = show
+    }
+
     fun setIndex(navigationItem: NavigationItem): Int {
         val bottomBarItem = bottomNavigationList.find { it.navItem.route == navigationItem.route }
         val index = bottomNavigationList.indexOf(bottomBarItem)
@@ -61,5 +70,12 @@ class MainViewModel(
 
     fun setSelectedBottomNavItem(index: Int) {
         this.selectedBottomItem.value = index
+    }
+
+    fun setSavedList(list: List<String>, selectedList: String) {
+        this.savedList.clear()
+        this.savedList.addAll(list)
+
+        this.selectedList.value = selectedList
     }
 }

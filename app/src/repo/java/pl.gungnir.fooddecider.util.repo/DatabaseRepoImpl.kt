@@ -3,6 +3,7 @@ package pl.gungnir.fooddecider.util.repo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*
@@ -26,11 +27,12 @@ class DatabaseRepoImpl(
             )
     }
 
-    override fun getSavedFood(listName: String): Flow<List<String>>? {
+    override fun getSavedFood(listName: String): Either<Failure, Flow<SavedFoodCollection>> {
         val userUUID = firebaseAuthHelper.getUID()
         if (userUUID.isEmpty())
-            return null
+            return Failure.Unauthorized.left()
         return firebaseHelper.getSavedFoodConnection(userUID = userUUID, listName = listName)
+            .right()
     }
 
     override suspend fun loginUser(email: String, password: String): Either<Failure, String> {
