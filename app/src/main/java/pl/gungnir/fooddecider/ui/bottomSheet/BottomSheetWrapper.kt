@@ -7,16 +7,19 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.ShowLists
+import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.AddElementToListBottomSheet
+import pl.gungnir.fooddecider.ui.bottomSheet.showLists.ShowLists
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 fun BottomSheetWrapper(
     state: ModalBottomSheetState,
     sheetState: BottomSheetType?,
-    addElementToList: @Composable () -> Unit,
+    closeSheet: () -> Unit,
     content: @Composable () -> Unit,
 ) {
     ModalBottomSheetLayout(
@@ -27,7 +30,7 @@ fun BottomSheetWrapper(
 
             SheetLayout(
                 sheetState,
-                addElementToList
+                closeSheet = closeSheet
             )
         },
     ) {
@@ -35,15 +38,23 @@ fun BottomSheetWrapper(
     }
 }
 
+@ExperimentalComposeUiApi
 @ExperimentalMaterialApi
 @Composable
 private fun SheetLayout(
     type: BottomSheetType?,
-    AddElementToList: @Composable () -> Unit
+    closeSheet: () -> Unit,
 ) {
     when (type) {
-        BottomSheetType.AddElementToList -> AddElementToList()
-        is BottomSheetType.ShowLists -> ShowLists(list = type.list, selectedList = type.selected)
+        BottomSheetType.AddElementToList -> AddElementToListBottomSheet(closeSheet)
+        is BottomSheetType.ShowLists -> ShowLists(
+            list = type.list,
+            selectedList = type.selected,
+            onElementClick = {
+                closeSheet()
+                type.onItemClick(it)
+            }
+        )
     }
 }
 

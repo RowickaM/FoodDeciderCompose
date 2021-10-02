@@ -33,10 +33,14 @@ class SaveFoodShareViewModel(
     val newFood: MutableState<String> = mutableStateOf("")
 
     private var setSavedList: ((List<String>, String) -> Unit)? = null
+    private var listName: MutableState<String> = mutableStateOf("")
 
     fun onInitialize(setSavedList: (List<String>, String) -> Unit) {
         this.setSavedList = setSavedList
-        if (_listOfSavedFood.isEmpty()) {
+
+        if (config.listName != listName.value) {
+            checkVersion()
+        } else if (_listOfSavedFood.isEmpty()) {
             checkVersion()
         }
     }
@@ -66,9 +70,11 @@ class SaveFoodShareViewModel(
                         _listOfSavedFood.addAll(savedListItems)
                         savedResult(savedListItems)
 
+                        listName.value = it.selectedListName
+
                         setSavedList?.invoke(
                             it.allListName,
-                            it.selectedList
+                            it.selectedListName
                         )
                     }.launchIn(this)
                 }
@@ -102,10 +108,17 @@ class SaveFoodShareViewModel(
             viewModelScope.launch {
                 randomFood.value = Result.Loading
                 delay(delay)
-                val index = Random.nextInt(0, _listOfSavedFood.size)
+                val index = getRandomIndex(_listOfSavedFood)
                 randomFood.value = Result.Success(_listOfSavedFood[index])
             }
+        }
+    }
 
+    private fun getRandomIndex(list: List<String>): Int {
+        return if (list.size == 1) {
+            0
+        } else {
+            Random.nextInt(0, _listOfSavedFood.size)
         }
     }
 

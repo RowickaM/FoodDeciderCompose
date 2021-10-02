@@ -1,6 +1,5 @@
 package pl.gungnir.fooddecider.util.firebase
 
-import android.util.Log
 import com.google.firebase.auth.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -115,10 +114,6 @@ class FirebaseAuthHelperImpl : FirebaseAuthHelper {
     @ExperimentalCoroutinesApi
     override fun sendVerificationEmail(): Flow<Either<Failure, None>> {
         return channelFlow {
-            Log.d(
-                "MRMRMR",
-                "FirebaseAuthHelperImpl.kt sendVerificationEmail: ${auth.currentUser == null}"
-            )
             auth.currentUser?.sendEmailVerification()?.addOnCompleteListener {
                 if (it.isSuccessful) {
                     trySendBlocking(None.right())

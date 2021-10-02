@@ -40,7 +40,7 @@ class FirebaseHelperImpl : FirebaseHelper {
                             trySendBlocking(
                                 SavedFoodCollection(
                                     allListName = arrays.keys.toList(),
-                                    selectedList = listName,
+                                    selectedListName = listName,
                                     savedList = items ?: emptyList()
                                 )
                             )

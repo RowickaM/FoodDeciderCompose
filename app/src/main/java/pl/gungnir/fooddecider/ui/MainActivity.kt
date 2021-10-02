@@ -20,7 +20,6 @@ import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetType
 import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetWrapper
-import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.AddElementToListBottomSheet
 import pl.gungnir.fooddecider.ui.mics.BottomBar
 import pl.gungnir.fooddecider.ui.mics.FloatingActionButton
 import pl.gungnir.fooddecider.ui.mics.Toolbar
@@ -68,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     BottomSheetWrapper(
                         state = bottomSheetState,
                         sheetState = bottomSheetType,
-                        addElementToList = { AddElementToListBottomSheet(hideSheet) }
+                        closeSheet = hideSheet,
                     ) {
                         Scaffold(
                             modifier = Modifier
@@ -103,8 +102,9 @@ class MainActivity : ComponentActivity() {
                                     FloatingActionButton(onClick = {
                                         openSheet(
                                             BottomSheetType.ShowLists(
-                                                viewModel.savedList,
-                                                viewModel.selectedList.value
+                                                list = viewModel.savedList,
+                                                selected = viewModel.selectedList.value,
+                                                onItemClick = viewModel::changeSelectedList
                                             )
                                         )
                                     })

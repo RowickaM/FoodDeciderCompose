@@ -1,4 +1,4 @@
-package pl.gungnir.fooddecider.ui.bottomSheet.addElementToList
+package pl.gungnir.fooddecider.ui.bottomSheet.showLists
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,6 +18,7 @@ import pl.gungnir.fooddecider.R
 fun ShowLists(
     list: List<String>,
     selectedList: String,
+    onElementClick: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -27,8 +28,8 @@ fun ShowLists(
                 vertical = dimensionResource(id = R.dimen.space_default)
             ),
     ) {
-        items(list) { item ->
-            val backgroundColor = if (item == selectedList) {
+        items(list) { listName ->
+            val backgroundColor = if (listName == selectedList) {
                 MaterialTheme.colors.primary.copy(alpha = 0.5f)
             } else {
                 Color.Transparent
@@ -37,12 +38,12 @@ fun ShowLists(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(backgroundColor)
-                    .clickable { }
+                    .clickable { onElementClick(listName) }
                     .padding(
                         vertical = dimensionResource(id = R.dimen.space_default),
                         horizontal = dimensionResource(id = R.dimen.space_default)
                     ),
-                text = item,
+                text = listName,
             )
         }
     }

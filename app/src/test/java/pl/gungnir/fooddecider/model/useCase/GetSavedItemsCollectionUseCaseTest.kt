@@ -59,7 +59,7 @@ class GetSavedItemsCollectionUseCaseTest : BaseTest() {
                 flowOf(
                     SavedFoodCollection(
                         allListName = listOf(),
-                        selectedList = "",
+                        selectedListName = "",
                         savedList = listOf()
                     )
                 )

@@ -26,7 +26,7 @@ val viewModelModule = module {
     single { FoodTemplatesSharedViewModel(get()) }
     factory { TemplateDetailsViewModel(get(), get()) }
     factory { LoginViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    factory { MainViewModel(get(), get()) }
+    factory { MainViewModel(get(), get(), get()) }
     factory { ForgotPasswordViewModel(get(), get()) }
     factory { RegistrationViewModel(get(), get(), get(), get(), get()) }
 }

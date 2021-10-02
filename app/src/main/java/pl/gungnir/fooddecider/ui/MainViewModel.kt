@@ -9,11 +9,13 @@ import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.model.useCase.LogoutUseCase
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.util.None
+import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.helper.ResourceProvider
 import pl.gungnir.fooddecider.util.onSuccess
 
 class MainViewModel(
     private val logoutUseCase: LogoutUseCase,
+    private val config: Config,
     resourceProvider: ResourceProvider
 ) : ViewModel() {
 
@@ -77,5 +79,10 @@ class MainViewModel(
         this.savedList.addAll(list)
 
         this.selectedList.value = selectedList
+    }
+
+    fun changeSelectedList(listName: String) {
+        config.listName = listName
+        this.selectedList.value = listName
     }
 }
