@@ -2,6 +2,7 @@ package pl.gungnir.fooddecider.ui.bottomSheet
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
@@ -18,6 +19,7 @@ fun BottomSheetWrapper(
     content: @Composable () -> Unit,
 ) {
     ModalBottomSheetLayout(
+        sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
         sheetState = state,
         sheetContent = {
             EmptyBottomSheet()
