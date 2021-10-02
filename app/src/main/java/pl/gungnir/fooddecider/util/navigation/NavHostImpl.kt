@@ -98,7 +98,9 @@ fun NavHostImpl(
             viewModel.setTitle(stringResource(id = R.string.templates_title))
             viewModel.showFAB(true)
 
-            SavedFood()
+            SavedFood(
+                selectedListName = viewModel.selectedList.value
+            )
         }
         composable(route = NavigationItem.FoodTemplates.route) {
             CrashlyticsLog.log(NAV_FOOD_TEMPLATE_LOG)

@@ -39,10 +39,17 @@ class SaveFoodShareViewModel(
         this.setSavedList = setSavedList
 
         if (config.listName != listName.value) {
+            randomFood.value = Result.Empty
             checkVersion()
         } else if (_listOfSavedFood.isEmpty()) {
             checkVersion()
         }
+    }
+
+    fun onSelectedChange(selectedListName: String) {
+        listName.value = selectedListName
+        randomFood.value = Result.Empty
+        checkVersion()
     }
 
     private fun checkVersion() {
