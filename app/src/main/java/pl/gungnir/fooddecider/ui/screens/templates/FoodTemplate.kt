@@ -29,7 +29,7 @@ import pl.gungnir.fooddecider.ui.mics.*
 @Composable
 fun FoodTemplate(
     navToTemplateDetails: (String) -> Unit,
-    viewModel: FoodTemplatesSharedViewModel = getViewModel(),
+    viewModel: TemplatesViewModel = getViewModel(),
 ) {
     viewModel.onInitialize()
     val templates = remember { viewModel.templates }
@@ -77,7 +77,6 @@ private fun FoodList(
         }
     }
 }
-
 
 @Composable
 fun FoodTemplateItem(

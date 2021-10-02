@@ -32,7 +32,7 @@ import pl.gungnir.fooddecider.ui.mics.getImage
 @Composable
 fun FoodTemplateDetails(
     templateId: String,
-    viewModel: FoodTemplateDetailsViewModel = getViewModel(),
+    viewModel: TemplateDetailsViewModel = getViewModel(),
 ) {
     viewModel.getTemplateById(templateId)
     val template = remember { viewModel.templateDetails }

@@ -35,8 +35,6 @@ class SavedFoodTest : BaseTest() {
             FoodDeciderTheme {
                 SavedFood(viewModel)
             }
-
-            viewModel.changeList(listOf())
         }
 
         composeTestRule

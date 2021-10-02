@@ -35,8 +35,8 @@ class FoodTemplateTest : BaseTest() {
     override fun setup() {
         super.setup()
         composeTestRule.setContent {
-            val viewModel: FoodTemplatesSharedViewModel = getViewModel()
-            viewModel.changeList(templates)
+            val viewModel: TemplatesViewModel = getViewModel()
+            viewModel.changeLists(templates)
 
             FoodDeciderTheme {
                 FoodTemplate(navToTemplateDetails = {}, viewModel = viewModel)

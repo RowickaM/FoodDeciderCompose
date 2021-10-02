@@ -92,8 +92,10 @@ class DatabaseRepoImpl(
             .right()
     }
 
-    override suspend fun splitFoodsInTemplates(template: Template): Either<Failure, Pair<TemplateDetails, List<String>>> {
+    override suspend fun splitFoodsInTemplates(templateId: String): Either<Failure, TemplateDetails> {
         val allAddedFoods = firebaseHelper.getSavedFood().first()
+        val template = getTemplateById(templateId) ?: return Failure.Unknown.left()
+
         val addedFood = arrayListOf<String>()
         val noAddedFood = arrayListOf<String>()
 
@@ -105,17 +107,14 @@ class DatabaseRepoImpl(
             }
         }
 
-        return Pair(
-            TemplateDetails(
-                id = template.id,
-                imageUrl = template.imageUrl,
-                categoryFoodName = template.categoryFoodName,
-                foodCount = template.foodCount,
-                foodTags = template.foodTags,
-                added = addedFood,
-                notAdded = noAddedFood
-            ),
-            allAddedFoods
+        return TemplateDetails(
+            id = template.id,
+            imageUrl = template.imageUrl,
+            categoryFoodName = template.categoryFoodName,
+            foodCount = template.foodCount,
+            foodTags = template.foodTags,
+            added = addedFood,
+            notAdded = noAddedFood
         ).right()
     }
 
@@ -126,6 +125,19 @@ class DatabaseRepoImpl(
 
     override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
         return firebaseHelper.setSavedFood(foods).first()
+    }
+
+    override suspend fun saveNewFoodToList(item: String): Either<Failure, None> {
+        val allSaved = firebaseHelper.getSavedFood().first()
+        val newList = ArrayList(allSaved)
+
+        newList.add(item)
+
+        return firebaseHelper.setSavedFood(newList).first()
+    }
+
+    private suspend fun getTemplateById(id: String): Template? {
+        return firebaseHelper.getTemplate(id).first()
     }
 
     override suspend fun addNewFood(food: String): Either<Failure, None>? {

@@ -25,20 +25,16 @@ class FoodTemplateDetailsTest : BaseTest() {
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
-    fun `_templateNotExist`() {
+    fun templateNotExist() {
         composeTestRule.setContent {
-            val viewModel: FoodTemplateDetailsViewModel = getViewModel()
+            val viewModel: TemplateDetailsViewModel = getViewModel()
 
             FoodDeciderTheme {
-                FoodTemplateDetails(templateId = "-1", viewModel = viewModel)
+                FoodTemplateDetails(templateId = "-1", viewModel)
             }
         }
 
-        composeTestRule.onNodeWithText(
-            composeTestRule
-                .activity
-                .getString(R.string.templates_template_no_exist)
-        )
+        composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.templates_template_no_exist))
             .assertExists()
             .assertIsDisplayed()
     }
