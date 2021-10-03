@@ -15,7 +15,7 @@ interface FirebaseHelper {
 
     fun getTemplate(id: String): Flow<Template?>
 
-    suspend fun getSavedFood(): Flow<List<String>>
+    suspend fun getSavedFood(listName: String): Flow<List<String>>
 
     suspend fun setSavedFood(listName: String, list: List<String>): Flow<Either<Failure, None>>
 
