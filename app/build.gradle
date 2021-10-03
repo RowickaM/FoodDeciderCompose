@@ -149,6 +149,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 
     implementation "com.google.accompanist:accompanist-swiperefresh:0.14.0"
 
