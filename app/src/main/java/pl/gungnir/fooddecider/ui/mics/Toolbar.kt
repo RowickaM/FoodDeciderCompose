@@ -3,6 +3,7 @@ package pl.gungnir.fooddecider.ui.mics
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -126,6 +127,14 @@ private fun ToolbarView() {
 @Composable
 private fun BodyCreditsDialog() {
     val context = LocalContext.current
+    val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+
+    val versionName = packageInfo.versionName
+    val versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        packageInfo.longVersionCode
+    } else {
+        packageInfo.versionCode.toLong()
+    }
 
     Column {
         Text(stringResource(id = R.string.photos_in_app))
@@ -151,5 +160,12 @@ private fun BodyCreditsDialog() {
                 Text(text = author)
             }
         }
+
+        Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.space_default)))
+
+        Text(
+            text = stringResource(id = R.string.version_app, versionName, "$versionCode"),
+            style = MaterialTheme.typography.subtitle1
+        )
     }
 }
