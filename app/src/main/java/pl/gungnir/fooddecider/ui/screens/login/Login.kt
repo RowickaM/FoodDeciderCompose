@@ -41,6 +41,9 @@ fun Login(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
+        if (viewModel.showLoader.value) {
+            Loading()
+        }
         when (isUserLogged.value) {
             null -> Loading()
             true -> {

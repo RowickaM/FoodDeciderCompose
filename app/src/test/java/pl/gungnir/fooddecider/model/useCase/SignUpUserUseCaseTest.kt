@@ -4,8 +4,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
-import pl.gungnir.fooddecider.BaseTest
 import org.mockito.Mockito.*
+import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.TestCoroutineRule
 import pl.gungnir.fooddecider.util.Failure

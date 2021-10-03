@@ -6,23 +6,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.R
-import pl.gungnir.fooddecider.model.useCase.IsUserLoggedUseCase
-import pl.gungnir.fooddecider.model.useCase.LoginUseCase
-import pl.gungnir.fooddecider.model.useCase.SendEmailVerificationUseCase
-import pl.gungnir.fooddecider.util.Failure
-import pl.gungnir.fooddecider.util.None
+import pl.gungnir.fooddecider.model.useCase.*
+import pl.gungnir.fooddecider.util.*
+import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.helper.ResourceProvider
-import pl.gungnir.fooddecider.util.onFailure
-import pl.gungnir.fooddecider.util.onSuccess
 
 class LoginViewModel(
     private val resourceProvider: ResourceProvider,
+    private val config: Config,
     private val loginUseCase: LoginUseCase,
     private val isUserLoggedUseCase: IsUserLoggedUseCase,
-    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
+    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
+    private val checkDBVersion: CheckDBVersion,
+    private val changeStructureUseCase: ChangeStructureUseCase,
 ) : ViewModel() {
 
     val isUserLogged: MutableState<Boolean?> = mutableStateOf(null)
+    val showLoader: MutableState<Boolean> = mutableStateOf(false)
 
     private var uid = ""
 
@@ -41,12 +41,14 @@ class LoginViewModel(
         afterSuccess: () -> Unit,
         afterFailure: (Boolean, String) -> Unit,
     ) {
+        showLoader.value = true
         viewModelScope.launch {
             isUserLogged.value = null
             loginUseCase.run(LoginUseCase.Params(email, password))
                 .onSuccess {
-                    afterSuccess.invoke()
+                    checkVersion(afterSuccess)
                 }.onFailure {
+                    showLoader.value = false
                     val message = when (it) {
                         Failure.UserNotExist -> resourceProvider.getString(R.string.firebase_user_not_exist)
                         Failure.InvalidCredentials -> resourceProvider.getString(R.string.firebase_invalid_credentials)
@@ -68,10 +70,40 @@ class LoginViewModel(
         viewModelScope.launch {
             sendEmailVerificationUseCase.run(uid)
                 .fold({}) {
+                    showLoader.value = false
                     isUserLogged.value = false
                     afterSuccess.invoke(resourceProvider.getString(R.string.send_email_verification))
                 }
         }
+    }
+
+    private fun checkVersion(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            checkDBVersion.run(None)
+                .onSuccess { isActual ->
+                    if (isActual) {
+                        showLoader.value = false
+                        onSuccess.invoke()
+                    } else {
+                        changeStructure(onSuccess)
+                    }
+                }
+        }
+    }
+
+    private fun changeStructure(onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            changeStructureUseCase.run(None)
+                .onSuccess {
+                    showLoader.value = false
+                    saveNewDBVersion()
+                    onSuccess.invoke()
+                }
+        }
+    }
+
+    private fun saveNewDBVersion() {
+        config.databaseVersion = DB_VERSION_IN_APP
     }
 
 }

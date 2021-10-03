@@ -3,22 +3,36 @@ package pl.gungnir.fooddecider.util.repo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*
+import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
 
 class DatabaseRepoImpl(
     private val firebaseHelper: FirebaseHelper,
-    private val firebaseAuthHelper: FirebaseAuthHelper
+    private val firebaseAuthHelper: FirebaseAuthHelper,
+    private val config: Config
 ) : DatabaseRepo {
 
-    override fun getSavedFood(): Flow<List<String>>? {
+    override suspend fun isUserDatabaseVersionActual(): Either<Failure, Boolean> {
+        return firebaseHelper.getActualDatabaseVersion().first()
+            .fold(
+                { it.left() },
+                {
+                    (it == config.databaseVersion).right()
+                }
+            )
+    }
+
+    override fun getSavedFood(listName: String): Either<Failure, Flow<SavedFoodCollection>> {
         val userUUID = firebaseAuthHelper.getUID()
         if (userUUID.isEmpty())
-            return null
-        return firebaseHelper.getSavedFoodConnection(userUID = userUUID)
+            return Failure.Unauthorized.left()
+        return firebaseHelper.getSavedFoodConnection(userUID = userUUID, listName = listName)
+            .right()
     }
 
     override suspend fun loginUser(email: String, password: String): Either<Failure, String> {
@@ -93,7 +107,7 @@ class DatabaseRepoImpl(
     }
 
     override suspend fun splitFoodsInTemplates(templateId: String): Either<Failure, TemplateDetails> {
-        val allAddedFoods = firebaseHelper.getSavedFood().first()
+        val allAddedFoods = firebaseHelper.getSavedFood(config.listName).first()
         val template = getTemplateById(templateId) ?: return Failure.Unknown.left()
 
         val addedFood = arrayListOf<String>()
@@ -119,16 +133,22 @@ class DatabaseRepoImpl(
     }
 
     override suspend fun setNewFoodList(foods: List<String>): Either<Failure, None> {
-        return firebaseHelper.setSavedFood(foods).first()
+        return firebaseHelper.setSavedFood(config.listName, foods).first()
     }
 
     override suspend fun saveNewFoodToList(item: String): Either<Failure, None> {
-        val allSaved = firebaseHelper.getSavedFood().first()
+        val allSaved = firebaseHelper.getSavedFood(config.listName).first()
         val newList = ArrayList(allSaved)
 
         newList.add(item)
 
-        return firebaseHelper.setSavedFood(newList).first()
+        return firebaseHelper.setSavedFood(config.listName, newList).first()
+    }
+
+    override suspend fun changeStructure(): Either<Failure, None> {
+        return firebaseHelper.updateStructure(
+            firebaseAuthHelper.getUID()
+        ).first()
     }
 
     private suspend fun getTemplateById(id: String): Template? {

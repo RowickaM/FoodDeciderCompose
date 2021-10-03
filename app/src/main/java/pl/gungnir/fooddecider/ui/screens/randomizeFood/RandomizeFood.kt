@@ -22,9 +22,10 @@ import pl.gungnir.fooddecider.util.RANDOM_FOOD_TIME
 @ExperimentalAnimationApi
 @Composable
 fun RandomizeFood(
+    setSavedList: (List<String>, String) -> Unit = { _, _ -> },
     viewModel: SaveFoodShareViewModel = getViewModel(),
 ) {
-    viewModel.onInitialize()
+    viewModel.onInitialize(setSavedList)
     val foodResult = viewModel.randomFood.value
 
     Column(

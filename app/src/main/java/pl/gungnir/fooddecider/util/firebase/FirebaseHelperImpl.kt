@@ -7,6 +7,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.util.*
 
@@ -16,7 +17,10 @@ class FirebaseHelperImpl : FirebaseHelper {
     private val auth by lazy { FirebaseAuth.getInstance() }
 
     @ExperimentalCoroutinesApi
-    override fun getSavedFoodConnection(userUID: String): Flow<List<String>> {
+    override fun getSavedFoodConnection(
+        userUID: String,
+        listName: String
+    ): Flow<SavedFoodCollection> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_FOOD)
                 .document(userUID)
@@ -27,8 +31,20 @@ class FirebaseHelperImpl : FirebaseHelper {
                     }
 
                     value?.let { querySnapshot ->
-                        val data = querySnapshot.data?.get(KEY_DATA_DISHES)
-                        trySendBlocking(data as? List<String> ?: emptyList())
+
+                        querySnapshot.data?.let { data ->
+                            val arrays = data[KEY_SAVED_LIST] as Map<String, Any>
+                            val lists = arrays[listName] as? Map<String, Any?>
+                            val items = lists?.get(KEY_SAVED_ITEM) as? List<String>
+
+                            trySendBlocking(
+                                SavedFoodCollection(
+                                    allListName = arrays.keys.toList(),
+                                    selectedListName = listName,
+                                    savedList = items ?: emptyList()
+                                )
+                            )
+                        }
                     }
                 }
 
@@ -106,7 +122,137 @@ class FirebaseHelperImpl : FirebaseHelper {
     }.flowOn(Dispatchers.IO)
 
     @ExperimentalCoroutinesApi
-    override suspend fun getSavedFood(): Flow<List<String>> {
+    override suspend fun getSavedFood(
+        listName: String
+    ): Flow<List<String>> {
+        auth.uid?.let { uid ->
+            return channelFlow {
+                db.collection(COLLECTION_SAVED_FOOD)
+                    .document(uid)
+                    .get()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            val savedItem = task.result?.data?.let { data ->
+                                val arrays = data[KEY_SAVED_LIST] as Map<String, Any>
+                                val lists = arrays[listName] as? Map<String, Any?>
+                                lists?.get(KEY_SAVED_ITEM) as? List<String>
+                            } ?: emptyList()
+
+
+                            trySendBlocking(savedItem as? List<String> ?: emptyList())
+                        }
+                        close()
+                    }
+                awaitClose()
+            }.flowOn(Dispatchers.IO)
+
+        } ?: return flowOf(emptyList())
+    }
+
+    @ExperimentalCoroutinesApi
+    override suspend fun setSavedFood(
+        listName: String,
+        list: List<String>
+    ): Flow<Either<Failure, None>> {
+        auth.uid?.let { uid ->
+            return channelFlow {
+                db.collection(COLLECTION_SAVED_FOOD)
+                    .document(uid)
+                    .update(
+                        mapOf(
+                            "$KEY_SAVED_LIST.$listName.$KEY_SAVED_ITEM" to list
+                        )
+                    )
+                    .addOnCompleteListener { task ->
+                        if (task.exception != null) {
+                            trySendBlocking(Failure.Unknown.left())
+                        }
+                        if (task.isSuccessful) {
+                            trySendBlocking(None.right())
+                        }
+                        close()
+                    }
+                awaitClose()
+            }.flowOn(Dispatchers.IO)
+        } ?: return flowOf(Failure.Unauthorized.left())
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun getActualDatabaseVersion(): Flow<Either<Failure, String>> = channelFlow {
+        db.collection(COLLECTION_SETUP)
+            .document(KEY_SETUP_DB)
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.exception != null) {
+                    trySendBlocking(Failure.Unknown.left())
+                }
+                if (task.isSuccessful) {
+                    val version = task.result?.data?.get(KEY_SETUP_DB_VERSION) as String
+                    trySendBlocking(version.right())
+                }
+                close()
+            }
+        awaitClose()
+    }.flowOn(Dispatchers.IO)
+
+    @ExperimentalCoroutinesApi
+    override fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>> {
+        return saveInNewStructure(userUID, emptyList())
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun saveInNewStructure(uid: String, oldList: List<String>) = channelFlow {
+        db.collection(COLLECTION_SAVED_FOOD)
+            .document(uid)
+            .set(
+                mapOf<String, Any>(
+                    KEY_SAVED_LIST to mapOf<String, Any>(
+                        KEY_SAVED_LIST_NAME_DEFAULT to mapOf(
+                            KEY_SAVED_ITEM to oldList
+                        )
+                    )
+                )
+            )
+            .addOnCompleteListener { task ->
+                if (task.exception != null) {
+                    trySendBlocking(Failure.Unknown.left())
+                }
+                if (task.isSuccessful) {
+                    trySendBlocking(None.right())
+                }
+                close()
+            }
+        awaitClose()
+    }.flowOn(Dispatchers.IO)
+
+    @ExperimentalCoroutinesApi
+    override fun updateStructure(uid: String) = channelFlow {
+        val oldList = getOldSavedFood().first()
+
+        db.collection(COLLECTION_SAVED_FOOD)
+            .document(uid)
+            .set(
+                mapOf<String, Any>(
+                    KEY_SAVED_LIST to mapOf<String, Any>(
+                        KEY_SAVED_LIST_NAME_DEFAULT to mapOf(
+                            KEY_SAVED_ITEM to oldList
+                        )
+                    )
+                )
+            )
+            .addOnCompleteListener { task ->
+                if (task.exception != null) {
+                    trySendBlocking(Failure.Unknown.left())
+                }
+                if (task.isSuccessful) {
+                    trySendBlocking(None.right())
+                }
+                close()
+            }
+        awaitClose()
+    }.flowOn(Dispatchers.IO)
+
+    private suspend fun getOldSavedFood(): Flow<List<String>> {
         auth.uid?.let { uid ->
             return channelFlow {
                 db.collection(COLLECTION_SAVED_FOOD)
@@ -124,45 +270,5 @@ class FirebaseHelperImpl : FirebaseHelper {
             }.flowOn(Dispatchers.IO)
 
         } ?: return flowOf(emptyList())
-    }
-
-    @ExperimentalCoroutinesApi
-    override suspend fun setSavedFood(list: List<String>): Flow<Either<Failure, None>> {
-        auth.uid?.let { uid ->
-            return channelFlow {
-                db.collection(COLLECTION_SAVED_FOOD)
-                    .document(uid)
-                    .set(mapOf(KEY_DATA_DISHES to list))
-                    .addOnCompleteListener { task ->
-                        if (task.exception != null) {
-                            trySendBlocking(Failure.Unknown.left())
-                        }
-                        if (task.isSuccessful) {
-                            trySendBlocking(None.right())
-                        }
-                        close()
-                    }
-                awaitClose()
-            }.flowOn(Dispatchers.IO)
-        } ?: return flowOf(Failure.Unauthorized.left())
-    }
-
-    @ExperimentalCoroutinesApi
-    override fun createCollectionForUser(userUID: String): Flow<Either<Failure, None>> {
-        return channelFlow {
-            db.collection(COLLECTION_SAVED_FOOD)
-                .document(userUID)
-                .set(mapOf(KEY_DATA_DISHES to emptyList<String>()))
-                .addOnCompleteListener { task ->
-                    if (task.exception != null) {
-                        trySendBlocking(Failure.Unknown.left())
-                    }
-                    if (task.isSuccessful) {
-                        trySendBlocking(None.right())
-                    }
-                    close()
-                }
-            awaitClose()
-        }.flowOn(Dispatchers.IO)
     }
 }

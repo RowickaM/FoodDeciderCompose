@@ -1,6 +1,7 @@
 package pl.gungnir.fooddecider.util.repo
 
 import kotlinx.coroutines.flow.Flow
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.Either
@@ -9,7 +10,11 @@ import pl.gungnir.fooddecider.util.None
 
 interface DatabaseRepo {
 
-    fun getSavedFood(): Flow<List<String>>?
+    suspend fun isUserDatabaseVersionActual(): Either<Failure, Boolean>
+
+    suspend fun changeStructure(): Either<Failure, None>
+
+    fun getSavedFood(listName: String): Either<Failure, Flow<SavedFoodCollection>>
 
     suspend fun loginUser(email: String, password: String): Either<Failure, String>
 
