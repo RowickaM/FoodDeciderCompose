@@ -129,7 +129,10 @@ fun NavHostImpl(
 
             val id = it.arguments?.getString(KEY_TEMPLATE_ID)
             id?.let {
-                FoodTemplateDetails(id)
+                FoodTemplateDetails(
+                    templateId = id,
+                    selectedListName = viewModel.selectedList.value
+                )
             } ?: navBack()
 
         }
