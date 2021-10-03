@@ -12,14 +12,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.model.useCase.ChangeStructureUseCase
 import pl.gungnir.fooddecider.model.useCase.CheckDBVersion
-import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
+import pl.gungnir.fooddecider.model.useCase.GetSavedItemsCollectionUseCase
 import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
 import pl.gungnir.fooddecider.util.*
 import pl.gungnir.fooddecider.util.config.Config
 import kotlin.random.Random
 
 class SaveFoodShareViewModel(
-    private val getAllSavedFoodUseCase: GetAllSavedFoodUseCase,
+    private val getSavedItemsCollectionUseCase: GetSavedItemsCollectionUseCase,
     private val setFoodListUseCase: SetFoodListUseCase,
     private val checkDBVersion: CheckDBVersion,
     private val changeStructureUseCase: ChangeStructureUseCase,
@@ -32,10 +32,24 @@ class SaveFoodShareViewModel(
 
     val newFood: MutableState<String> = mutableStateOf("")
 
-    fun onInitialize() {
-        if (_listOfSavedFood.isEmpty()) {
+    private var setSavedList: ((List<String>, String) -> Unit)? = null
+    private var listName: MutableState<String> = mutableStateOf("")
+
+    fun onInitialize(setSavedList: (List<String>, String) -> Unit) {
+        this.setSavedList = setSavedList
+
+        if (config.listName != listName.value) {
+            randomFood.value = Result.Empty
+            checkVersion()
+        } else if (_listOfSavedFood.isEmpty()) {
             checkVersion()
         }
+    }
+
+    fun onSelectedChange(selectedListName: String) {
+        listName.value = selectedListName
+        randomFood.value = Result.Empty
+        checkVersion()
     }
 
     private fun checkVersion() {
@@ -53,13 +67,22 @@ class SaveFoodShareViewModel(
 
     private fun getList() {
         viewModelScope.launch {
-            getAllSavedFoodUseCase.run(config.listName)
+            getSavedItemsCollectionUseCase.run(config.listName)
                 .onSuccess {
                     it.map {
                         listOfSavedFood.value = Result.Loading
+
+                        val savedListItems = it.savedList
                         _listOfSavedFood.clear()
-                        _listOfSavedFood.addAll(it)
-                        savedResult(it)
+                        _listOfSavedFood.addAll(savedListItems)
+                        savedResult(savedListItems)
+
+                        listName.value = it.selectedListName
+
+                        setSavedList?.invoke(
+                            it.allListName,
+                            it.selectedListName
+                        )
                     }.launchIn(this)
                 }
         }
@@ -92,10 +115,17 @@ class SaveFoodShareViewModel(
             viewModelScope.launch {
                 randomFood.value = Result.Loading
                 delay(delay)
-                val index = Random.nextInt(0, _listOfSavedFood.size)
+                val index = getRandomIndex(_listOfSavedFood)
                 randomFood.value = Result.Success(_listOfSavedFood[index])
             }
+        }
+    }
 
+    private fun getRandomIndex(list: List<String>): Int {
+        return if (list.size == 1) {
+            0
+        } else {
+            Random.nextInt(0, _listOfSavedFood.size)
         }
     }
 

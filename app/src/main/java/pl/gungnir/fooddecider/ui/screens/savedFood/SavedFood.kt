@@ -29,8 +29,10 @@ import kotlin.random.Random
 @ExperimentalComposeUiApi
 @Composable
 fun SavedFood(
+    selectedListName: String,
     viewModel: SaveFoodShareViewModel = getViewModel(),
 ) {
+    viewModel.onSelectedChange(selectedListName)
     val listFood = viewModel.listOfSavedFood.value
 
     Column {
@@ -50,7 +52,7 @@ fun SavedFood(
 @Preview(showBackground = true)
 @Composable
 private fun SavedFoodView() {
-    SavedFood()
+    SavedFood("")
 }
 
 @ExperimentalMaterialApi

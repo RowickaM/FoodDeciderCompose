@@ -7,6 +7,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.*
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.util.*
 
@@ -16,7 +17,10 @@ class FirebaseHelperImpl : FirebaseHelper {
     private val auth by lazy { FirebaseAuth.getInstance() }
 
     @ExperimentalCoroutinesApi
-    override fun getSavedFoodConnection(userUID: String, listName: String): Flow<List<String>> {
+    override fun getSavedFoodConnection(
+        userUID: String,
+        listName: String
+    ): Flow<SavedFoodCollection> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_FOOD)
                 .document(userUID)
@@ -27,16 +31,19 @@ class FirebaseHelperImpl : FirebaseHelper {
                     }
 
                     value?.let { querySnapshot ->
-//                        val data = querySnapshot.data?.get(KEY_DATA_DISHES)
-                        //todo if (data as? List<String> != null) should change structure!
-//                        trySendBlocking(data as? List<String> ?: emptyList())
 
                         querySnapshot.data?.let { data ->
                             val arrays = data[KEY_SAVED_LIST] as Map<String, Any>
                             val lists = arrays[listName] as? Map<String, Any?>
                             val items = lists?.get(KEY_SAVED_ITEM) as? List<String>
 
-                            trySendBlocking(items ?: emptyList())
+                            trySendBlocking(
+                                SavedFoodCollection(
+                                    allListName = arrays.keys.toList(),
+                                    selectedListName = listName,
+                                    savedList = items ?: emptyList()
+                                )
+                            )
                         }
                     }
                 }
