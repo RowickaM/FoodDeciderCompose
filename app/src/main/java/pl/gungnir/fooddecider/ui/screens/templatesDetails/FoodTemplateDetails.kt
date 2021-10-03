@@ -30,10 +30,11 @@ import pl.gungnir.fooddecider.ui.mics.getImage
 
 @Composable
 fun FoodTemplateDetails(
+    selectedListName: String,
     templateId: String,
     viewModel: TemplateDetailsViewModel = getViewModel(),
 ) {
-    viewModel.getTemplateById(templateId)
+    viewModel.getTemplateById(selectedListName, templateId)
     val template = remember { viewModel.templateDetails }
     val isRefreshing = remember { viewModel.isRefreshing }
 
@@ -53,7 +54,7 @@ fun FoodTemplateDetails(
 @Preview(showBackground = true)
 @Composable
 private fun FoodTemplateDetailsView() {
-    FoodTemplateDetails(templateId = "template id")
+    FoodTemplateDetails(templateId = "template id", selectedListName = "list")
 }
 
 @Composable

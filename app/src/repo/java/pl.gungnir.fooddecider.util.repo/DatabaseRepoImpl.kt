@@ -107,7 +107,7 @@ class DatabaseRepoImpl(
     }
 
     override suspend fun splitFoodsInTemplates(templateId: String): Either<Failure, TemplateDetails> {
-        val allAddedFoods = firebaseHelper.getSavedFood().first()
+        val allAddedFoods = firebaseHelper.getSavedFood(config.listName).first()
         val template = getTemplateById(templateId) ?: return Failure.Unknown.left()
 
         val addedFood = arrayListOf<String>()
@@ -137,7 +137,7 @@ class DatabaseRepoImpl(
     }
 
     override suspend fun saveNewFoodToList(item: String): Either<Failure, None> {
-        val allSaved = firebaseHelper.getSavedFood().first()
+        val allSaved = firebaseHelper.getSavedFood(config.listName).first()
         val newList = ArrayList(allSaved)
 
         newList.add(item)

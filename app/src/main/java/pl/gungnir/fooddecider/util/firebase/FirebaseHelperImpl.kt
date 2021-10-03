@@ -122,7 +122,9 @@ class FirebaseHelperImpl : FirebaseHelper {
     }.flowOn(Dispatchers.IO)
 
     @ExperimentalCoroutinesApi
-    override suspend fun getSavedFood(): Flow<List<String>> {
+    override suspend fun getSavedFood(
+        listName: String
+    ): Flow<List<String>> {
         auth.uid?.let { uid ->
             return channelFlow {
                 db.collection(COLLECTION_SAVED_FOOD)
@@ -130,11 +132,14 @@ class FirebaseHelperImpl : FirebaseHelper {
                     .get()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val data =
-                                task.result?.data?.get(KEY_DATA_DISHES) ?: emptyList<String>()
+                            val savedItem = task.result?.data?.let { data ->
+                                val arrays = data[KEY_SAVED_LIST] as Map<String, Any>
+                                val lists = arrays[listName] as? Map<String, Any?>
+                                lists?.get(KEY_SAVED_ITEM) as? List<String>
+                            } ?: emptyList()
 
 
-                            trySendBlocking(data as? List<String> ?: emptyList())
+                            trySendBlocking(savedItem as? List<String> ?: emptyList())
                         }
                         close()
                     }
