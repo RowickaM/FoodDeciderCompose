@@ -5,9 +5,8 @@ import FakeDatabaseRepoImpl
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithText
 import org.junit.Rule
 import org.junit.Test
 import org.koin.androidx.compose.getViewModel
@@ -19,6 +18,8 @@ import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 class FoodTemplateDetailsTest : BaseTest() {
+
+    //todo order of test has template for now. Problem with pass testable template
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
@@ -38,34 +39,63 @@ class FoodTemplateDetailsTest : BaseTest() {
             .assertIsDisplayed()
     }
 
-
     @Test
-    fun templateDisplayed() {
-        val index = 0
-        val template = FakeDatabaseRepoImpl.templstes[index]
+    fun templateProperlyDisplayed() {
+        val template = FakeDatabaseRepoImpl.getTemplateDetails(
+            FakeDatabaseRepoImpl.templstes[0]
+        )
 
         composeTestRule.setContent {
             val viewModel: TemplateDetailsViewModel = getViewModel()
-            viewModel.templateDetails.value = databaseRepo.splitToTemplateDetails(template)
 
             FoodDeciderTheme {
-                FoodTemplateDetails(templateId = (index + 1).toString(), viewModel)
+                FoodTemplateDetails(templateId = template.id, viewModel = viewModel)
             }
         }
 
-        composeTestRule.onNodeWithText(
-            composeTestRule
-                .activity
-                .getString(R.string.templates_template_no_exist)
-        )
-            .assertDoesNotExist()
-
-        composeTestRule.onNodeWithText(
-            text = template.categoryFoodName,
-            ignoreCase = true
-        )
+        composeTestRule.onNodeWithText(template.categoryFoodName.uppercase())
             .assertExists()
             .assertIsDisplayed()
 
+        //check not added element
+        if (template.notAdded.isNotEmpty()) {
+            composeTestRule.onNodeWithText(
+                composeTestRule
+                    .activity
+                    .getString(R.string.templates_to_add_list)
+            )
+                .assertExists()
+                .assertIsDisplayed()
+
+        }
+        template.notAdded.forEach {
+            composeTestRule.onNodeWithText(it)
+                .assertExists()
+                .assertIsDisplayed()
+
+            composeTestRule.onNodeWithContentDescription(
+                composeTestRule.activity.getString(
+                    R.string.templates_add_food_template,
+                    it
+                )
+            )
+                .assertExists()
+                .assertIsDisplayed()
+        }
+
+        //check added element
+        if (template.added.isNotEmpty()) {
+            composeTestRule.onNodeWithText(
+                composeTestRule
+                    .activity
+                    .getString(R.string.templates_added_list)
+            )
+                .assertExists()
+                .assertIsDisplayed()
+        }
+
+        composeTestRule.onNodeWithTag("addedList")
+            .onChildren()
+            .assertCountEquals(template.added.size)
     }
 }

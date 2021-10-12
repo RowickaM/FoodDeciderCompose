@@ -45,7 +45,7 @@ class SavedFoodTest : BaseTest() {
     }
 
     @Test
-    fun displayedListItems() {
+    fun `_displayedListItems`() {
         val foods = listOf(
             "Food 1",
             "Food 2",

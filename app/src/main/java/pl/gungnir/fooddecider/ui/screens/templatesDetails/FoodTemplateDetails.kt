@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -184,7 +185,9 @@ private fun FoodTemplateDetailsLists(
                 fontWeight = FontWeight.Bold
             )
         }
-        Column {
+        Column(
+            modifier = Modifier.testTag("addedList")
+        ) {
             template.added.forEach { food ->
                 Row(
                     modifier = Modifier

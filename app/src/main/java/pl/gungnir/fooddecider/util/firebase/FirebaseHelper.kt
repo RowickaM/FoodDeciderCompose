@@ -12,7 +12,7 @@ interface FirebaseHelper {
 
     fun getTemplates(): Flow<List<Template>>
 
-    fun getTemplate(id: String): Flow<Template?>
+    fun getTemplatesById(id: String): Flow<Template?>
 
     suspend fun getSavedFood(): Flow<List<String>>
 

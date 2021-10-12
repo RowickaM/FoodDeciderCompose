@@ -4,8 +4,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
-import pl.gungnir.fooddecider.BaseTest
 import org.mockito.Mockito.*
+import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.TestCoroutineRule
 import pl.gungnir.fooddecider.model.data.Template
@@ -17,9 +17,9 @@ import pl.gungnir.fooddecider.util.right
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
-class GetTemplateDetailsUseCaseTest : BaseTest() {
+class SplitDishesTemplateUseCaseTest : BaseTest() {
 
-    private lateinit var detailsUseCase: GetTemplateDetailsUseCase
+    private lateinit var useCase: SplitDishesTemplateUseCase
 
     @Mock
     private lateinit var databaseRepo: DatabaseRepo
@@ -29,7 +29,14 @@ class GetTemplateDetailsUseCaseTest : BaseTest() {
 
     private val testCoroutineRule = TestCoroutineRule()
 
-    private val templateId = "id_food_category1"
+    private val mockTemplate = Template(
+        id = "id_food_category1",
+        imageUrl = null,
+        categoryFoodName = "name 1",
+        foodCount = 2,
+        foodTags = listOf("tag 1, tag 2"),
+        foodList = listOf("food 1", "food 4")
+    )
 
     private val mockTemplateDetails = TemplateDetails(
         id = "id_food_category1",
@@ -44,7 +51,7 @@ class GetTemplateDetailsUseCaseTest : BaseTest() {
     override fun setup() {
         super.setup()
 
-        detailsUseCase = GetTemplateDetailsUseCase(databaseRepo)
+        useCase = SplitDishesTemplateUseCase(databaseRepo)
     }
 
     override fun tearDown() {
@@ -54,23 +61,23 @@ class GetTemplateDetailsUseCaseTest : BaseTest() {
     }
 
     @Test
-    fun getTemplateDetailsUseCase_Failure() = testCoroutineRule.runBlockingTest {
-        whenever(databaseRepo.splitFoodsInTemplates(any())).thenReturn(Failure.UserNotExist.left())
+    fun splitDishesTemplateUseCase_Failure() = testCoroutineRule.runBlockingTest {
+        whenever(databaseRepo.splitFoodsInTemplates(template = any())).thenReturn(Failure.UserNotExist.left())
 
-        val result = detailsUseCase.run(templateId)
+        val result = useCase.run(mockTemplate)
 
         assertEquals(Failure.UserNotExist.left(), result)
-        verify(databaseRepo, times(1)).splitFoodsInTemplates(templateId)
+        verify(databaseRepo, times(1)).splitFoodsInTemplates(mockTemplate)
     }
 
     @Test
-    fun getTemplateDetailsUseCase_None() = testCoroutineRule.runBlockingTest {
-        whenever(databaseRepo.splitFoodsInTemplates(any()))
-            .thenReturn(mockTemplateDetails.right())
+    fun splitDishesTemplateUseCase_None() = testCoroutineRule.runBlockingTest {
+        whenever(databaseRepo.splitFoodsInTemplates(template = any()))
+            .thenReturn(Pair(mockTemplateDetails, emptyList<String>()).right())
 
-        val result = detailsUseCase.run(templateId)
+        val result = useCase.run(mockTemplate)
 
-        assertEquals(mockTemplateDetails.right(), result)
-        verify(databaseRepo, times(1)).splitFoodsInTemplates(templateId)
+        assertEquals(Pair(mockTemplateDetails, emptyList<String>()).right(), result)
+        verify(databaseRepo, times(1)).splitFoodsInTemplates(mockTemplate)
     }
 }

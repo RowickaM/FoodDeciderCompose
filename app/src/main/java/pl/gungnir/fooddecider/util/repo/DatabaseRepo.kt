@@ -19,6 +19,8 @@ interface DatabaseRepo {
 
     suspend fun splitFoodsInTemplates(templateId: String): Either<Failure, TemplateDetails>
 
+//    suspend fun splitFoodsInTemplates(id: String): Either<Failure, Pair<TemplateDetails, List<String>>>
+
     suspend fun setNewFoodList(foods: List<String>): Either<Failure, None>
 
     suspend fun saveNewFoodToList(item: String): Either<Failure, None>
@@ -32,4 +34,6 @@ interface DatabaseRepo {
     suspend fun createUseCollection(userUID: String): Either<Failure, None>
 
     suspend fun sendVerificationEmail(userUID: String): Either<Failure, None>
+
+    suspend fun addNewFood(food: String): Either<Failure, None>?
 }

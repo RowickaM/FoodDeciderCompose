@@ -9,6 +9,18 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
 
     companion object {
 
+        fun getTemplateDetails(template: Template): TemplateDetails {
+            return TemplateDetails(
+                id = template.id,
+                imageUrl = template.imageUrl,
+                categoryFoodName = template.categoryFoodName,
+                foodCount = template.foodCount,
+                foodTags = template.foodTags,
+                added = listOf("food 1", "food 6"),
+                notAdded = listOf("food 29")
+            )
+        }
+
         const val userMail = "email@email.com"
         const val userPassword = "password"
         const val userUUID = "UUIDForUser"
@@ -18,7 +30,7 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
                 id = "1",
                 imageUrl = null,
                 categoryFoodName = "category 1",
-                foodCount = 2,
+                foodCount = 3,
                 foodTags = listOf(),
                 foodList = listOf("food 1", "food 6", "food 29")
             ),
@@ -203,5 +215,22 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
             added = addedFood,
             notAdded = noAddedFood
         )
+    }
+
+    override suspend fun splitFoodsInTemplates(id: String): Either<Failure, Pair<TemplateDetails, List<String>>> {
+        val template = templstes.find { id == it.id }
+        template ?: return Failure.Unknown.left()
+
+        return splitFoodsInTemplates(template = template)
+    }
+
+    override suspend fun addNewFood(food: String): Either<Failure, None>? {
+        val allSavedFoodForList = getSavedFood()?.first()
+        allSavedFoodForList ?: return null
+
+        val newList = ArrayList(allSavedFoodForList)
+        newList.add(food)
+
+        return setNewFoodList(newList)
     }
 }

@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.util.repo
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import org.koin.java.KoinJavaComponent
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
@@ -21,6 +22,7 @@ object ServiceDatabaseRepo {
 
     @VisibleForTesting
     fun changeDatabaseRepo(databaseRepo: DatabaseRepo) {
+        Log.d("MRMRMR", "ServiceDatabaseRepo changeDatabaseRepo: no i co z tym?")
         this.databaseRepo = databaseRepo
     }
 

@@ -48,6 +48,8 @@ val useCaseModule = module {
     factory { CreateUserCollectionUseCase(get()) }
     factory { SendEmailVerificationUseCase(get()) }
     factory { SaveItemToListUseCase(get()) }
+    factory { AddFoodToListUseCase(get()) }
+    factory { SplitDishesTemplateByIdUseCase(get()) }
 }
 
 val appModule = module {
