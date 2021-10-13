@@ -156,8 +156,7 @@ class DatabaseRepoImpl(
     }
 
     override suspend fun addNewFood(food: String): Either<Failure, None>? {
-        val allSavedFoodForList = getSavedFood()?.first()
-        allSavedFoodForList ?: return null
+        val allSavedFoodForList = firebaseHelper.getSavedFood(config.listName).first()
 
         val newList = ArrayList(allSavedFoodForList)
         newList.add(food)

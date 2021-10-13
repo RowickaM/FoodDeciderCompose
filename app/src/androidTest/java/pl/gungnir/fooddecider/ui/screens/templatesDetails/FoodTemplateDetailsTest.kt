@@ -30,7 +30,11 @@ class FoodTemplateDetailsTest : BaseTest() {
             val viewModel: TemplateDetailsViewModel = getViewModel()
 
             FoodDeciderTheme {
-                FoodTemplateDetails(templateId = "-1", viewModel)
+                FoodTemplateDetails(
+                    templateId = "-1",
+                    viewModel = viewModel,
+                    selectedListName = FakeDatabaseRepoImpl.listName1
+                )
             }
         }
 
@@ -49,7 +53,11 @@ class FoodTemplateDetailsTest : BaseTest() {
             val viewModel: TemplateDetailsViewModel = getViewModel()
 
             FoodDeciderTheme {
-                FoodTemplateDetails(templateId = template.id, viewModel = viewModel)
+                FoodTemplateDetails(
+                    templateId = template.id,
+                    viewModel = viewModel,
+                    selectedListName = FakeDatabaseRepoImpl.listName1
+                )
             }
         }
 

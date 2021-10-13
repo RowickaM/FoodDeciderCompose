@@ -1,6 +1,7 @@
 package pl.gungnir.fooddecider.ui.screens.savedFood
 
 import BaseTest
+import FakeDatabaseRepoImpl
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -33,7 +34,7 @@ class SavedFoodTest : BaseTest() {
             viewModel = getViewModel()
 
             FoodDeciderTheme {
-                SavedFood(viewModel)
+                SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
             }
         }
 
@@ -54,7 +55,7 @@ class SavedFoodTest : BaseTest() {
             viewModel = getViewModel()
 
             FoodDeciderTheme {
-                SavedFood(viewModel)
+                SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
             }
 
             viewModel.changeList(foods)
@@ -80,7 +81,7 @@ class SavedFoodTest : BaseTest() {
             viewModel = getViewModel()
 
             FoodDeciderTheme {
-                SavedFood(viewModel)
+                SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
             }
 
             viewModel.changeList(foods)

@@ -1,5 +1,6 @@
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.util.*
@@ -24,6 +25,8 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         const val userMail = "email@email.com"
         const val userPassword = "password"
         const val userUUID = "UUIDForUser"
+        const val listName1 = "list1"
+        const val listName2 = "list2"
 
         val templstes: List<Template> = listOf(
             Template(
@@ -108,14 +111,51 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
             "food 5",
             "food 6"
         )
+        var list2: List<String> = arrayListOf(
+            "food 1",
+            "food 2",
+            "food 3",
+            "food 4",
+            "food 5",
+            "food 6"
+        )
+        val savedFoodCollection1 = SavedFoodCollection(
+            allListName = listOf(listName1, listName2),
+            selectedListName = listName1,
+            savedList = list
+        )
+        val savedFoodCollection2 = SavedFoodCollection(
+            allListName = listOf(listName1, listName2),
+            selectedListName = listName2,
+            savedList = list2
+        )
     }
 
-    fun changeList(list: List<String>) {
+    private fun changeList(list: List<String>) {
         FakeDatabaseRepoImpl.list = list
     }
 
-    override fun getSavedFood(): Flow<List<String>>? {
-        return flowOf(list)
+    var isActual = false
+    override suspend fun isUserDatabaseVersionActual(): Either<Failure, Boolean> {
+        return isActual.right()
+    }
+
+    override suspend fun changeStructure(): Either<Failure, None> {
+        return if (isActual) Failure.Unknown.left() else None.right()
+    }
+
+    private fun getList(listName: String): SavedFoodCollection {
+        return when (listName) {
+            listName1 -> savedFoodCollection1
+            else -> savedFoodCollection2
+        }
+    }
+
+    override fun getSavedFood(listName: String): Either<Failure, Flow<SavedFoodCollection>> {
+        return when (listName) {
+            listName1, listName2 -> flowOf(getList(listName)).right()
+            else -> Failure.Unknown.left()
+        }
     }
 
     override suspend fun loginUser(email: String, password: String): Either<Failure, String> {
@@ -173,12 +213,6 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         return templstes.right()
     }
 
-    override suspend fun splitFoodsInTemplates(templateId: String): Either<Failure, TemplateDetails> {
-        val template = templstes.find { it.id == templateId } ?: return Failure.Unknown.left()
-
-        return splitToTemplateDetails(template = template).right()
-    }
-
     override suspend fun saveNewFoodToList(item: String): Either<Failure, None> {
         val newList = ArrayList(list)
         newList.add(item)
@@ -192,7 +226,7 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         return None.right()
     }
 
-    fun splitToTemplateDetails(template: Template): TemplateDetails {
+    private fun splitToTemplateDetails(template: Template): TemplateDetails {
         val allAddedFoods = list
 
         val addedFood = arrayListOf<String>()
@@ -217,16 +251,16 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         )
     }
 
-    override suspend fun splitFoodsInTemplates(id: String): Either<Failure, Pair<TemplateDetails, List<String>>> {
-        val template = templstes.find { id == it.id }
+    override suspend fun splitFoodsInTemplates(templateId: String): Either<Failure, TemplateDetails> {
+        val template = templstes.find { templateId == it.id }
         template ?: return Failure.Unknown.left()
 
-        return splitFoodsInTemplates(template = template)
+        return splitToTemplateDetails(template = template).right()
     }
 
-    override suspend fun addNewFood(food: String): Either<Failure, None>? {
-        val allSavedFoodForList = getSavedFood()?.first()
-        allSavedFoodForList ?: return null
+    var selectedList = listName1
+    override suspend fun addNewFood(food: String): Either<Failure, None> {
+        val allSavedFoodForList = getList(selectedList).savedList
 
         val newList = ArrayList(allSavedFoodForList)
         newList.add(food)

@@ -23,8 +23,6 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
 
 val viewModelModule = module {
     single { SaveFoodShareViewModel(get(), get(), get(), get(), get()) }
-    single { FoodTemplatesSharedViewModel(get()) }
-    single { SaveFoodShareViewModel(get(), get()) }
     single { TemplatesViewModel(get()) }
     factory { TemplateDetailsViewModel(get(), get()) }
     factory { LoginViewModel(get(), get(), get(), get(), get(), get(), get()) }
@@ -40,21 +38,21 @@ val databaseModule = module {
 }
 
 val useCaseModule = module {
-    factory { GetSavedItemsCollectionUseCase() }
-    factory { LoginUseCase() }
-    factory { CheckDBVersion() }
-    factory { IsUserLoggedUseCase() }
-    factory { GetTemplatesUseCase() }
-    factory { GetTemplateDetailsUseCase() }
-    factory { SetFoodListUseCase() }
-    factory { LogoutUseCase() }
-    factory { SendRemindPasswordLinkUseCase() }
-    factory { SignUpUserUseCase() }
-    factory { CreateUserCollectionUseCase() }
-    factory { SendEmailVerificationUseCase() }
-    factory { SaveItemToListUseCase() }
-    factory { ChangeStructureUseCase() }
     factory { AddFoodToListUseCase() }
+    factory { ChangeStructureUseCase() }
+    factory { CheckDBVersion() }
+    factory { CreateUserCollectionUseCase() }
+    factory { GetSavedItemsCollectionUseCase() }
+    factory { GetTemplateDetailsUseCase() }
+    factory { GetTemplatesUseCase() }
+    factory { IsUserLoggedUseCase() }
+    factory { LoginUseCase() }
+    factory { LogoutUseCase() }
+    factory { SaveItemToListUseCase() }
+    factory { SendEmailVerificationUseCase() }
+    factory { SendRemindPasswordLinkUseCase() }
+    factory { SetFoodListUseCase() }
+    factory { SignUpUserUseCase() }
     factory { SplitDishesTemplateByIdUseCase() }
 }
 

@@ -18,11 +18,11 @@ import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
+@ExperimentalCoroutinesApi
 class LoginTest : BaseTest() {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    @ExperimentalCoroutinesApi
     private val testCoroutineRule = TestCoroutineRule()
 
     @Test
@@ -164,13 +164,9 @@ class LoginTest : BaseTest() {
         loginButton.assertExists().assertIsDisplayed().assertIsEnabled()
         loginButton.performClick()
 
-        /**
-         * this makes error
-         * androidx.compose.ui.test.junit4.android.ComposeNotIdleException: Idling resource timed out: possibly due to compose being busy.
-         * IdlingResourceRegistry has the following idling resources registered:
-         **/
-//        composeTestRule.onNodeWithTag("dialog").assertExists()
-//        composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.ok))
-//            .performClick()
+
+        composeTestRule.onNodeWithTag("dialog").assertExists()
+        composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.ok))
+            .performClick()
     }
 }
