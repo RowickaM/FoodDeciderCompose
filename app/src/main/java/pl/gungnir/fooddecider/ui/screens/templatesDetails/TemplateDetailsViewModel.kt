@@ -20,11 +20,13 @@ class TemplateDetailsViewModel(
 
     val isRefreshing: MutableState<Boolean> = mutableStateOf(false)
     private var templateId: String? = null
+    private var selectedListName: String? = null
 
-    fun getTemplateById(id: String) {
+    fun getTemplateById(selectedListName: String?, id: String) {
         viewModelScope.launch {
             getTemplateDetailsUseCase.run(id)
                 .onSuccess {
+                    this@TemplateDetailsViewModel.selectedListName = selectedListName
                     templateDetails.value = it
                     templateId = id
                 }
@@ -39,7 +41,7 @@ class TemplateDetailsViewModel(
                 notAdded = emptyList()
             )
             delay(delay)
-            templateId?.let { getTemplateById(it) }
+            templateId?.let { getTemplateById(selectedListName, it) }
         }
         isRefreshing.value = false
     }

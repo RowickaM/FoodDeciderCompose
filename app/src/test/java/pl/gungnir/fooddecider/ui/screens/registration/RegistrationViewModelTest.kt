@@ -1,7 +1,6 @@
 package pl.gungnir.fooddecider.ui.screens.registration
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
@@ -28,7 +27,6 @@ class RegistrationViewModelTest : BaseTest() {
     @get:Rule
     val coroutineRule = MainCoroutineRule()
 
-    @ExperimentalCoroutinesApi
     val testCoroutineRule = TestCoroutineRule()
 
     @Mock

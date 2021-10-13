@@ -1,12 +1,10 @@
 package pl.gungnir.fooddecider.model.useCase
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
-
 import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.TestCoroutineRule

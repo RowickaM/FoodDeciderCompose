@@ -10,6 +10,8 @@ import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
 import pl.gungnir.fooddecider.ui.screens.registration.RegistrationViewModel
 import pl.gungnir.fooddecider.ui.screens.templates.TemplatesViewModel
 import pl.gungnir.fooddecider.ui.screens.templatesDetails.TemplateDetailsViewModel
+import pl.gungnir.fooddecider.util.config.Config
+import pl.gungnir.fooddecider.util.config.ConfigImpl
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelperImpl
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
@@ -20,38 +22,43 @@ import pl.gungnir.fooddecider.util.repo.DatabaseRepo
 import pl.gungnir.fooddecider.util.repo.DatabaseRepoImpl
 
 val viewModelModule = module {
+    single { SaveFoodShareViewModel(get(), get(), get(), get(), get()) }
+    single { FoodTemplatesSharedViewModel(get()) }
     single { SaveFoodShareViewModel(get(), get()) }
     single { TemplatesViewModel(get()) }
     factory { TemplateDetailsViewModel(get(), get()) }
-    factory { LoginViewModel(get(), get(), get(), get()) }
-    factory { MainViewModel(get(), get()) }
+    factory { LoginViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    factory { MainViewModel(get(), get(), get()) }
     factory { ForgotPasswordViewModel(get(), get()) }
     factory { RegistrationViewModel(get(), get(), get(), get(), get()) }
 }
 
 val databaseModule = module {
-    single<DatabaseRepo> { DatabaseRepoImpl(get(), get()) }
+    single<DatabaseRepo> { DatabaseRepoImpl(get(), get(), get()) }
     single<FirebaseHelper> { FirebaseHelperImpl() }
     single<FirebaseAuthHelper> { FirebaseAuthHelperImpl() }
 }
 
 val useCaseModule = module {
-    factory { GetAllSavedFoodUseCase(get()) }
-    factory { LoginUseCase(get()) }
-    factory { IsUserLoggedUseCase(get()) }
-    factory { GetTemplatesUseCase(get()) }
-    factory { GetTemplateDetailsUseCase(get()) }
-    factory { SetFoodListUseCase(get()) }
-    factory { LogoutUseCase(get()) }
-    factory { SendRemindPasswordLinkUseCase(get()) }
-    factory { SignUpUserUseCase(get()) }
-    factory { CreateUserCollectionUseCase(get()) }
-    factory { SendEmailVerificationUseCase(get()) }
-    factory { SaveItemToListUseCase(get()) }
-    factory { AddFoodToListUseCase(get()) }
-    factory { SplitDishesTemplateByIdUseCase(get()) }
+    factory { GetSavedItemsCollectionUseCase() }
+    factory { LoginUseCase() }
+    factory { CheckDBVersion() }
+    factory { IsUserLoggedUseCase() }
+    factory { GetTemplatesUseCase() }
+    factory { GetTemplateDetailsUseCase() }
+    factory { SetFoodListUseCase() }
+    factory { LogoutUseCase() }
+    factory { SendRemindPasswordLinkUseCase() }
+    factory { SignUpUserUseCase() }
+    factory { CreateUserCollectionUseCase() }
+    factory { SendEmailVerificationUseCase() }
+    factory { SaveItemToListUseCase() }
+    factory { ChangeStructureUseCase() }
+    factory { AddFoodToListUseCase() }
+    factory { SplitDishesTemplateByIdUseCase() }
 }
 
 val appModule = module {
     single<ResourceProvider> { ResourceProviderImpl(androidContext()) }
+    single<Config> { ConfigImpl() }
 }

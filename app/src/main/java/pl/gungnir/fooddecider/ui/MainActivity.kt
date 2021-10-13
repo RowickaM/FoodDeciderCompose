@@ -20,8 +20,8 @@ import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetType
 import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetWrapper
-import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.AddElementToListBottomSheet
 import pl.gungnir.fooddecider.ui.mics.BottomBar
+import pl.gungnir.fooddecider.ui.mics.FloatingActionButton
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 import pl.gungnir.fooddecider.util.navigation.Actions
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
                     BottomSheetWrapper(
                         state = bottomSheetState,
                         sheetState = bottomSheetType,
-                        addElementToList = { AddElementToListBottomSheet(hideSheet) }
+                        closeSheet = hideSheet,
                     ) {
                         Scaffold(
                             modifier = Modifier
@@ -96,7 +96,20 @@ class MainActivity : ComponentActivity() {
                                         }
                                     )
                                 }
-                            }
+                            },
+                            floatingActionButton = {
+                                if (viewModel.showFab.value) {
+                                    FloatingActionButton(onClick = {
+                                        openSheet(
+                                            BottomSheetType.ShowLists(
+                                                list = viewModel.savedList,
+                                                selected = viewModel.selectedList.value,
+                                                onItemClick = viewModel::changeSelectedList
+                                            )
+                                        )
+                                    })
+                                }
+                            },
                         ) {
                             NavHostImpl(
                                 viewModel = viewModel,
