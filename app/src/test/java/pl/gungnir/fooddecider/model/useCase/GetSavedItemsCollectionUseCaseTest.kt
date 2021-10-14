@@ -16,6 +16,7 @@ import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.left
 import pl.gungnir.fooddecider.util.onSuccess
 import pl.gungnir.fooddecider.util.repo.DatabaseRepo
+import pl.gungnir.fooddecider.util.right
 
 @ExperimentalCoroutinesApi
 class GetSavedItemsCollectionUseCaseTest : BaseTest() {
@@ -29,6 +30,12 @@ class GetSavedItemsCollectionUseCaseTest : BaseTest() {
     val coroutineRule = MainCoroutineRule()
 
     private val testCoroutineRule = TestCoroutineRule()
+
+    private val savedCollectionEmpty = SavedFoodCollection(
+        allListName = listOf(),
+        selectedListName = "",
+        savedList = listOf()
+    )
 
     override fun setup() {
         super.setup()
@@ -44,7 +51,7 @@ class GetSavedItemsCollectionUseCaseTest : BaseTest() {
 
     @Test
     fun getAllSavedFood_Failure() = testCoroutineRule.runBlockingTest {
-        whenever(databaseRepo.getSavedFood(anyString())).thenReturn(null)
+        whenever(databaseRepo.getSavedFood(anyString())).thenReturn(Failure.UserNotExist.left())
 
         val result = useCase.run("")
 
@@ -62,14 +69,14 @@ class GetSavedItemsCollectionUseCaseTest : BaseTest() {
                         selectedListName = "",
                         savedList = listOf()
                     )
-                )
+                ).right()
             )
 
         val result = useCase.run("")
 
         result.onSuccess {
             testCoroutineRule.runBlockingTest {
-                assertEquals(emptyList<String>(), it.first())
+                assertEquals(savedCollectionEmpty, it.first())
             }
         }
         verify(databaseRepo, times(1)).getSavedFood(anyString())
