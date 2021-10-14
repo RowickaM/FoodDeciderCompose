@@ -152,6 +152,15 @@ class DatabaseRepoImpl(
     }
 
     private suspend fun getTemplateById(id: String): Template? {
-        return firebaseHelper.getTemplate(id).first()
+        return firebaseHelper.getTemplatesById(id).first()
+    }
+
+    override suspend fun addNewFood(food: String): Either<Failure, None>? {
+        val allSavedFoodForList = firebaseHelper.getSavedFood(config.listName).first()
+
+        val newList = ArrayList(allSavedFoodForList)
+        newList.add(food)
+
+        return setNewFoodList(newList)
     }
 }

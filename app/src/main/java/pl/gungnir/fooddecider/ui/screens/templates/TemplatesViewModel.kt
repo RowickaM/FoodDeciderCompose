@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.ui.screens.templates
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,7 @@ import pl.gungnir.fooddecider.model.useCase.GetTemplatesUseCase
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.onSuccess
 
-class FoodTemplatesSharedViewModel(
+class TemplatesViewModel(
     private val getTemplatesUseCase: GetTemplatesUseCase,
 ) : ViewModel() {
 
@@ -47,6 +48,15 @@ class FoodTemplatesSharedViewModel(
             fetchData()
         }
         isRefreshing.value = false
+    }
+
+    @VisibleForTesting
+    fun changeLists(list: List<Template>) {
+        if (list.isEmpty()) {
+            templates.value = Result.Empty
+        } else {
+            templates.value = Result.Success(list)
+        }
     }
 }
 

@@ -12,6 +12,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -28,7 +29,7 @@ import pl.gungnir.fooddecider.ui.mics.*
 @Composable
 fun FoodTemplate(
     navToTemplateDetails: (String) -> Unit,
-    viewModel: FoodTemplatesSharedViewModel = getViewModel(),
+    viewModel: TemplatesViewModel = getViewModel(),
 ) {
     viewModel.onInitialize()
     val templates = remember { viewModel.templates }
@@ -50,6 +51,7 @@ fun FoodTemplate(
                 )
             }
         }
+
     }
 }
 
@@ -65,7 +67,7 @@ private fun FoodList(
     templates: List<Template>,
     navToTemplateDetails: (String) -> Unit,
 ) {
-    LazyColumn {
+    LazyColumn(modifier = Modifier.testTag("templateList")) {
         items(templates) { template ->
             FoodTemplateItem(
                 template = template,
@@ -79,7 +81,7 @@ private fun FoodList(
 @Composable
 fun FoodTemplateItem(
     template: Template,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     val height = dimensionResource(id = R.dimen.height_food_template_item)
     val image = template.imageUrl.getImage()

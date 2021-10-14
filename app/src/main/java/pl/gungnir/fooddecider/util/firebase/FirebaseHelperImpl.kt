@@ -89,37 +89,39 @@ class FirebaseHelperImpl : FirebaseHelper {
     }
 
     @ExperimentalCoroutinesApi
-    override fun getTemplate(id: String): Flow<Template?> = channelFlow {
-        db.collection(COLLECTION_SAVED_TEMPLATES)
-            .document(id)
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val template = task
-                        .result
-                        ?.data?.let { data ->
-                            val foods = data[KEY_DATA_DISHES] as List<String>
-                            val category = data[KEY_DATA_CATEGORY] as Map<String, Any>
-                            val categoryName = category[KEY_DATA_NAME] as String
-                            val tags = category[KEY_DATA_TAGS] as List<String>
-                            val imageUrl = category[KEY_DATA_IMAGE] as String?
+    override fun getTemplatesById(id: String): Flow<Template?> {
+        return channelFlow {
+            db.collection(COLLECTION_SAVED_TEMPLATES)
+                .document(id)
+                .get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val template = task
+                            .result
+                            ?.data?.let { data ->
+                                val foods = data[KEY_DATA_DISHES] as List<String>
+                                val category = data[KEY_DATA_CATEGORY] as Map<String, Any>
+                                val categoryName = category[KEY_DATA_NAME] as String
+                                val tags = category[KEY_DATA_TAGS] as List<String>
+                                val imageUrl = category[KEY_DATA_IMAGE] as String?
 
-                            Template(
-                                id = id,
-                                imageUrl = imageUrl,
-                                categoryFoodName = categoryName,
-                                foodCount = foods.size,
-                                foodTags = tags,
-                                foodList = foods
-                            )
-                        }
+                                Template(
+                                    id = id,
+                                    imageUrl = imageUrl,
+                                    categoryFoodName = categoryName,
+                                    foodCount = foods.size,
+                                    foodTags = tags,
+                                    foodList = foods
+                                )
+                            }
 
-                    trySendBlocking(template)
+                        trySendBlocking(template)
+                    }
+                    close()
                 }
-                close()
-            }
-        awaitClose()
-    }.flowOn(Dispatchers.IO)
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
+    }
 
     @ExperimentalCoroutinesApi
     override suspend fun getSavedFood(
