@@ -54,7 +54,6 @@ class NavigationTest : BaseE2ETest() {
             .assertIsDisplayed()
     }
 
-    //todo
     @Test
     fun login_listItem_allList_Displayed() {
         emailInputLogin.assertExists().assertIsDisplayed()
@@ -80,6 +79,46 @@ class NavigationTest : BaseE2ETest() {
             .assertTextEquals(getString(R.string.list_foods_title))
             .assertExists()
             .assertIsDisplayed()
+
+        composeTestRule
+            .onNodeWithText("food 1")
+            .assertExists()
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun login_listItem_allList_Displayed_switchList() {
+        emailInputLogin.assertExists().assertIsDisplayed()
+        passwordInputLogin.assertExists().assertIsDisplayed()
+        loginButtonLogin.assertExists().assertIsDisplayed()
+
+        emailInputLogin.performTextInput(FakeDatabaseRepoImpl.userMail)
+        passwordInputLogin.performTextInput(FakeDatabaseRepoImpl.userPassword)
+        loginButtonLogin.performClick()
+
+        composeTestRule
+            .onNodeWithContentDescription(getString(R.string.randomize_food_click))
+            .assertIsDisplayed()
+
+        composeTestRule
+            .onNodeWithTag(getString(R.string.bottom_nav_list_label))
+            .assertIsDisplayed()
+            .assertHasClickAction()
+            .performClick()
+
+        composeTestRule
+            .onNodeWithTag(TestTags.TOOLBAR_TITLE_TAG)
+            .assertTextEquals(getString(R.string.list_foods_title))
+            .assertExists()
+            .assertIsDisplayed()
+
+        composeTestRule
+            .onNodeWithTag(TestTags.FAB_TAG)
+            .assertExists()
+            .assertIsDisplayed()
+            .performClick()
+
+        //todo not display bottom sheet with list of list name
     }
 
     @Test

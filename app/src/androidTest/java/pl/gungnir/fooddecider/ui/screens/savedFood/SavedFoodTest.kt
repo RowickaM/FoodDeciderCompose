@@ -2,17 +2,21 @@ package pl.gungnir.fooddecider.ui.screens.savedFood
 
 import BaseTest
 import FakeDatabaseRepoImpl
+import TestCoroutineRule
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.MainActivity
+import pl.gungnir.fooddecider.ui.screens.randomizeFood.Result
 import pl.gungnir.fooddecider.ui.screens.randomizeFood.SaveFoodShareViewModel
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 
@@ -25,6 +29,8 @@ class SavedFoodTest : BaseTest() {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
+
+    private val testCoroutineRule = TestCoroutineRule()
 
     private lateinit var viewModel: SaveFoodShareViewModel
 
@@ -69,12 +75,21 @@ class SavedFoodTest : BaseTest() {
     @Test
     fun removeItem() {
         composeTestRule.setContent {
-            viewModel = getViewModel()
+            viewModel = SaveFoodShareViewModel(
+                getSavedItemsCollectionUseCase = get(),
+                setFoodListUseCase = get(),
+                checkDBVersion = get(),
+                changeStructureUseCase = get(),
+                config = get(),
+                coroutineScopeProvider = testCoroutineRule.testCoroutineScope
+            )
 
             FoodDeciderTheme {
                 SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
             }
         }
+
+        assertTrue((viewModel.listOfSavedFood.value as Result.SuccessFetch).result.contains(foodList[0]))
 
         composeTestRule.onNodeWithText(foodList[0])
             .assertExists()
@@ -85,5 +100,11 @@ class SavedFoodTest : BaseTest() {
             .performGesture {
                 swipeLeft()
             }
+
+        assertTrue(
+            !(viewModel.listOfSavedFood.value as Result.SuccessFetch).result.contains(
+                foodList[0]
+            )
+        )
     }
 }

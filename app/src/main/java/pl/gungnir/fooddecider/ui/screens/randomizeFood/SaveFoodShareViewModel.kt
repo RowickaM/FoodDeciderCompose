@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -25,7 +26,10 @@ class SaveFoodShareViewModel(
     private val checkDBVersion: CheckDBVersion,
     private val changeStructureUseCase: ChangeStructureUseCase,
     private val config: Config,
+    coroutineScopeProvider: CoroutineScope? = null
 ) : ViewModel() {
+
+    private val coroutineScope = getViewModelScope(coroutineScopeProvider)
 
     private val _listOfSavedFood: SnapshotStateList<String> = mutableStateListOf()
     val listOfSavedFood: MutableState<Result> = mutableStateOf(Result.Empty)
@@ -54,7 +58,7 @@ class SaveFoodShareViewModel(
     }
 
     private fun checkVersion() {
-        viewModelScope.launch {
+        coroutineScope.launch {
             checkDBVersion.run(None)
                 .onSuccess { isActual ->
                     if (isActual) {
@@ -67,22 +71,22 @@ class SaveFoodShareViewModel(
     }
 
     private fun getList() {
-        viewModelScope.launch {
+        coroutineScope.launch {
             getSavedItemsCollectionUseCase.run(config.listName)
-                .onSuccess {
-                    it.map {
+                .onSuccess { flow ->
+                    flow.map { savedFoodCollection ->
                         listOfSavedFood.value = Result.Loading
 
-                        val savedListItems = it.savedList
+                        val savedListItems = savedFoodCollection.savedList
                         _listOfSavedFood.clear()
                         _listOfSavedFood.addAll(savedListItems)
                         savedResult(savedListItems)
 
-                        listName.value = it.selectedListName
+                        listName.value = savedFoodCollection.selectedListName
 
                         setSavedList?.invoke(
-                            it.allListName,
-                            it.selectedListName
+                            savedFoodCollection.allListName,
+                            savedFoodCollection.selectedListName
                         )
                     }.launchIn(this)
                 }
@@ -90,7 +94,7 @@ class SaveFoodShareViewModel(
     }
 
     private fun changeStructure() {
-        viewModelScope.launch {
+        coroutineScope.launch {
             changeStructureUseCase.run(None)
                 .onSuccess {
                     saveNewDBVersion()
@@ -113,7 +117,7 @@ class SaveFoodShareViewModel(
 
     fun drawFood(delay: Long = RANDOM_FOOD_TIME.toLong()) {
         if (!_listOfSavedFood.isNullOrEmpty()) {
-            viewModelScope.launch {
+            coroutineScope.launch {
                 randomFood.value = Result.Loading
                 delay(delay)
                 val index = getRandomIndex(_listOfSavedFood)
@@ -136,7 +140,7 @@ class SaveFoodShareViewModel(
 
     fun onAddFoodClick(onSuccess: () -> Unit) {
         _listOfSavedFood.add(newFood.value)
-        viewModelScope.launch {
+        coroutineScope.launch {
             setFoodListUseCase.run(_listOfSavedFood)
                 .onSuccess {
                     newFood.value = ""
@@ -150,8 +154,11 @@ class SaveFoodShareViewModel(
 
     fun onRemoveFood(foodIndex: Int) {
         _listOfSavedFood.removeAt(foodIndex)
-        viewModelScope.launch {
+        coroutineScope.launch {
             setFoodListUseCase.run(_listOfSavedFood)
+                .onSuccess {
+                    savedResult(_listOfSavedFood)
+                }
         }
     }
 
@@ -167,3 +174,6 @@ sealed class Result {
     class Success(val result: String) : Result()
     class SuccessFetch(val result: List<String>) : Result()
 }
+
+fun ViewModel.getViewModelScope(coroutineScope: CoroutineScope?) =
+    coroutineScope ?: this.viewModelScope
