@@ -9,12 +9,10 @@ import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.TestCoroutineRule
-import pl.gungnir.fooddecider.model.useCase.IsUserLoggedUseCase
-import pl.gungnir.fooddecider.model.useCase.LoginUseCase
-import pl.gungnir.fooddecider.model.useCase.LogoutUseCase
-import pl.gungnir.fooddecider.model.useCase.SendEmailVerificationUseCase
+import pl.gungnir.fooddecider.model.useCase.*
 import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.None
+import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.helper.ResourceProvider
 import pl.gungnir.fooddecider.util.left
 import pl.gungnir.fooddecider.util.right
@@ -40,10 +38,16 @@ class LoginViewModelTest : BaseTest() {
     private lateinit var isUserLoggedUseCase: IsUserLoggedUseCase
 
     @Mock
-    private lateinit var logoutUseCase: LogoutUseCase
+    private lateinit var sendEmailVerificationUseCase: SendEmailVerificationUseCase
 
     @Mock
-    private lateinit var sendEmailVerificationUseCase: SendEmailVerificationUseCase
+    private lateinit var config: Config
+
+    @Mock
+    private lateinit var checkDBVersion: CheckDBVersion
+
+    @Mock
+    private lateinit var changeStructureUseCase: ChangeStructureUseCase
 
     private val emailMock = "email@example.com"
 
@@ -59,10 +63,13 @@ class LoginViewModelTest : BaseTest() {
         super.setup()
 
         viewModel = LoginViewModel(
-            resourceProvider,
-            loginUseCase,
-            isUserLoggedUseCase,
-            sendEmailVerificationUseCase,
+            resourceProvider = resourceProvider,
+            config = config,
+            loginUseCase = loginUseCase,
+            isUserLoggedUseCase = isUserLoggedUseCase,
+            sendEmailVerificationUseCase = sendEmailVerificationUseCase,
+            checkDBVersion = checkDBVersion,
+            changeStructureUseCase = changeStructureUseCase
         )
     }
 
@@ -71,10 +78,12 @@ class LoginViewModelTest : BaseTest() {
 
         verifyNoMoreInteractions(
             resourceProvider,
+            config,
             loginUseCase,
             isUserLoggedUseCase,
-            logoutUseCase,
             sendEmailVerificationUseCase,
+            checkDBVersion,
+            changeStructureUseCase
         )
     }
 
@@ -95,20 +104,6 @@ class LoginViewModelTest : BaseTest() {
 
             viewModel.onInitialize()
         }
-    }
-
-    @Test
-    fun onLoginClick_onSuccess_nothingHappened() = testCoroutineRule.runBlockingTest {
-        whenever(loginUseCase.run(any())).thenReturn(MOCK_STRING.right())
-
-        viewModel.onLoginClick(
-            emailMock,
-            passwordMock,
-            onSuccess,
-            onFailure
-        )
-
-        verify(loginUseCase, times(1)).run(any())
     }
 
     @Test

@@ -67,7 +67,7 @@ class TemplateDetailsViewModelTest : BaseTest() {
     @Test
     fun onRefreshDetails() = testCoroutineRule.runBlockingTest {
         whenever(getTemplateDetailsUseCase.run(any())).thenReturn(mockTemplateDetails.right())
-        viewModel.getTemplateById(mockTemplateDetails.id)
+        viewModel.getTemplateById("listName", mockTemplateDetails.id)
 
         viewModel.onRefreshDetails(0)
 
@@ -78,7 +78,7 @@ class TemplateDetailsViewModelTest : BaseTest() {
     private fun getTemplateDetails(id: String) = testCoroutineRule.runBlockingTest {
         whenever(getTemplateDetailsUseCase.run(any())).thenReturn(mockTemplateDetails.right())
 
-        viewModel.getTemplateById(id)
+        viewModel.getTemplateById("listName", id)
 
         verify(getTemplateDetailsUseCase, times(1)).run(any())
         assertEquals(mockTemplateDetails, viewModel.templateDetails.value)
