@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import pl.gungnir.fooddecider.R
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @Composable
 fun DialogError(
@@ -87,7 +88,7 @@ fun DialogDisplay(
     body: @Composable () -> Unit,
 ) {
     AlertDialog(
-        modifier = Modifier.testTag("dialog"),
+        modifier = Modifier.testTag(TestTags.DIALOG_TAG),
         onDismissRequest = { onChangeVisible(false) },
         buttons = buttons,
         title = {

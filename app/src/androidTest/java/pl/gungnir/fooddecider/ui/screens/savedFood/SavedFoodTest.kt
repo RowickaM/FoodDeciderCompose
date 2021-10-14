@@ -28,80 +28,62 @@ class SavedFoodTest : BaseTest() {
 
     private lateinit var viewModel: SaveFoodShareViewModel
 
+    private val foodList = FakeDatabaseRepoImpl.savedFoodCollection1.savedList
+
     @Test
-    fun displayedEmptyList() {
+    fun displayedListItems() {
         composeTestRule.setContent {
             viewModel = getViewModel()
 
             FoodDeciderTheme {
                 SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
             }
-        }
-
-        composeTestRule
-            .onNode(hasText(composeTestRule.activity.getString(R.string.list_foods_no_foods)))
-            .assertExists()
-            .assertIsDisplayed()
-
-    }
-
-    @Test
-    fun `_displayedListItems`() {
-        val foods = listOf(
-            "Food 1",
-            "Food 2",
-        )
-        composeTestRule.setContent {
-            viewModel = getViewModel()
-
-            FoodDeciderTheme {
-                SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
-            }
-
-            viewModel.changeList(foods)
         }
 
         composeTestRule
             .onNode(hasText(composeTestRule.activity.getString(R.string.list_foods_no_foods)))
             .assertDoesNotExist()
 
-        foods.forEach {
-            composeTestRule.onNodeWithText(it)
-                .assertExists()
-                .assertIsDisplayed()
-        }
+        composeTestRule.onNodeWithText(foodList[0])
+            .assertExists()
+            .assertIsDisplayed()
     }
 
     @Test
-    fun removeItem() {
-        val foods = listOf(
-            "Food 1",
-        )
+    fun emptyList_infoDisplayed() {
         composeTestRule.setContent {
             viewModel = getViewModel()
 
             FoodDeciderTheme {
                 SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
             }
-
-            viewModel.changeList(foods)
         }
-
-        composeTestRule.onNodeWithText("Food 1")
-            .assertExists()
-            .assertIsDisplayed()
-
-
-        composeTestRule.onNodeWithText("Food 1")
-            .performGesture {
-                swipeLeft()
-            }
-
-        viewModel.changeList()
+        viewModel.onChangeList(emptyList())
 
         composeTestRule
             .onNode(hasText(composeTestRule.activity.getString(R.string.list_foods_no_foods)))
             .assertExists()
             .assertIsDisplayed()
+    }
+
+    @Test
+    fun removeItem() {
+        composeTestRule.setContent {
+            viewModel = getViewModel()
+
+            FoodDeciderTheme {
+                SavedFood(FakeDatabaseRepoImpl.listName1, viewModel)
+            }
+        }
+
+        composeTestRule.onNodeWithText(foodList[0])
+            .assertExists()
+            .assertIsDisplayed()
+
+
+        composeTestRule.onNodeWithText(foodList[0])
+            .performGesture {
+                swipeLeft()
+            }
     }
 }

@@ -95,9 +95,10 @@ class ForgotPasswordTest : BaseTest() {
 
         actionButton.performClick()
 
-        //todo couldn't check if dialog displayed!
         composeTestRule
             .onNodeWithText(composeTestRule.activity.getString(R.string.cannot_sing_in))
+            .assertExists()
+            .assertIsDisplayed()
 
     }
 

@@ -14,6 +14,7 @@ import org.junit.Test
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.MainActivity
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -165,7 +166,7 @@ class LoginTest : BaseTest() {
         loginButton.performClick()
 
 
-        composeTestRule.onNodeWithTag("dialog").assertExists()
+        composeTestRule.onNodeWithTag(TestTags.DIALOG_TAG).assertExists()
         composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.ok))
             .performClick()
     }

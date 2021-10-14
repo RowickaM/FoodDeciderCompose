@@ -28,7 +28,7 @@
     <string name="randomize_food_image_click">Kliknij w obrazek, aby wylosować propozycje potrawy</string>
     <string name="randomize_food_loading">Losowanie w trakcie</string>
 
-    <string name="list_foods_title">List potraw do losowania</string>
+    <string name="list_foods_title">Szczegóły listy</string>
     <string name="list_foods_no_foods">Brak zapisanych potraw</string>
 
     <string name="templates_title">Lista propozycji</string>
@@ -63,4 +63,5 @@
     <string name="photos_in_app">Zdjęcia z propozycji potraw.</string>
     <string name="authors">Autorzy:</string>
     <string name="icons_in_app">Ikony z Material Design oraz FlatIcon. Niektóre ikony zostały przerobione na własne potrzeby.</string>
+    <string name="show_credits">Pokaż specjalne podzękowania</string>
 </resources>

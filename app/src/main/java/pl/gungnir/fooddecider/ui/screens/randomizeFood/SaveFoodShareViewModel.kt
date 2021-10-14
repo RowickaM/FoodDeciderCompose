@@ -156,15 +156,8 @@ class SaveFoodShareViewModel(
     }
 
     @VisibleForTesting
-    fun changeList(list: List<String>) {
-        _listOfSavedFood.clear()
-        _listOfSavedFood.addAll(list)
-        listOfSavedFood.value = Result.SuccessFetch(list)
-    }
-
-    @VisibleForTesting
-    fun changeList() {
-        savedResult(_listOfSavedFood)
+    fun onChangeList(list: List<String> = _listOfSavedFood) {
+        savedResult(list)
     }
 }
 

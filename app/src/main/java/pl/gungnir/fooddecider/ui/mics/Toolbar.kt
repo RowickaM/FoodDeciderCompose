@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -29,6 +30,7 @@ import androidx.core.content.ContextCompat.startActivity
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.credits.iconAuthors
 import pl.gungnir.fooddecider.credits.unsplashAuthors
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @Composable
 fun Toolbar(
@@ -74,6 +76,7 @@ fun Toolbar(
 
         Text(
             modifier = Modifier
+                .testTag(TestTags.TOOLBAR_TITLE_TAG)
                 .fillMaxWidth()
                 .align(alignment = Alignment.Center),
             textAlign = TextAlign.Center,
@@ -98,7 +101,7 @@ fun Toolbar(
             IconButton(
                 modifier = Modifier.wrapContentWidth(Alignment.End),
                 icon = Icons.Outlined.Info,
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.show_credits),
                 onClick = { setShowInfoDialog(true) }
             )
         }

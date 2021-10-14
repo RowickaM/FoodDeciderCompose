@@ -14,13 +14,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.getViewModel
 import org.koin.java.KoinJavaComponent.inject
 import pl.gungnir.fooddecider.model.data.NavigationItem
 import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetType
 import pl.gungnir.fooddecider.ui.bottomSheet.BottomSheetWrapper
 import pl.gungnir.fooddecider.ui.mics.BottomBar
+import pl.gungnir.fooddecider.ui.mics.BottomBarItem
 import pl.gungnir.fooddecider.ui.mics.FloatingActionButton
 import pl.gungnir.fooddecider.ui.mics.Toolbar
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
@@ -64,75 +67,18 @@ class MainActivity : ComponentActivity() {
 
             actions?.let { action ->
                 FoodDeciderTheme {
-                    BottomSheetWrapper(
-                        state = bottomSheetState,
-                        sheetState = bottomSheetType,
-                        closeSheet = hideSheet,
-                    ) {
-                        Scaffold(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = MaterialTheme.colors.background),
-                            bottomBar = {
-                                if (viewModel.showBottomBar.value) {
-                                    BottomBar(
-                                        navigationList = bottomNavigationList,
-                                        activeIndex = viewModel.selectedBottomItem.value,
-                                        setActiveIndex = viewModel::setSelectedBottomNavItem,
-                                        onItemCLick = action.navigateTo
-                                    )
-                                }
-                            },
-                            topBar = {
-                                if (viewModel.showToolbar.value) {
-                                    Toolbar(
-                                        title = viewModel.title.value,
-                                        icon = additionalIcon(actualNav = action.getActualNavigationItem()),
-                                        onIconClick = {
-                                            openSheet(BottomSheetType.AddElementToList)
-                                        },
-                                        onLogout = {
-                                            viewModel.logout { clearHistoryStack() }
-                                        }
-                                    )
-                                }
-                            },
-                            floatingActionButton = {
-                                if (viewModel.showFab.value) {
-                                    FloatingActionButton(onClick = {
-                                        openSheet(
-                                            BottomSheetType.ShowLists(
-                                                list = viewModel.savedList,
-                                                selected = viewModel.selectedList.value,
-                                                onItemClick = viewModel::changeSelectedList
-                                            )
-                                        )
-                                    })
-                                }
-                            },
-                        ) {
-                            NavHostImpl(
-                                viewModel = viewModel,
-                                navController = navController,
-                                navToHome = action.navToHome,
-                                navToRememberPassword = action.navToRememberPassword,
-                                navToRegistration = action.navToRegistration,
-                                navToTemplateDetails = action.navToTemplateDetails,
-                                navBack = action.navBack,
-                            )
-                        }
-                    }
+                    MainScreen(
+                        bottomSheetState = bottomSheetState,
+                        bottomSheetType = bottomSheetType,
+                        hideSheet = hideSheet,
+                        openSheet = openSheet,
+                        bottomNavigationList = bottomNavigationList,
+                        actions = action,
+                        navController = navController,
+                        clearHistoryStack = { clearHistoryStack() }
+                    )
                 }
             }
-        }
-    }
-
-    @Composable
-    private fun additionalIcon(actualNav: NavigationItem): ImageVector? {
-        return when (actualNav) {
-            NavigationItem.Random -> Icons.Default.Add
-            NavigationItem.RandomList -> Icons.Default.Add
-            else -> null
         }
     }
 
@@ -151,5 +97,89 @@ class MainActivity : ComponentActivity() {
         intent.flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+}
+
+@ExperimentalAnimationApi
+@ExperimentalComposeUiApi
+@ExperimentalMaterialApi
+@Composable
+fun MainScreen(
+    viewModel: MainViewModel = getViewModel(),
+    bottomSheetState: ModalBottomSheetState,
+    bottomSheetType: BottomSheetType?,
+    hideSheet: () -> Unit,
+    openSheet: (BottomSheetType) -> Unit,
+    clearHistoryStack: () -> Unit,
+    bottomNavigationList: ArrayList<BottomBarItem>,
+    actions: Actions,
+    navController: NavHostController
+) {
+    BottomSheetWrapper(
+        state = bottomSheetState,
+        sheetState = bottomSheetType,
+        closeSheet = hideSheet,
+    ) {
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colors.background),
+            bottomBar = {
+                if (viewModel.showBottomBar.value) {
+                    BottomBar(
+                        navigationList = bottomNavigationList,
+                        activeIndex = viewModel.selectedBottomItem.value,
+                        setActiveIndex = viewModel::setSelectedBottomNavItem,
+                        onItemCLick = actions.navigateTo
+                    )
+                }
+            },
+            topBar = {
+                if (viewModel.showToolbar.value) {
+                    Toolbar(
+                        title = viewModel.title.value,
+                        icon = additionalIcon(actualNav = actions.getActualNavigationItem()),
+                        onIconClick = {
+                            openSheet(BottomSheetType.AddElementToList)
+                        },
+                        onLogout = {
+                            viewModel.logout { clearHistoryStack() }
+                        }
+                    )
+                }
+            },
+            floatingActionButton = {
+                if (viewModel.showFab.value) {
+                    FloatingActionButton(onClick = {
+                        openSheet(
+                            BottomSheetType.ShowLists(
+                                list = viewModel.savedList,
+                                selected = viewModel.selectedList.value,
+                                onItemClick = viewModel::changeSelectedList
+                            )
+                        )
+                    })
+                }
+            },
+        ) {
+            NavHostImpl(
+                viewModel = viewModel,
+                navController = navController,
+                navToHome = actions.navToHome,
+                navToRememberPassword = actions.navToRememberPassword,
+                navToRegistration = actions.navToRegistration,
+                navToTemplateDetails = actions.navToTemplateDetails,
+                navBack = actions.navBack,
+            )
+        }
+    }
+}
+
+@Composable
+private fun additionalIcon(actualNav: NavigationItem): ImageVector? {
+    return when (actualNav) {
+        NavigationItem.Random -> Icons.Default.Add
+        NavigationItem.RandomList -> Icons.Default.Add
+        else -> null
     }
 }

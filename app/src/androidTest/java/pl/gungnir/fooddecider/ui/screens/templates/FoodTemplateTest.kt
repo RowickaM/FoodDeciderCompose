@@ -24,9 +24,7 @@ import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
 @ExperimentalTestApi
 class FoodTemplateTest : BaseTest() {
 
-    //todo cannot get data from FakeDatabaseRepo. For now is additional function "changeList" to control list in test
-
-    @get:Rule
+   @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     val templates = FakeDatabaseRepoImpl.templstes

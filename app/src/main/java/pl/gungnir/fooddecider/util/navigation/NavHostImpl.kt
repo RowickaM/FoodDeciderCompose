@@ -95,7 +95,7 @@ fun NavHostImpl(
             CrashlyticsLog.log(NAV_RANDOM_LIST_LOG)
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
-            viewModel.setTitle(stringResource(id = R.string.templates_title))
+            viewModel.setTitle(stringResource(id = R.string.list_foods_title))
             viewModel.showFAB(true)
 
             SavedFood(
@@ -106,7 +106,7 @@ fun NavHostImpl(
             CrashlyticsLog.log(NAV_FOOD_TEMPLATE_LOG)
             viewModel.showBottomBar(true)
             viewModel.showToolbar(true)
-            viewModel.setTitle(stringResource(id = R.string.list_foods_title))
+            viewModel.setTitle(stringResource(id = R.string.templates_title))
             viewModel.showFAB(true)
 
             FoodTemplate(

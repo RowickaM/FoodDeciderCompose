@@ -25,7 +25,7 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
         const val userMail = "email@email.com"
         const val userPassword = "password"
         const val userUUID = "UUIDForUser"
-        const val listName1 = "list1"
+        const val listName1 = KEY_SAVED_LIST_NAME_DEFAULT
         const val listName2 = "list2"
 
         val templstes: List<Template> = listOf(
@@ -119,7 +119,7 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
             "food 5",
             "food 6"
         )
-        val savedFoodCollection1 = SavedFoodCollection(
+        var savedFoodCollection1 = SavedFoodCollection(
             allListName = listOf(listName1, listName2),
             selectedListName = listName1,
             savedList = list
@@ -132,7 +132,7 @@ class FakeDatabaseRepoImpl : DatabaseRepo {
     }
 
     private fun changeList(list: List<String>) {
-        FakeDatabaseRepoImpl.list = list
+        savedFoodCollection1 = savedFoodCollection1.copy(savedList = list)
     }
 
     var isActual = false

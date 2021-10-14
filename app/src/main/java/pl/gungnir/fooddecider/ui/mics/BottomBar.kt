@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -145,6 +146,7 @@ private fun ExpandedBottomBarItem(
 ) {
     Row(
         modifier = Modifier
+            .testTag(item.label)
             .height(dimensionResource(id = R.dimen.height_bottom_bar_item))
             .nonRippleClickable(onClick = {
                 onItemCLick(item)
@@ -192,6 +194,7 @@ private fun CollapsedBottomBarItem(
 ) {
     Row(
         modifier = Modifier
+            .testTag(item.label)
             .height(dimensionResource(id = R.dimen.height_bottom_bar_item))
             .nonRippleClickable(onClick = {
                 onItemCLick(item)
