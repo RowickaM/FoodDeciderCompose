@@ -16,6 +16,7 @@ import org.junit.Test
 import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.ui.MainActivity
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -51,7 +52,7 @@ class FoodTemplateTest : BaseTest() {
             .assertIsDisplayed()
 
         composeTestRule
-            .onNodeWithTag("templateList")
+            .onNodeWithTag(TestTags.TEMPLATE_LIST_TAG)
             .performScrollToIndex(templates.size - 1)
 
         composeTestRule

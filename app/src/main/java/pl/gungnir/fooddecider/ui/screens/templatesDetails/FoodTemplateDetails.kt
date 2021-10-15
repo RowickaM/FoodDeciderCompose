@@ -28,6 +28,7 @@ import pl.gungnir.fooddecider.model.data.TemplateDetails
 import pl.gungnir.fooddecider.ui.mics.ImageBackgroundColumn
 import pl.gungnir.fooddecider.ui.mics.Tag
 import pl.gungnir.fooddecider.ui.mics.getImage
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @Composable
 fun FoodTemplateDetails(
@@ -187,7 +188,7 @@ private fun FoodTemplateDetailsLists(
             )
         }
         Column(
-            modifier = Modifier.testTag("addedList")
+            modifier = Modifier.testTag(TestTags.TEMPLATE_DETAILS_ADDED_TAG)
         ) {
             template.added.forEach { food ->
                 Row(

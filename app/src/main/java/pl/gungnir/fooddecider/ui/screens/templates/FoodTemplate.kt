@@ -24,6 +24,7 @@ import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.Template
 import pl.gungnir.fooddecider.ui.mics.*
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @ExperimentalCoilApi
 @Composable
@@ -67,7 +68,7 @@ private fun FoodList(
     templates: List<Template>,
     navToTemplateDetails: (String) -> Unit,
 ) {
-    LazyColumn(modifier = Modifier.testTag("templateList")) {
+    LazyColumn(modifier = Modifier.testTag(TestTags.TEMPLATE_LIST_TAG)) {
         items(templates) { template ->
             FoodTemplateItem(
                 template = template,

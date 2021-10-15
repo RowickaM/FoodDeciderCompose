@@ -13,13 +13,12 @@ import org.koin.androidx.compose.getViewModel
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.MainActivity
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
 class FoodTemplateDetailsTest : BaseTest() {
-
-    //todo order of test has template for now. Problem with pass testable template
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<MainActivity>()
@@ -102,7 +101,7 @@ class FoodTemplateDetailsTest : BaseTest() {
                 .assertIsDisplayed()
         }
 
-        composeTestRule.onNodeWithTag("addedList")
+        composeTestRule.onNodeWithTag(TestTags.TEMPLATE_DETAILS_ADDED_TAG)
             .onChildren()
             .assertCountEquals(template.added.size)
     }

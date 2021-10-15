@@ -12,6 +12,7 @@ import org.junit.Test
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.ui.MainActivity
 import pl.gungnir.fooddecider.ui.theme.FoodDeciderTheme
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -56,7 +57,7 @@ class RandomizeFoodTest : BaseTest() {
             .onNodeWithText(composeTestRule.activity.getString(R.string.randomize_food_image_click))
         result.assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("boxTag")
+        composeTestRule.onNodeWithTag(TestTags.BOX_DRAW_ANIMATION_TAG)
             .performClick()
 
         composeTestRule.onNodeWithText(composeTestRule.activity.getString(R.string.randomize_food_image_click))

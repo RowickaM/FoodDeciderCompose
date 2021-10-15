@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import pl.gungnir.fooddecider.R
+import pl.gungnir.fooddecider.util.test.TestTags
 
 @ExperimentalAnimationApi
 @Composable
@@ -49,7 +50,7 @@ fun FoodAnimationOnClick(
         modifier = Modifier
             .fillMaxWidth()
             .height(height)
-            .testTag("boxTag")
+            .testTag(TestTags.BOX_DRAW_ANIMATION_TAG)
             .nonRippleClickable(
                 onClick = {
                     onClick()
