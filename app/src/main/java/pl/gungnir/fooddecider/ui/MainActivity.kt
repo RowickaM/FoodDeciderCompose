@@ -32,6 +32,11 @@ import pl.gungnir.fooddecider.util.navigation.NavHostImpl
 @ExperimentalAnimationApi
 class MainActivity : ComponentActivity() {
 
+    companion object {
+
+        const val SHOW_COMPONENT = "SHOW_COMPONENT"
+    }
+
     private var actions: Actions? = null
     private val viewModel by inject<MainViewModel>(MainViewModel::class.java)
 

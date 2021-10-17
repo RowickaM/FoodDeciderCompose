@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">FoodDecider</string>
+    <string name="version_app">Wersja aplikacji: %s (%s)</string>
+
+    <string name="channel_notification_info">Kanał informacyjny</string>
 
     <string name="sing_in">Zaloguj się</string>
     <string name="sing_up">Zarejestruj się</string>
@@ -62,4 +65,5 @@
     <string name="photos_in_app">Zdjęcia z propozycji potraw.</string>
     <string name="authors">Autorzy:</string>
     <string name="icons_in_app">Ikony z Material Design oraz FlatIcon. Niektóre ikony zostały przerobione na własne potrzeby.</string>
+    <string name="new_actions_in_app">Nowe funkcjonalności zostały dodane</string>
 </resources>
