@@ -1,5 +1,6 @@
 package pl.gungnir.fooddecider.util.di
 
+import androidx.core.app.NotificationManagerCompat
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import pl.gungnir.fooddecider.model.useCase.*
@@ -16,6 +17,8 @@ import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseAuthHelperImpl
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelper
 import pl.gungnir.fooddecider.util.firebase.FirebaseHelperImpl
+import pl.gungnir.fooddecider.util.helper.Notification
+import pl.gungnir.fooddecider.util.helper.NotificationImpl
 import pl.gungnir.fooddecider.util.helper.ResourceProvider
 import pl.gungnir.fooddecider.util.helper.ResourceProviderImpl
 import pl.gungnir.fooddecider.util.repo.DatabaseRepo
@@ -57,4 +60,10 @@ val useCaseModule = module {
 val appModule = module {
     single<ResourceProvider> { ResourceProviderImpl(androidContext()) }
     single<Config> { ConfigImpl() }
+    single<Notification> { (notificationManager: NotificationManagerCompat) ->
+        NotificationImpl(
+            get(),
+            notificationManager
+        )
+    }
 }
