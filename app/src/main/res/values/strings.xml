@@ -66,4 +66,7 @@
     <string name="authors">Autorzy:</string>
     <string name="icons_in_app">Ikony z Material Design oraz FlatIcon. Niektóre ikony zostały przerobione na własne potrzeby.</string>
     <string name="new_actions_in_app">Nowe funkcjonalności zostały dodane</string>
+
+    <string name="update">Zaaktualizuj</string>
+    <string name="database_not_actual">Jeśli widzisz tą wiadomość, to nie masz aktualnej bazy danych. Kliknij przycisk poniżej, aby mieć najnowszą wersję bazy danych. Jeśli widzisz tą wiadomość koeljny raz skontaktuj się z deweloperem!</string>
 </resources>

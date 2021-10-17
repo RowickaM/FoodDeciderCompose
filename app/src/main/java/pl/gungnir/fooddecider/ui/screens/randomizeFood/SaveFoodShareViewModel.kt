@@ -26,6 +26,8 @@ class SaveFoodShareViewModel(
     private val config: Config,
 ) : ViewModel() {
 
+    val isActualDB: MutableState<Boolean> = mutableStateOf(true)
+
     private val _listOfSavedFood: SnapshotStateList<String> = mutableStateListOf()
     val listOfSavedFood: MutableState<Result> = mutableStateOf(Result.Empty)
     val randomFood: MutableState<Result> = mutableStateOf(Result.Empty)
@@ -56,6 +58,7 @@ class SaveFoodShareViewModel(
         viewModelScope.launch {
             checkDBVersion.run(None)
                 .onSuccess { isActual ->
+                    isActualDB.value = isActual
                     if (isActual) {
                         getList()
                     } else {
@@ -69,6 +72,7 @@ class SaveFoodShareViewModel(
         viewModelScope.launch {
             getSavedItemsCollectionUseCase.run(config.listName)
                 .onSuccess {
+                    isActualDB.value = true
                     it.map {
                         listOfSavedFood.value = Result.Loading
 
@@ -88,7 +92,7 @@ class SaveFoodShareViewModel(
         }
     }
 
-    private fun changeStructure() {
+    fun changeStructure() {
         viewModelScope.launch {
             changeStructureUseCase.run(None)
                 .onSuccess {
