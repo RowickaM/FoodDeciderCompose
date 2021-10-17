@@ -1,6 +1,9 @@
 # Food Decider
 The Food Decider was created based on [this repo](https://github.com/RowickaM/fooddecider). In this app I use Compose instated of Android's view.
 
+# Google Play
+Application is available in Google Play: [**Food Decider**](https://play.google.com/store/apps/details?id=pl.gungnir.fooddecider)
+
 # Technologies
 Kotlin 
 Firebase
