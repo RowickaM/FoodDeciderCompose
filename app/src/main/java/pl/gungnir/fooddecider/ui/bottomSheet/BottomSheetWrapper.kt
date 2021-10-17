@@ -53,6 +53,9 @@ private fun SheetLayout(
             onElementClick = {
                 closeSheet()
                 type.onItemClick(it)
+            },
+            onAddButtonClick = {
+                //todo
             }
         )
     }

@@ -66,4 +66,6 @@
     <string name="authors">Autorzy:</string>
     <string name="icons_in_app">Ikony z Material Design oraz FlatIcon. Niektóre ikony zostały przerobione na własne potrzeby.</string>
     <string name="new_actions_in_app">Nowe funkcjonalności zostały dodane</string>
+
+    <string name="add_new_list">Dodaj listę</string>
 </resources>
