@@ -151,6 +151,22 @@ class DatabaseRepoImpl(
         ).first()
     }
 
+    override suspend fun addNewList(listName: String): Either<Failure, None> {
+        val uid = firebaseAuthHelper.getUID()
+        return firebaseHelper.getListsName(uid)
+            .map {
+                (it as? Either.Right)?.b?.let { listsName ->
+                    if (!listsName.contains(listName)) {
+                        firebaseHelper.addNewList(
+                            uid = uid,
+                            listName = listName
+                        ).first()
+                    } else Failure.ListCollision.left()
+                } ?: Failure.Unknown.left()
+            }
+            .first()
+    }
+
     private suspend fun getTemplateById(id: String): Template? {
         return firebaseHelper.getTemplate(id).first()
     }

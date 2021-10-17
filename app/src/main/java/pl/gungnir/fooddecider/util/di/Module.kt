@@ -29,7 +29,7 @@ val viewModelModule = module {
     single { FoodTemplatesSharedViewModel(get()) }
     factory { TemplateDetailsViewModel(get(), get()) }
     factory { LoginViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    factory { MainViewModel(get(), get(), get()) }
+    factory { MainViewModel(get(), get(), get(), get()) }
     factory { ForgotPasswordViewModel(get(), get()) }
     factory { RegistrationViewModel(get(), get(), get(), get(), get()) }
 }
@@ -55,6 +55,7 @@ val useCaseModule = module {
     factory { SendEmailVerificationUseCase(get()) }
     factory { SaveItemToListUseCase(get()) }
     factory { ChangeStructureUseCase(get()) }
+    factory { AddNewListUseCase(get()) }
 }
 
 val appModule = module {
