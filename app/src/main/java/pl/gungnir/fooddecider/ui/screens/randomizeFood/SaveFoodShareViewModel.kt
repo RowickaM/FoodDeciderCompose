@@ -125,7 +125,7 @@ class SaveFoodShareViewModel(
         return if (list.size == 1) {
             0
         } else {
-            Random.nextInt(0, _listOfSavedFood.size)
+            Random.nextInt(0, list.size)
         }
     }
 
