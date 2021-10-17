@@ -2,6 +2,7 @@ package pl.gungnir.fooddecider.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -67,6 +68,11 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
+            viewModel.message.value?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                viewModel.messageDisplayed()
+            }
+
             actions?.let { action ->
                 FoodDeciderTheme {
                     BottomSheetWrapper(
@@ -109,7 +115,10 @@ class MainActivity : ComponentActivity() {
                                             BottomSheetType.ShowLists(
                                                 list = viewModel.savedList,
                                                 selected = viewModel.selectedList.value,
-                                                onItemClick = viewModel::changeSelectedList
+                                                onItemClick = viewModel::changeSelectedList,
+                                                onAddButtonClick = {
+                                                    openSheet(BottomSheetType.AddList(viewModel::addNewList))
+                                                }
                                             )
                                         )
                                     })

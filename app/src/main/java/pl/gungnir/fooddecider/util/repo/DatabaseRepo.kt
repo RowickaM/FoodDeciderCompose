@@ -37,4 +37,6 @@ interface DatabaseRepo {
     suspend fun createUseCollection(userUID: String): Either<Failure, None>
 
     suspend fun sendVerificationEmail(userUID: String): Either<Failure, None>
+
+    suspend fun addNewList(listName: String): Either<Failure, None>
 }

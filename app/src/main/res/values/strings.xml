@@ -68,4 +68,6 @@
     <string name="new_actions_in_app">Nowe funkcjonalności zostały dodane</string>
 
     <string name="add_new_list">Dodaj listę</string>
+    <string name="list_name">Nazwa listy</string>
+    <string name="list_name_collision">Lista o takiej nazwie już istnieje</string>
 </resources>

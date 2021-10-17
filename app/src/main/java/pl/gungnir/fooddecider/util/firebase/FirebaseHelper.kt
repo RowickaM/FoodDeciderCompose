@@ -26,4 +26,8 @@ interface FirebaseHelper {
     fun saveInNewStructure(uid: String, oldList: List<String>): Flow<Either<Failure.Unknown, None>>
 
     fun updateStructure(uid: String): Flow<Either<Failure.Unknown, None>>
+
+    fun addNewList(uid: String, listName: String): Flow<Either<Failure, None>>
+
+    fun getListsName(uid: String): Flow<Either<Failure, List<String>>>
 }

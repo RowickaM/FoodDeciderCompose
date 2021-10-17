@@ -11,6 +11,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import pl.gungnir.fooddecider.ui.bottomSheet.addElementToList.AddElementToListBottomSheet
+import pl.gungnir.fooddecider.ui.bottomSheet.addList.AddListBottomSheet
 import pl.gungnir.fooddecider.ui.bottomSheet.showLists.ShowLists
 
 @ExperimentalComposeUiApi
@@ -47,6 +48,10 @@ private fun SheetLayout(
 ) {
     when (type) {
         BottomSheetType.AddElementToList -> AddElementToListBottomSheet(closeSheet)
+        is BottomSheetType.AddList -> AddListBottomSheet(
+            closeBottomSheet = closeSheet,
+            onDone = type.onDone
+        )
         is BottomSheetType.ShowLists -> ShowLists(
             list = type.list,
             selectedList = type.selected,
@@ -55,7 +60,7 @@ private fun SheetLayout(
                 type.onItemClick(it)
             },
             onAddButtonClick = {
-                //todo
+                type.onAddButtonClick()
             }
         )
     }

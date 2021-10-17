@@ -53,6 +53,50 @@ class FirebaseHelperImpl : FirebaseHelper {
     }
 
     @ExperimentalCoroutinesApi
+    override fun addNewList(uid: String, listName: String): Flow<Either<Failure, None>> {
+        return channelFlow {
+            db.collection(COLLECTION_SAVED_FOOD)
+                .document(uid)
+                .update(
+                    mapOf("$KEY_SAVED_LIST.$listName.$KEY_SAVED_ITEM" to emptyList<String>())
+                )
+                .addOnCompleteListener { task ->
+                    if (task.exception != null) {
+                        trySendBlocking(Failure.Unknown.left())
+                    } else if (task.isSuccessful) {
+                        trySendBlocking(None.right())
+                    }
+                    close()
+                }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
+    }
+
+    @ExperimentalCoroutinesApi
+    override fun getListsName(uid: String): Flow<Either<Failure, List<String>>> {
+        return channelFlow {
+            db.collection(COLLECTION_SAVED_FOOD)
+                .document(uid)
+                .addSnapshotListener { value, error ->
+                    error?.let {
+                        trySendBlocking(Failure.Unknown.left())
+                        return@addSnapshotListener
+                    }
+
+                    value?.let { querySnapshot ->
+
+                        querySnapshot.data?.let { data ->
+                            val arrays = data[KEY_SAVED_LIST] as Map<String, Any>
+                            val lists = arrays.keys.toList()
+                            trySendBlocking(lists.right())
+                        } ?: trySendBlocking(Failure.Unknown.left())
+                    } ?: trySendBlocking(Failure.Unknown.left())
+                }
+            awaitClose()
+        }.flowOn(Dispatchers.IO)
+    }
+
+    @ExperimentalCoroutinesApi
     override fun getTemplates(): Flow<List<Template>> {
         return channelFlow {
             db.collection(COLLECTION_SAVED_TEMPLATES)

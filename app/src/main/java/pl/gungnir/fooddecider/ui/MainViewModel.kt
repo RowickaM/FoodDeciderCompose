@@ -6,17 +6,21 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import pl.gungnir.fooddecider.R
 import pl.gungnir.fooddecider.model.data.NavigationItem
+import pl.gungnir.fooddecider.model.useCase.AddNewListUseCase
 import pl.gungnir.fooddecider.model.useCase.LogoutUseCase
 import pl.gungnir.fooddecider.ui.mics.BottomBarItem
+import pl.gungnir.fooddecider.util.Failure
 import pl.gungnir.fooddecider.util.None
 import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.helper.ResourceProvider
+import pl.gungnir.fooddecider.util.onFailure
 import pl.gungnir.fooddecider.util.onSuccess
 
 class MainViewModel(
     private val logoutUseCase: LogoutUseCase,
     private val config: Config,
-    resourceProvider: ResourceProvider
+    private val addNewListUseCase: AddNewListUseCase,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     val savedList = mutableListOf<String>()
@@ -29,6 +33,9 @@ class MainViewModel(
     val showFab = mutableStateOf(false)
 
     val selectedBottomItem = mutableStateOf(1)
+
+    private val _message = mutableStateOf<String?>(null)
+    val message get() = _message
 
     val bottomNavigationList = arrayListOf(
         BottomBarItem.RandomFoodList(resourceProvider.getString(R.string.bottom_nav_list_label)),
@@ -84,5 +91,30 @@ class MainViewModel(
     fun changeSelectedList(listName: String) {
         config.listName = listName
         this.selectedList.value = listName
+    }
+
+    fun addNewList(listName: String) {
+        viewModelScope.launch {
+            addNewListUseCase.run(listName)
+                .onSuccess {
+                    config.listName = listName
+                    selectedList.value = listName
+                }
+                .onFailure {
+                    when (it) {
+                        Failure.ListCollision -> {
+                            _message.value =
+                                resourceProvider.getString(R.string.list_name_collision)
+                        }
+                        else -> {
+                            _message.value = resourceProvider.getString(R.string.error_unknown)
+                        }
+                    }
+                }
+        }
+    }
+
+    fun messageDisplayed() {
+        _message.value = null
     }
 }
