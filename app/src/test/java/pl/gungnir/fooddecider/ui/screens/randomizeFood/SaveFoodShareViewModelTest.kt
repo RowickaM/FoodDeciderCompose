@@ -10,13 +10,13 @@ import org.mockito.Mockito.*
 import pl.gungnir.fooddecider.BaseTest
 import pl.gungnir.fooddecider.MainCoroutineRule
 import pl.gungnir.fooddecider.TestCoroutineRule
-import pl.gungnir.fooddecider.model.useCase.GetAllSavedFoodUseCase
+import pl.gungnir.fooddecider.model.data.SavedFoodCollection
+import pl.gungnir.fooddecider.model.useCase.ChangeStructureUseCase
+import pl.gungnir.fooddecider.model.useCase.CheckDBVersion
+import pl.gungnir.fooddecider.model.useCase.GetSavedItemsCollectionUseCase
 import pl.gungnir.fooddecider.model.useCase.SetFoodListUseCase
-import pl.gungnir.fooddecider.util.Failure
-import pl.gungnir.fooddecider.util.None
-import pl.gungnir.fooddecider.util.left
+import pl.gungnir.fooddecider.util.config.Config
 import pl.gungnir.fooddecider.util.right
-import kotlin.test.assertContains
 
 @ExperimentalCoroutinesApi
 class SaveFoodShareViewModelTest : BaseTest() {
@@ -29,23 +29,39 @@ class SaveFoodShareViewModelTest : BaseTest() {
     val testCoroutineRule = TestCoroutineRule()
 
     @Mock
-    private lateinit var getAllSavedFoodUseCase: GetAllSavedFoodUseCase
-
-    @Mock
     private lateinit var setFoodListUseCase: SetFoodListUseCase
 
-    private val mockFoodList = listOf(
-        "food 1",
-        "food 2",
-        "food 3"
+    @Mock
+    private lateinit var checkDBVersion: CheckDBVersion
+
+    @Mock
+    private lateinit var getSavedItemsCollectionUseCase: GetSavedItemsCollectionUseCase
+
+    @Mock
+    private lateinit var changeStructureUseCase: ChangeStructureUseCase
+
+    @Mock
+    private lateinit var config: Config
+
+    private val savedCollection = SavedFoodCollection(
+        allListName = listOf(),
+        selectedListName = "",
+        savedList = listOf(
+            "food 1",
+            "food 2",
+            "food 3"
+        )
     )
 
     override fun setup() {
         super.setup()
 
         viewModel = SaveFoodShareViewModel(
-            getAllSavedFoodUseCase,
-            setFoodListUseCase
+            setFoodListUseCase = setFoodListUseCase,
+            checkDBVersion = checkDBVersion,
+            getSavedItemsCollectionUseCase = getSavedItemsCollectionUseCase,
+            changeStructureUseCase = changeStructureUseCase,
+            config = config
         )
     }
 
@@ -53,8 +69,11 @@ class SaveFoodShareViewModelTest : BaseTest() {
         super.tearDown()
 
         verifyNoMoreInteractions(
-            getAllSavedFoodUseCase,
-            setFoodListUseCase
+            setFoodListUseCase,
+            checkDBVersion,
+            getSavedItemsCollectionUseCase,
+            changeStructureUseCase,
+            config
         )
     }
 
@@ -65,40 +84,16 @@ class SaveFoodShareViewModelTest : BaseTest() {
         assertEquals(MOCK_STRING, viewModel.newFood.value)
     }
 
-    @Test
-    fun onAddFoodClick_onFailure() = testCoroutineRule.runBlockingTest {
-        addToList()
+    private fun addToList() = testCoroutineRule.runBlockingTest {
+        whenever(getSavedItemsCollectionUseCase.run(anyString()))
+            .thenReturn(flowOf(savedCollection).right())
 
-        whenever(setFoodListUseCase.run(any())).thenReturn(Failure.Unknown.left())
-        viewModel.onFoodNameChange(MOCK_STRING)
+        viewModel.onInitialize { _, _ -> Unit }
 
-        viewModel.onAddFoodClick {}
-
-        verify(setFoodListUseCase, times(1)).run(any())
-        assertEquals(MOCK_STRING, viewModel.newFood.value)
+        verify(getSavedItemsCollectionUseCase, times(1)).run(anyString())
         assertEquals(
-            mockFoodList,
+            savedCollection.savedList,
             (viewModel.listOfSavedFood.value as Result.SuccessFetch).result
         )
-    }
-
-    @Test
-    fun onDrawFood() = testCoroutineRule.runBlockingTest {
-        addToList()
-
-        viewModel.drawFood(0L)
-        val result = viewModel.randomFood.value
-
-        assertEquals(true, result is Result.Success)
-        assertContains(mockFoodList, (result as Result.Success).result)
-    }
-
-    private fun addToList() = testCoroutineRule.runBlockingTest {
-        whenever(getAllSavedFoodUseCase.run(None)).thenReturn(flowOf(mockFoodList).right())
-
-        viewModel.onInitialize()
-
-        verify(getAllSavedFoodUseCase, times(1)).run(any())
-        assertEquals(mockFoodList, (viewModel.listOfSavedFood.value as Result.SuccessFetch).result)
     }
 }
